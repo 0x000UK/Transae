@@ -23,14 +23,12 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     User(id: "11", name: "sara"),
   ];
 
-  double _appBarOpacity = 1.0;
-
   @override
   Widget build(BuildContext context) {
     //Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 244, 126, 126),
+      backgroundColor:const Color.fromARGB(255, 255, 168, 168),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
@@ -41,7 +39,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
             expandedHeight: 10,
             flexibleSpace:AppBar(
                 //toolbarOpacity: 1,
-                backgroundColor: Color.fromARGB(255, 255, 151, 151),
+                backgroundColor:const Color.fromARGB(255, 255, 151, 151),
                 title: const Text('BoomBam',
                   style: TextStyle(
                     fontSize: 30,
