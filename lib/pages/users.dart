@@ -25,72 +25,69 @@ class _ScrollableUserListState extends State<ScrollableUserList>
 
   @override
   Widget build(BuildContext context) {
-    //Size size = MediaQuery.of(context).size;
+    final List<String> tabs = <String>['Tab 1', 'Tab 2', 'Tab 3'];
+    Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor:const Color.fromARGB(255, 255, 168, 168),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-            snap: true,
-            shadowColor: const Color.fromARGB(0, 0, 0, 0),
-            floating: true,
-            expandedHeight: 10,
-            flexibleSpace:AppBar(
-                //toolbarOpacity: 1,
-                backgroundColor:const Color.fromARGB(255, 255, 151, 151),
-                title: const Text('BoomBam',
-                  style: TextStyle(
-                    fontSize: 30,
-                    color: Color.fromARGB(226, 255, 83, 83)
+    return DefaultTabController(
+      length: 3,
+      initialIndex: 1,
+        child: Scaffold(
+          backgroundColor: const Color.fromARGB(255, 255, 168, 168),
+          body: NestedScrollView(
+            floatHeaderSlivers: true,
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  floating: true,
+                  elevation: 0.0,
+                  flexibleSpace:AppBar(
+                      backgroundColor:const Color.fromARGB(255, 255, 151, 151),
+                      title: const Text('BoomBam',
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Color.fromARGB(225, 250, 79, 79)
+                        ),
+                      ),
+                      actions: [
+                        IconButton(
+                          padding: const EdgeInsets.only(right: 10),
+                          onPressed: () => {},
+                          icon:const Icon(Icons.search, size: 30,),
+                          color:  Color.fromARGB(225, 250, 79, 79),
+                          splashRadius: 1,
+
+                        ),
+                        IconButton(
+                          onPressed: () => {},
+                          icon:const Icon(Icons.more_vert, size: 30,),
+                          color:  Color.fromARGB(225, 250, 79, 79),
+                          splashRadius: 1,
+                        )
+                      ],
+                      elevation: 0.0,
+                    )
                   ),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: BoomBam(60.0),
                 ),
-                actions: [
-                  IconButton(
-                    padding: const EdgeInsets.only(right: 10),
-                    onPressed: () => {},
-                    icon:const Icon(Icons.search)
-                  ),
-                  IconButton(
-                    onPressed: () => {},
-                    icon:const Icon(Icons.more_vert)
-                  )
-                ],
-              )
+              ];
+            },
+            body: TabBarView(
+              children: tabs.map(
+                (String name) {
+                  return const CustomScrollView(
+                    slivers: [
+                      Messages(),
+                    ],
+                  );
+                },
+              ).toList(),
             ),
-          ];
-        },
-        body: 
-        // Container(
-        //   decoration:const BoxDecoration(
-        //   color: Color.fromARGB(192, 249, 195, 195),
-        //   borderRadius: BorderRadius.only(
-        //     topLeft: Radius.circular(10),
-        //     topRight: Radius.circular(10)
-        //   )
-        //   ),
-        //   child :
-            ListView.builder(
-            itemCount: userList.length, // Replace with your actual item count
-            itemBuilder: (context, index) {
-            return ListTile (
-                leading: const CircleAvatar(
-                  radius: 45,
-                ),
-                title: Text(
-                  userList[index].name,
-                  style: const TextStyle(fontSize: 25),
-                ),
-                minVerticalPadding: 25,
-                minLeadingWidth: 10,
-                horizontalTitleGap: 5,
-                onTap: () => {},
-            );
-            }
-        )
-      )
-    );
+          ),
+        ),
+      );
   }
 }
 
@@ -99,4 +96,74 @@ class User {
   final String name;
 
   User({required this.id, required this.name});
+}
+
+class BoomBam extends SliverPersistentHeaderDelegate {
+  final double size;
+
+  BoomBam(this.size);
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: const Color.fromARGB(255, 255, 151, 151),
+      height: size,
+      child: const TabBar(
+        indicatorWeight: 3,
+        indicatorColor:  Color.fromARGB(225, 250, 79, 79),
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white60,
+        tabs: <Widget>[
+
+// ::TODO:: adjust fontsize of tabs
+
+          Tab(text: "Chats",iconMargin: EdgeInsets.only(bottom: 0),),
+          Tab(text: "Groups"),
+          Tab(text: "Story", height: 30,),
+        ],
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => size;
+
+  @override
+  double get minExtent => size;
+
+  @override
+  bool shouldRebuild(BoomBam oldDelegate) {
+    return oldDelegate.size != size;
+  }
+}
+
+class Messages extends StatelessWidget {
+  const Messages({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return const ListTile(
+            leading: CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+            ),
+            title: Text(
+              "Mr. H",
+              style: TextStyle(
+                fontSize: 20
+              ),
+            
+            ),
+            subtitle: Text("Hey there, Isn't it cool ?"),
+            minVerticalPadding: 21,
+          );
+        },
+      ),
+    );
+  }
 }

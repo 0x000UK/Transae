@@ -1,33 +1,10 @@
 import 'package:flutter/material.dart';
-
-Route _createPageRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) {
-      return const MySettings();
-    },
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0); // Start position of the page
-      var end = Offset.zero; // End position of the page
-      var curve = Curves.easeInOut;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      // Slide the page vertically from bottom to top.
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
-}
-
 class page2 extends StatefulWidget {
   const page2({super.key});
 
   @override
   State<page2> createState() => _page2State();
 }
-
 class _page2State extends State<page2> {
   @override
   Widget build(BuildContext context) {

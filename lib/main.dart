@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'pages/login.dart';
 import 'pages/register.dart';
 import 'pages/home.dart';
-import 'pages/account_settings.dart';
 
 
 void main() {
@@ -22,7 +21,6 @@ class MyApp extends StatelessWidget {
         'login' :(context) => const MyLogin(),
         'register' :(context) => const MyRegister(),
         'home' : (context) => const MyHomePage(),
-        'settings' :(context) =>const MySettings()
       },
     );
   }
