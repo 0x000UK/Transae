@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     curve: Curves.easeInOut,
                     child: IconButton(
                       onPressed: _onHomeClicked,
-                      icon: Icon(Icons.chat_outlined, color: homeButton),
+                      icon: Icon(Icons.home_outlined, color: homeButton),
                       iconSize: _isHomeLarge ? 40 : 30,
                       splashRadius: 1,
                     ),

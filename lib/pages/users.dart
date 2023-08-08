@@ -24,6 +24,43 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     User(id: "11", name: "sara"),
   ];
 
+  TabController? tabController;
+  int activeTab = 1;
+
+  @override
+  void initState(){
+    super.initState();
+    tabController = TabController(length: 3, vsync: this, initialIndex: activeTab);
+    
+    tabController!.addListener(() {
+      if(tabController?.index != activeTab) {
+        setState(() {
+          activeTab = tabController!.index;
+          print(activeTab);
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    tabController?.dispose();
+    super.dispose();
+  }
+
+  Widget getAddIcon(index) {
+    switch (index) {
+      case 1:
+        return const Icon(Icons.person_add_alt);
+      case 2:
+        return const Icon(Icons.group_add_outlined);
+      case 3:
+        return const Icon(Icons.add_circle_outline);
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<String> tabs = <String>['Tab 1', 'Tab 2', 'Tab 3'];
@@ -54,13 +91,20 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                         ),
                       ),
                       actions: [
+                        
+
                         IconButton(
                           padding: const EdgeInsets.only(right: 10),
                           onPressed: () => {},
                           icon:const Icon(Icons.search, size: 30,),
                           color:  Color.fromARGB(225, 250, 79, 79),
                           splashRadius: 1,
-
+                        ),
+                        IconButton(
+                          onPressed: () => {},
+                          icon: getAddIcon(activeTab),
+                          color:  Color.fromARGB(225, 250, 79, 79),
+                          splashRadius: 1,
                         ),
                         IconButton(
                           onPressed: () => {},
@@ -88,6 +132,8 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   borderRadius:  BorderRadius.all(Radius.circular(30))
                 ),
                 child : TabBarView(
+                  controller: tabController,
+                  physics:const ClampingScrollPhysics(),
                     children: tabs.map(
                       (String name) {
                         return const CustomScrollView(
@@ -132,9 +178,9 @@ class BoomBam extends SliverPersistentHeaderDelegate {
         unselectedLabelColor: Colors.white60,
         tabs: <Widget>[
 
-          Tab(child: Text("Chats", style: TextStyle(fontSize: 20)),),
-          Tab(child: Text("Groups", style: TextStyle(fontSize: 20)),),
-          Tab(child: Text("Story", style: TextStyle(fontSize: 20)),),
+          Tab(child: Icon(Icons.chat_outlined	, size: 25)),
+          Tab(child: Icon(Icons.question_answer_outlined, size: 25)),
+          Tab(child: Icon(Icons.circle_outlined, size: 25)),
         ],
       ),
     );
