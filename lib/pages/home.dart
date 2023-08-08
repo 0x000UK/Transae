@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 168, 168),
+      backgroundColor: const Color.fromARGB(255, 255, 151, 151),
       bottomNavigationBar: SizedBox(
         height: size.height* 0.08,
         child: Padding(

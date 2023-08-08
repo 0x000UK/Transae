@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 
 class ScrollableUserList extends StatefulWidget {
   const ScrollableUserList({super.key});
@@ -28,17 +29,20 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     final List<String> tabs = <String>['Tab 1', 'Tab 2', 'Tab 3'];
     Size size = MediaQuery.of(context).size;
 
-    return DefaultTabController(
+    return SafeArea(
+      maintainBottomViewPadding: true,
+      child: DefaultTabController(
       length: 3,
       initialIndex: 1,
         child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 255, 168, 168),
+          backgroundColor:const Color.fromARGB(255, 255, 151, 151),
           body: NestedScrollView(
             floatHeaderSlivers: true,
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 SliverAppBar(
+                  snap: true,
                   floating: true,
                   elevation: 0.0,
                   flexibleSpace:AppBar(
@@ -70,24 +74,36 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   ),
                 SliverPersistentHeader(
                   pinned: true,
+                  floating: true,
                   delegate: BoomBam(60.0),
                 ),
               ];
             },
-            body: TabBarView(
-              children: tabs.map(
-                (String name) {
-                  return const CustomScrollView(
-                    slivers: [
-                      Messages(),
-                    ],
-                  );
-                },
-              ).toList(),
-            ),
-          ),
-        ),
-      );
+            body:Padding(
+              padding:const EdgeInsets.all(10),
+              child :Container(
+                padding:const EdgeInsets.all(5.0),
+                decoration: const BoxDecoration(
+                  color: Color.fromARGB(200, 255, 186, 186),
+                  borderRadius:  BorderRadius.all(Radius.circular(30))
+                ),
+                child : TabBarView(
+                    children: tabs.map(
+                      (String name) {
+                        return const CustomScrollView(
+                          slivers: [
+                            Messages(),
+                          ],
+                        );
+                      },
+                    ).toList(),
+                  )
+                )
+              )
+            )
+          )
+        )
+    );
   }
 }
 
@@ -116,11 +132,9 @@ class BoomBam extends SliverPersistentHeaderDelegate {
         unselectedLabelColor: Colors.white60,
         tabs: <Widget>[
 
-// ::TODO:: adjust fontsize of tabs
-
-          Tab(text: "Chats",iconMargin: EdgeInsets.only(bottom: 0),),
-          Tab(text: "Groups"),
-          Tab(text: "Story", height: 30,),
+          Tab(child: Text("Chats", style: TextStyle(fontSize: 20)),),
+          Tab(child: Text("Groups", style: TextStyle(fontSize: 20)),),
+          Tab(child: Text("Story", style: TextStyle(fontSize: 20)),),
         ],
       ),
     );
@@ -149,10 +163,10 @@ class Messages extends StatelessWidget {
           return const ListTile(
             leading: CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage(
+              backgroundImage:NetworkImage(
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
             ),
-            title: Text(
+            title:Text(
               "Mr. H",
               style: TextStyle(
                 fontSize: 20
@@ -160,7 +174,7 @@ class Messages extends StatelessWidget {
             
             ),
             subtitle: Text("Hey there, Isn't it cool ?"),
-            minVerticalPadding: 21,
+            minVerticalPadding: 20,
           );
         },
       ),
