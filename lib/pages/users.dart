@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'chats.dart';
 
 class ScrollableUserList extends StatefulWidget {
   const ScrollableUserList({super.key});
@@ -9,7 +10,7 @@ class ScrollableUserList extends StatefulWidget {
 }
 
 class _ScrollableUserListState extends State<ScrollableUserList>
-  with SingleTickerProviderStateMixin {
+  with TickerProviderStateMixin {
   final List<User> userList = [
     User(id: "1", name: "John"),
     User(id: "2", name: "Alice"),
@@ -24,19 +25,27 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     User(id: "11", name: "sara"),
   ];
 
-  TabController? tabController;
-  int activeTab = 1;
+  final List<IconData> _icons = [Icons.person_add_alt, Icons.group_add_outlined, Icons.add_circle_outline];
+  late TabController tabController;
+  late AnimationController _animationController;
+  int activeTab = 0;
 
   @override
   void initState(){
     super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration:const Duration(milliseconds: 300),
+    );
+
     tabController = TabController(length: 3, vsync: this, initialIndex: activeTab);
-    
-    tabController!.addListener(() {
-      if(tabController?.index != activeTab) {
+    tabController.addListener(() {
+      if(tabController.index != activeTab) {
         setState(() {
-          activeTab = tabController!.index;
-          print(activeTab);
+          activeTab = tabController.index;
+          _animationController.reset();
+          _animationController.forward();
         });
       }
     });
@@ -44,27 +53,17 @@ class _ScrollableUserListState extends State<ScrollableUserList>
 
   @override
   void dispose() {
-    tabController?.dispose();
+    tabController.dispose();
+    _animationController.dispose();
     super.dispose();
-  }
-
-  Widget getAddIcon(index) {
-    switch (index) {
-      case 1:
-        return const Icon(Icons.person_add_alt);
-      case 2:
-        return const Icon(Icons.group_add_outlined);
-      case 3:
-        return const Icon(Icons.add_circle_outline);
-      default:
-        return const SizedBox.shrink();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> tabs = <String>['Tab 1', 'Tab 2', 'Tab 3'];
+
     Size size = MediaQuery.of(context).size;
+
+    final List<String> tabs = <String>['Tab 1', 'Tab 2', 'Tab 3'];
 
     return SafeArea(
       maintainBottomViewPadding: true,
@@ -97,19 +96,28 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                           padding: const EdgeInsets.only(right: 10),
                           onPressed: () => {},
                           icon:const Icon(Icons.search, size: 30,),
-                          color:  Color.fromARGB(225, 250, 79, 79),
+                          color: const Color.fromARGB(225, 250, 79, 79),
                           splashRadius: 1,
                         ),
-                        IconButton(
-                          onPressed: () => {},
-                          icon: getAddIcon(activeTab),
-                          color:  Color.fromARGB(225, 250, 79, 79),
-                          splashRadius: 1,
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder: (Widget child, Animation<double> animation) {
+                            return ScaleTransition(scale: animation, child: child);
+                          },
+                          child: IconButton(
+                            key: ValueKey<int>(tabController.index),
+                            icon: Icon(_icons[tabController.index],
+                              color: const Color.fromARGB(225, 250, 79, 79),
+                            ),
+                            onPressed: () {
+                              // Do something when IconButton is pressed
+                            },
+                          ),
                         ),
                         IconButton(
                           onPressed: () => {},
                           icon:const Icon(Icons.more_vert, size: 30,),
-                          color:  Color.fromARGB(225, 250, 79, 79),
+                          color: const Color.fromARGB(225, 250, 79, 79),
                           splashRadius: 1,
                         )
                       ],
@@ -119,12 +127,12 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                 SliverPersistentHeader(
                   pinned: true,
                   floating: true,
-                  delegate: BoomBam(60.0),
+                  delegate: BoomBam(60.0, tabController),
                 ),
               ];
             },
             body:Padding(
-              padding:const EdgeInsets.all(10),
+              padding:const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child :Container(
                 padding:const EdgeInsets.all(5.0),
                 decoration: const BoxDecoration(
@@ -133,10 +141,12 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                 ),
                 child : TabBarView(
                   controller: tabController,
-                  physics:const ClampingScrollPhysics(),
+                  physics:const PageScrollPhysics(),
                     children: tabs.map(
                       (String name) {
                         return const CustomScrollView(
+                          scrollBehavior:MaterialScrollBehavior(),
+                          shrinkWrap: true,
                           slivers: [
                             Messages(),
                           ],
@@ -162,8 +172,9 @@ class User {
 
 class BoomBam extends SliverPersistentHeaderDelegate {
   final double size;
+  final TabController tabController;
 
-  BoomBam(this.size);
+  BoomBam(this.size, this.tabController);
 
   @override
   Widget build(
@@ -171,12 +182,13 @@ class BoomBam extends SliverPersistentHeaderDelegate {
     return Container(
       color: const Color.fromARGB(255, 255, 151, 151),
       height: size,
-      child: const TabBar(
+      child: TabBar(
+        controller: tabController,
         indicatorWeight: 3,
-        indicatorColor:  Color.fromARGB(225, 250, 79, 79),
-        labelColor: Colors.white,
+        indicatorColor: const Color.fromARGB(225, 250, 79, 79),
+        labelColor: const Color.fromARGB(255, 250, 79, 79),
         unselectedLabelColor: Colors.white60,
-        tabs: <Widget>[
+        tabs:const <Widget>[
 
           Tab(child: Icon(Icons.chat_outlined	, size: 25)),
           Tab(child: Icon(Icons.question_answer_outlined, size: 25)),
@@ -206,23 +218,35 @@ class Messages extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return const ListTile(
-            leading: CircleAvatar(
-              radius: 30,
-              backgroundImage:NetworkImage(
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+          return  ListTile(
+            leading:  Hero(
+              tag: 'profilepic$index',
+              child:const CircleAvatar(
+                radius: 30,
+                backgroundImage:NetworkImage(
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+              ),
             ),
-            title:Text(
+            title:const Text(
               "Mr. H",
               style: TextStyle(
                 fontSize: 20
               ),
             
             ),
-            subtitle: Text("Hey there, Isn't it cool ?"),
+            subtitle: const Text("Hey there, Isn't it cool ?"),
             minVerticalPadding: 20,
+            onTap: (){
+              Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyMessagesPage(index: index,name: "Mr. k",),
+              ),
+            );
+            },
           );
         },
+        childCount: 10
       ),
     );
   }

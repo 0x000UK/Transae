@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'account_settings.dart';
-import 'dart:async';
+import 'chats.dart';
 import 'users.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -12,66 +12,62 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 class _MyHomePageState extends State<MyHomePage> {
- Color homeButton = const Color.fromARGB(255, 255, 168, 168);
-  Color chatButton = const Color.fromARGB(255, 255, 168, 168);
-  Color grpButton = const Color.fromARGB(255, 255, 168, 168);
-  Color accButton = const Color.fromARGB(255, 255, 168, 168);
+ Color homeColor = const Color.fromARGB(255, 255, 168, 168);
+  Color chatColor = const Color.fromARGB(255, 255, 168, 168);
+  Color grpColor = const Color.fromARGB(255, 255, 168, 168);
+  Color accColor = const Color.fromARGB(255, 255, 168, 168);
+
+  IconData homeIcon = Icons.home_outlined;
+  IconData freindsIcon = Icons.groups_2_outlined;
+  IconData notifyIcon = Icons.notifications_outlined;
+  IconData accIcon = Icons.account_circle_outlined;
   
-  bool _isHomeLarge = false;
-  bool _isChatLarge = false;
-  bool _isgrpLarge = false;
-  bool _isaccLarge = false;
+  bool lastButton= true;
   
   void _onHomeClicked() {
     setState(() {
-      _isHomeLarge = true;
-      Future.delayed(const Duration(milliseconds: 200), () {
-        setState(() {
-          _isHomeLarge = false;
-        });
-      });
+      homeIcon = Icons.home;
+      freindsIcon = Icons.groups_2_outlined;
+      notifyIcon = Icons.notifications_outlined;
+      accIcon = Icons.account_circle_outlined;
       _currentIndex = 0;
     });
   }
 
-    void _onChatClicked() {
+    void _onFrndClicked() {
     setState(() {
-      _isChatLarge = true;
-      Future.delayed(const Duration(milliseconds: 200), () {
-        setState(() {
-          _isChatLarge = false;
-        });
-      });
-      _currentIndex = 3;
+      homeIcon = Icons.home_outlined;
+      freindsIcon = Icons.groups_2;
+      notifyIcon = Icons.notifications_outlined;
+      accIcon = Icons.account_circle_outlined;
+      _currentIndex = 1;
     });
   }
 
-  void _onGroupClicked() {
+  void _onNotifyClicked() {
     setState(() {
-      _isgrpLarge = true;
-      Future.delayed(const Duration(milliseconds: 200), () {
-        setState(() {
-          _isgrpLarge = false;
-        });
-      });
+      homeIcon = Icons.home_outlined;
+      freindsIcon = Icons.groups_2_outlined;
+      notifyIcon = Icons.notifications;
+      accIcon = Icons.account_circle_outlined;
       _currentIndex = 2;
     });
   }
   void _onAccClicked() {
     setState(() {
-      _isaccLarge = true;
-      Future.delayed(const Duration(milliseconds: 200), () {
-        setState(() {
-          _isaccLarge = false;
-        });
-      });
-      _currentIndex = 1;
+      homeIcon = Icons.home_outlined;
+      freindsIcon = Icons.groups_2_outlined;
+      notifyIcon = Icons.notifications_outlined;
+      accIcon = Icons.account_circle;
+      _currentIndex = 3;
     });
   }
 
   final List<Widget> _screens = [
     const ScrollableUserList(),
-    const MySettings()
+    const MyMessagesPage(index: 1,name: "qwerty",),
+    const MyMessagesPage(index: 2,name: "asdfgh",),
+    const MySettings(),
   ];
 
   int _currentIndex = 0;
@@ -111,8 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     curve: Curves.easeInOut,
                     child: IconButton(
                       onPressed: _onHomeClicked,
-                      icon: Icon(Icons.home_outlined, color: homeButton),
-                      iconSize: _isHomeLarge ? 40 : 30,
+                      icon: Icon(homeIcon, color: homeColor),
+                      iconSize: 30,
                       splashRadius: 1,
                     ),
                   ),
@@ -123,9 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: AnimatedContainer(duration: const  Duration(milliseconds: 400),
                     curve: Curves.easeInOut,
                     child: IconButton(
-                      onPressed: _onChatClicked,
-                      icon: Icon(Icons.groups_2_outlined, color:chatButton),
-                      iconSize: _isChatLarge ? 40 : 35,
+                      onPressed: _onFrndClicked,
+                      icon: Icon(freindsIcon, color:chatColor),
+                      iconSize: 35,
                       splashRadius: 1,
                     ),
                   ),
@@ -136,9 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: AnimatedContainer(duration: const  Duration(milliseconds: 400),
                     curve: Curves.easeInOut,
                     child: IconButton(
-                      onPressed: _onGroupClicked,
-                      icon: Icon(Icons.circle_notifications_outlined, color:grpButton),
-                      iconSize: _isgrpLarge ? 40 : 32,
+                      onPressed: _onNotifyClicked,
+                      icon: Icon(notifyIcon, color:grpColor),
+                      iconSize: 28,
                       splashRadius: 1,
                     ),
                   ),
@@ -150,8 +146,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     curve: Curves.easeInOut,
                     child: IconButton(
                       onPressed: _onAccClicked,
-                      icon: Icon(Icons.account_circle_outlined, color:accButton),
-                      iconSize: _isaccLarge ? 40 : 32,
+                      icon: Icon(accIcon, color:accColor),
+                      iconSize:32,
                       splashRadius: 1,
                     ),
                   ),
