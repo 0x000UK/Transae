@@ -11,6 +11,7 @@ class ScrollableUserList extends StatefulWidget {
 
 class _ScrollableUserListState extends State<ScrollableUserList>
   with TickerProviderStateMixin {
+
   final List<User> userList = [
     User(id: "1", name: "John"),
     User(id: "2", name: "Alice"),
@@ -28,6 +29,9 @@ class _ScrollableUserListState extends State<ScrollableUserList>
   final List<IconData> _icons = [Icons.person_add_alt, Icons.group_add_outlined, Icons.add_circle_outline];
   late TabController tabController;
   late AnimationController _animationController;
+
+  int usersNum = 0;
+  int grpNum = 0;
   int activeTab = 0;
 
   @override
@@ -63,7 +67,11 @@ class _ScrollableUserListState extends State<ScrollableUserList>
 
     Size size = MediaQuery.of(context).size;
 
-    final List<String> tabs = <String>['Tab 1', 'Tab 2', 'Tab 3'];
+    final List<Widget> tabs = <Widget>[
+      const Messages(),
+      GroupsTab(count: grpNum), 
+      const Story()
+    ];
 
     return SafeArea(
       maintainBottomViewPadding: true,
@@ -110,6 +118,9 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                               color: const Color.fromARGB(225, 250, 79, 79),
                             ),
                             onPressed: () {
+                              setState(() {
+                                grpNum+=1;
+                              });
                               // Do something when IconButton is pressed
                             },
                           ),
@@ -140,16 +151,17 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   borderRadius:  BorderRadius.all(Radius.circular(30))
                 ),
                 child : TabBarView(
+                  viewportFraction: 10.0,
                   controller: tabController,
                   physics:const PageScrollPhysics(),
                     children: tabs.map(
-                      (String name) {
-                        return const CustomScrollView(
-                          scrollBehavior:MaterialScrollBehavior(),
+                      (content) {
+                        return  CustomScrollView(
+                          scrollBehavior:const MaterialScrollBehavior(),
                           shrinkWrap: true,
                           slivers: [
-                            Messages(),
-                          ],
+                            content
+                          ]
                         );
                       },
                     ).toList(),
@@ -251,3 +263,89 @@ class Messages extends StatelessWidget {
     );
   }
 }
+
+class GroupsTab extends StatelessWidget {
+  const GroupsTab({Key? key, required this.count}) : super(key: key);
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return  ListTile(
+            leading:  Hero(
+              tag: 'profilepic$index',
+              child:const CircleAvatar(
+                radius: 30,
+                backgroundImage:NetworkImage(
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+              ),
+            ),
+            title:const Text(
+              "Mr. H",
+              style: TextStyle(
+                fontSize: 20
+              ),
+            
+            ),
+            subtitle: const Text("Hey there, Isn't it cool ?"),
+            minVerticalPadding: 20,
+            onTap: (){
+              Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyMessagesPage(index: index,name: "Mr. k",),
+              ),
+            );
+            },
+          );
+        },
+        childCount: count
+      ),
+    );
+  }
+}
+class Story extends StatelessWidget {
+  const Story ({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return  ListTile(
+            leading:  Hero(
+              tag: 'profilepic$index',
+              child:const CircleAvatar(
+                radius: 30,
+                backgroundImage:NetworkImage(
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+              ),
+            ),
+            title:const Text(
+              "Mr. H",
+              style: TextStyle(
+                fontSize: 20
+              ),
+            
+            ),
+            subtitle: const Text("Hey there, Isn't it cool ?"),
+            minVerticalPadding: 20,
+            onTap: (){
+              Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyMessagesPage(index: index,name: "Mr. k",),
+              ),
+            );
+            },
+          );
+        },
+        childCount: 1
+      ),
+    );
+  }
+}
+
