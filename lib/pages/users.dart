@@ -26,24 +26,28 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     User(id: "11", name: "sara"),
   ];
 
-  final List<IconData> _icons = [Icons.person_add_alt, Icons.group_add_outlined, Icons.add_circle_outline];
+  final List<IconData> _tabAddIcons = [Icons.person_add_alt, Icons.group_add_outlined, Icons.add_circle_outline];
   late TabController tabController;
   late AnimationController _animationController;
 
+  bool _isExpanded = false;
+  int lastTab = 0;
+  int _currIndex = 0;
   int usersNum = 0;
   int grpNum = 0;
+  int chatNum = 0;
   int activeTab = 0;
 
   @override
   void initState(){
     super.initState();
 
+    tabController = TabController(length: 3, vsync: this, initialIndex: activeTab);
     _animationController = AnimationController(
       vsync: this,
-      duration:const Duration(milliseconds: 300),
+      duration: tabController.animationDuration
     );
 
-    tabController = TabController(length: 3, vsync: this, initialIndex: activeTab);
     tabController.addListener(() {
       if(tabController.index != activeTab) {
         setState(() {
@@ -51,6 +55,17 @@ class _ScrollableUserListState extends State<ScrollableUserList>
           _animationController.reset();
           _animationController.forward();
         });
+      }
+      if(tabController.index == 2){
+        setState(() {
+        _isExpanded = false;
+        _currIndex = 0;
+        });
+      }
+      if (tabController.indexIsChanging) {
+        if (tabController.animation!.value == tabController.index) {
+          _animationController.value = tabController.animation!.value;
+    }
       }
     });
   }
@@ -68,7 +83,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     Size size = MediaQuery.of(context).size;
 
     final List<Widget> tabs = <Widget>[
-      const Messages(),
+      UserTab(count: chatNum),
       GroupsTab(count: grpNum), 
       const Story()
     ];
@@ -99,23 +114,60 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                       ),
                       actions: [
                         
-
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: _isExpanded ? 250.0 : 0.0,
+                          height: 50.0,
+                          child: TextField(
+                            decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: Color.fromARGB(200, 255, 186, 186),
+                              border:  OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.all(Radius.circular(45.0)),
+                              ),
+                              hintText: "Search...",
+                            ),
+                            enabled: _isExpanded,
+                          ),
+                        ),
                         IconButton(
-                          padding: const EdgeInsets.only(right: 10),
-                          onPressed: () => {},
-                          icon:const Icon(Icons.search, size: 30,),
+                          iconSize: 30,
                           color: const Color.fromARGB(225, 250, 79, 79),
-                          splashRadius: 1,
+                          icon: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 350),
+                              transitionBuilder: (child, anim) => RotationTransition(
+                                    turns: child.key == const ValueKey('search')
+                                        ? Tween<double>(begin: 0.75, end: 1.0).animate(anim)
+                                        : Tween<double>(begin: 1.0, end: 0.75).animate(anim),
+                                    child: ScaleTransition(scale: anim, child: child),
+                                  ),
+                              child: tabController.index == 2? null: _currIndex == 0
+                                  ? const Icon(Icons.search, key:ValueKey('search'))
+                                  : const Icon(
+                                      Icons.close,
+                                      key: ValueKey('close'),
+                                    )),
+                          onPressed: () {
+                            setState(() {
+                              _currIndex = _currIndex == 0 ? 1 : 0;
+                              _isExpanded = !_isExpanded;
+                            });
+                          },
                         ),
                         AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
+                          duration: tabController.animationDuration,
                           transitionBuilder: (Widget child, Animation<double> animation) {
-                            return ScaleTransition(scale: animation, child: child);
+                            return ScaleTransition(
+                              scale: _animationController, 
+                              child: child
+                            );
                           },
                           child: IconButton(
                             key: ValueKey<int>(tabController.index),
-                            icon: Icon(_icons[tabController.index],
+                            icon: Icon(_tabAddIcons[tabController.index],
                               color: const Color.fromARGB(225, 250, 79, 79),
+                              size: 30,
                             ),
                             onPressed: () {
                               setState(() {
@@ -142,7 +194,33 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                 ),
               ];
             },
-            body:Padding(
+            body:
+            // TabBarView(
+            //   controller: tabController,
+            //   children:const [ 
+            //     CustomScrollView(
+            //       slivers: [
+            //         // Content for Tab 1
+            //         UserTab(),
+            //       ],
+            //     ),
+            //     CustomScrollView(
+            //       slivers: [
+            //         // Content for Tab 2
+            //         GroupsTab(count: 2),
+            //       ],
+            //     ),
+            //     CustomScrollView(
+            //       slivers: [
+            //         // Content for Tab 3
+            //         Story(),
+            //       ],
+            //     ),
+            //   ],
+            // )
+
+
+            Padding(
               padding:const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child :Container(
                 padding:const EdgeInsets.all(5.0),
@@ -151,23 +229,21 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   borderRadius:  BorderRadius.all(Radius.circular(30))
                 ),
                 child : TabBarView(
-                  viewportFraction: 10.0,
                   controller: tabController,
                   physics:const PageScrollPhysics(),
                     children: tabs.map(
                       (content) {
                         return  CustomScrollView(
                           scrollBehavior:const MaterialScrollBehavior(),
-                          shrinkWrap: true,
                           slivers: [
-                            content
+                            content,
                           ]
                         );
                       },
                     ).toList(),
                   )
-                )
-              )
+               )
+             )
             )
           )
         )
@@ -204,7 +280,7 @@ class BoomBam extends SliverPersistentHeaderDelegate {
 
           Tab(child: Icon(Icons.chat_outlined	, size: 25)),
           Tab(child: Icon(Icons.question_answer_outlined, size: 25)),
-          Tab(child: Icon(Icons.circle_outlined, size: 25)),
+          Tab(child: Icon(Icons.camera, size: 28)),
         ],
       ),
     );
@@ -222,12 +298,48 @@ class BoomBam extends SliverPersistentHeaderDelegate {
   }
 }
 
-class Messages extends StatelessWidget {
-  const Messages({Key? key}) : super(key: key);
+class UserTab extends StatelessWidget {
+  const UserTab({Key? key, required this.count}) : super(key: key);
+  final int count;
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
+    return count == 0 ? SliverToBoxAdapter( 
+      child : Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 100,),
+            Container(
+            width: 300,
+            height: 300,
+            alignment: Alignment.bottomCenter,
+            decoration: const BoxDecoration(
+              image: DecorationImage(image: AssetImage("assets/images/Worried-amico.png"),
+                fit: BoxFit.fill
+              ),
+            ),
+          ),
+          const SizedBox(height: 20,),
+          const Text.rich(
+            TextSpan(
+              text: 'OOPS!!',
+              children: [
+                TextSpan(text: '  Sorry', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                TextSpan(text: " Can't see anyone ", style: TextStyle(fontSize: 20)),
+                TextSpan(text: '\nMay be Try Invite Someone if they are free'),
+              ]
+            ),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18
+              ),
+            ),
+          ],
+        )
+      ) 
+    )
+    :
+    SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           return  ListTile(
@@ -258,7 +370,7 @@ class Messages extends StatelessWidget {
             },
           );
         },
-        childCount: 10
+        childCount: count
       ),
     );
   }
@@ -271,7 +383,42 @@ class GroupsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
+    return count == 0 ? SliverToBoxAdapter( 
+      child : Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 100,),
+            Container(
+            width: 400,
+            height: 280,
+            alignment: Alignment.centerLeft,
+            decoration: const BoxDecoration(
+              image: DecorationImage(image: AssetImage("assets/images/group.png"),
+                fit: BoxFit.cover
+              ),
+            ),
+          ),
+          const SizedBox(height: 20,),
+          const Text.rich(
+            TextSpan(
+              text: 'OOPS!!',
+              children: [
+                TextSpan(text: '  Sorry', style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: " Can't see anyone ", style: TextStyle(fontSize: 20)),
+                TextSpan(text: '\nMay be Try joining any group'),
+              ]
+            ),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20
+              ),
+            ),
+          ],
+        )
+      ) 
+    )
+    :
+    SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           return  ListTile(

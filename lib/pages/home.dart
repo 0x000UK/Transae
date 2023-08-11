@@ -17,7 +17,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Color grpColor = const Color.fromARGB(255, 255, 168, 168);
   Color accColor = const Color.fromARGB(255, 255, 168, 168);
 
-  IconData homeIcon = Icons.home_outlined;
+  IconData homeIcon = Icons.home;
   IconData freindsIcon = Icons.groups_2_outlined;
   IconData notifyIcon = Icons.notifications_outlined;
   IconData accIcon = Icons.account_circle_outlined;
@@ -134,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: IconButton(
                       onPressed: _onNotifyClicked,
                       icon: Icon(notifyIcon, color:grpColor),
-                      iconSize: 28,
+                      iconSize: 30,
                       splashRadius: 1,
                     ),
                   ),
@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: IconButton(
                       onPressed: _onAccClicked,
                       icon: Icon(accIcon, color:accColor),
-                      iconSize:32,
+                      iconSize:34,
                       splashRadius: 1,
                     ),
                   ),

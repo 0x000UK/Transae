@@ -15,7 +15,7 @@ class _MyHomePageState extends State<MyMessagesPage> {
  
     return  Scaffold(
       appBar: AppBar(
-        
+        toolbarHeight: 70,
         title:  Row(
           children: [
               Hero(
