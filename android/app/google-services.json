@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "519740122132",
+    "project_id": "transae-e5e7b",
+    "storage_bucket": "transae-e5e7b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519740122132:android:4533c203e57e2ab6187301",
+        "android_client_info": {
+          "package_name": "com.example.firebase_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519740122132-2sjfho813l5uar0p7t159k4fu5n7cfeg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbPEZmdaaf6NIYPLVJEfsr7i6p8wdtFVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519740122132-2sjfho813l5uar0p7t159k4fu5n7cfeg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
