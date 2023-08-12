@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'chats.dart';
 
 class ScrollableUserList extends StatefulWidget {
@@ -12,19 +11,10 @@ class ScrollableUserList extends StatefulWidget {
 class _ScrollableUserListState extends State<ScrollableUserList>
   with TickerProviderStateMixin {
 
-  final List<User> userList = [
-    User(id: "1", name: "John"),
-    User(id: "2", name: "Alice"),
-    User(id: "3", name: "alex"),
-    User(id: "4", name: "Bob"),
-    User(id: "5", name: "sam"),
-    User(id: "6", name: "dominic"),
-    User(id: "7", name: "cliff"),
-    User(id: "8", name: "lockne"),
-    User(id: "9", name: "harry"),
-    User(id: "10", name: "kane"),
-    User(id: "11", name: "sara"),
-  ];
+    final List<UserChatModel> userList= [
+      UserChatModel(id: '1', name: 'Alexendra', imageURL: 'https//www.example.com/pic.png', messageText: 'hello', time: '1:30'),
+      UserChatModel(id: '2', name: 'Alexe', imageURL: 'https//www.example.com/pic1.png', messageText: 'whats up', time: 'yesterday'),
+    ];
 
   final List<IconData> _tabAddIcons = [Icons.person_add_alt, Icons.group_add_outlined, Icons.add_circle_outline];
   late TabController tabController;
@@ -33,8 +23,6 @@ class _ScrollableUserListState extends State<ScrollableUserList>
   bool _isExpanded = false;
   int lastTab = 0;
   int _currIndex = 0;
-  int usersNum = 0;
-  int grpNum = 0;
   int chatNum = 0;
   int activeTab = 0;
 
@@ -79,12 +67,9 @@ class _ScrollableUserListState extends State<ScrollableUserList>
 
   @override
   Widget build(BuildContext context) {
-
-    Size size = MediaQuery.of(context).size;
-
     final List<Widget> tabs = <Widget>[
-      UserTab(count: chatNum),
-      GroupsTab(count: grpNum), 
+      UserTab(count: userList.length, user: userList),
+      const GroupsTab(count: 0),
       const Story()
     ];
 
@@ -171,7 +156,6 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                             ),
                             onPressed: () {
                               setState(() {
-                                grpNum+=1;
                               });
                               // Do something when IconButton is pressed
                             },
@@ -190,7 +174,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                 SliverPersistentHeader(
                   pinned: true,
                   floating: true,
-                  delegate: BoomBam(60.0, tabController),
+                  delegate: Tabs(60.0, tabController),
                 ),
               ];
             },
@@ -236,7 +220,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                         return  CustomScrollView(
                           scrollBehavior:const MaterialScrollBehavior(),
                           slivers: [
-                            content,
+                            content
                           ]
                         );
                       },
@@ -251,18 +235,27 @@ class _ScrollableUserListState extends State<ScrollableUserList>
   }
 }
 
-class User {
+class UserChatModel {
   final String id;
   final String name;
+  final String messageText;
+  final String imageURL;
+  final String time;
 
-  User({required this.id, required this.name});
+  UserChatModel({
+    required this.id, 
+    required this.name,
+    required this.imageURL,
+    required this.messageText,
+    required this.time,
+  });
 }
 
-class BoomBam extends SliverPersistentHeaderDelegate {
+class Tabs extends SliverPersistentHeaderDelegate {
   final double size;
   final TabController tabController;
 
-  BoomBam(this.size, this.tabController);
+  Tabs(this.size, this.tabController);
 
   @override
   Widget build(
@@ -293,14 +286,19 @@ class BoomBam extends SliverPersistentHeaderDelegate {
   double get minExtent => size;
 
   @override
-  bool shouldRebuild(BoomBam oldDelegate) {
+  bool shouldRebuild(Tabs oldDelegate) {
     return oldDelegate.size != size;
   }
 }
 
 class UserTab extends StatelessWidget {
-  const UserTab({Key? key, required this.count}) : super(key: key);
+  const UserTab({Key? key, 
+  required this.count,
+  required this.user
+  }) : super(key: key);
+
   final int count;
+  final List<UserChatModel> user;
 
   @override
   Widget build(BuildContext context) {
@@ -344,33 +342,28 @@ class UserTab extends StatelessWidget {
         (context, index) {
           return  ListTile(
             leading:  Hero(
-              tag: 'profilepic$index',
+              tag: user[index].id,
               child:const CircleAvatar(
                 radius: 30,
                 backgroundImage:NetworkImage(
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
               ),
             ),
-            title:const Text(
-              "Mr. H",
-              style: TextStyle(
-                fontSize: 20
-              ),
-            
-            ),
-            subtitle: const Text("Hey there, Isn't it cool ?"),
+            title: Text(user[index].name, style: const TextStyle( fontSize: 20)),
+            subtitle:  Text(user[index].messageText),
             minVerticalPadding: 20,
+            trailing:  Text(user[index].time),
             onTap: (){
               Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MyMessagesPage(index: index,name: "Mr. k",),
+                builder: (context) => MyMessagesPage(id: user[index].id,name: user[index].name),
               ),
             );
             },
           );
         },
-        childCount: count
+        childCount: user.length
       ),
     );
   }
@@ -443,7 +436,7 @@ class GroupsTab extends StatelessWidget {
               Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MyMessagesPage(index: index,name: "Mr. k",),
+                builder: (context) => const MyMessagesPage(id: '1',name: "Mr. k",),
               ),
             );
             },
@@ -484,7 +477,7 @@ class Story extends StatelessWidget {
               Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MyMessagesPage(index: index,name: "Mr. k",),
+                builder: (context) => const MyMessagesPage(id: '1',name: "Mr. k",),
               ),
             );
             },

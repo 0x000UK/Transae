@@ -118,7 +118,7 @@ class _MyRegisterState extends State<MyRegister> {
                       style: TextStyle(
                         fontSize: 40,
                         foreground: Paint()
-                        ..color = Color.fromARGB(156, 219, 126, 193),
+                        ..color = const Color.fromARGB(156, 219, 126, 193),
                       ),
                     ),
                     SizedBox(height: size.height*0.1),
@@ -188,9 +188,9 @@ class _MyRegisterState extends State<MyRegister> {
                           },
                           style: ElevatedButton.styleFrom(
                             shadowColor: Colors.white,
-                            backgroundColor:Color.fromARGB(255, 185, 0, 182),
+                            backgroundColor:const Color.fromARGB(255, 185, 0, 182),
                             foregroundColor: const Color.fromARGB(255, 233, 227, 227),
-                            disabledBackgroundColor: Color.fromARGB(254, 255, 254, 254),
+                            disabledBackgroundColor: const Color.fromARGB(254, 255, 254, 254),
                             elevation: 2.0,
                             padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
                             textStyle:const TextStyle(

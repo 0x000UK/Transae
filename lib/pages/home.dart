@@ -65,8 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final List<Widget> _screens = [
     const ScrollableUserList(),
-    const MyMessagesPage(index: 1,name: "qwerty",),
-    const MyMessagesPage(index: 2,name: "asdfgh",),
+    const MyMessagesPage(id: '1',name: "qwerty",),
+    const MyMessagesPage(id : '2',name: "asdfgh",),
     const MySettings(),
   ];
 

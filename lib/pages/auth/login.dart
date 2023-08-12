@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../auth_validator.dart';
+import '../../auth_validator.dart';
 
 class MyLogin extends StatefulWidget {
 
@@ -137,7 +137,7 @@ class _MyLoginState extends State<MyLogin> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:Color.fromARGB(231, 44, 0, 121),
+                              backgroundColor:const Color.fromARGB(231, 44, 0, 121),
                               foregroundColor: Colors.white54,
                               disabledBackgroundColor: Colors.black12,
                               elevation: 2.0,
@@ -213,7 +213,7 @@ class _MyLoginState extends State<MyLogin> {
 }
 
 class DynamicInputWidget extends StatelessWidget {
-  DynamicInputWidget(
+  const DynamicInputWidget(
     {required this.controller,
     required this.obscureText,
     required this.currentFocusNode,

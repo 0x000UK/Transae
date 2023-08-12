@@ -29,7 +29,7 @@ class _MySettingsState extends State<MySettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color :Color.fromARGB(255, 255, 168, 168),
+        color :const Color.fromARGB(255, 255, 168, 168),
         child:CustomScrollView(
           slivers: [
             SliverAppBar(
