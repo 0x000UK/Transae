@@ -1,21 +1,22 @@
+import 'package:firebase_app/service/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../auth_validator.dart';
 
 class MyLogin extends StatefulWidget {
-
-  const MyLogin({Key? key }) : super(key: key);
+  const MyLogin({Key? key}) : super(key: key);
 
   @override
   _MyLoginState createState() => _MyLoginState();
 }
 
 class _MyLoginState extends State<MyLogin> {
-  
   //Global key to connect buttons
   final _key = GlobalKey<FormState>();
 
   //initiate Auth validator
-  final AuthValidators authValidators = AuthValidators();
+  late AuthValidators authValidators;
+  late AuthService authService;
   // controllers
   late TextEditingController emailController;
   late TextEditingController passwordController;
@@ -27,14 +28,20 @@ class _MyLoginState extends State<MyLogin> {
   // to obscure text default value is false
   bool obscureText = true;
 
+  String email = "";
+  String password = "";
+  bool _isLoading = false;
+
   // Instantiate all the *text editing controllers* and focus nodes on *initState* function
   @override
   void initState() {
     super.initState();
 
+    authValidators = AuthValidators();
+    authService = AuthService();
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    
+
     emailFocusNode = FocusNode();
     passwordFocusNode = FocusNode();
   }
@@ -45,7 +52,7 @@ class _MyLoginState extends State<MyLogin> {
 
     emailController.dispose();
     passwordController.dispose();
-  
+
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
   }
@@ -59,171 +66,223 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   Widget build(BuildContext context) {
-
-    Size size =  MediaQuery.of(context).size;
+    email = emailController.text;
+    password = passwordController.text;
+    Size size = MediaQuery.of(context).size;
 
     return Container(
-      
       decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/sunset.jpg'),
-          fit: BoxFit.cover
-        )
-      ),
+          image: DecorationImage(
+              image: AssetImage('assets/images/sunset.jpg'),
+              fit: BoxFit.cover)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.only(
-                top: size.height*0.25,
-                left: size.width*0.5-130
-              ),
-              child: Text(
-                'Welcome Back',
-                style: TextStyle(
-                  //color: Color.fromARGB(113, 255, 255, 255),
-                  fontSize: 40,
-                  foreground: Paint()
-                  ..blendMode = BlendMode.xor
-                  ..color = const Color.fromARGB(112, 11, 7, 7)
-                ),
-              ),
-            ),
-            SingleChildScrollView(
-              child :  Container(
-                height: size.height,
-                padding: EdgeInsets.only(
-                  top: size.height*0.5,
-                  left: 40,
-                  right: 40,
-                  bottom: 0
-                ),
-                child: Form(
-                  key: _key,
-                  child:  Column(
-                    children: [
-                      DynamicInputWidget(
-                        controller: emailController, 
-                        obscureText: false, 
-                        currentFocusNode: emailFocusNode, 
-                        toggleObscureText: toggleObscureText, 
-                        validator: authValidators.emailValidator, 
-                        prefIcon: const Icon(Icons.person), 
-                        labelText: 'Email', 
-                        isNonPasswordField: true,
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      DynamicInputWidget(
-                        controller: passwordController, 
-                        obscureText: obscureText, 
-                        currentFocusNode: passwordFocusNode, 
-                        toggleObscureText: toggleObscureText, 
-                        validator: authValidators.passwordVlidator, 
-                        prefIcon: const Icon(Icons.lock), 
-                        labelText: 'Password', 
-                        isNonPasswordField: false,
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              if(_key.currentState!.validate()) {
-                                Navigator.popAndPushNamed(context, 'home');
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:Color.fromARGB(231, 44, 0, 121),
-                              foregroundColor: Colors.white54,
-                              disabledBackgroundColor: Colors.black12,
-                              elevation: 2.0,
-                              padding: const EdgeInsets.fromLTRB(60, 10, 60, 10),
-                              textStyle:const TextStyle(
-                                  fontSize: 20,
-                              ),
-                              shape:  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(45)
-                              )
-                            ),
-                            child:const Text(
-                              'Sign In',
-                              ),
-                          )
-                        ],
-                      ),
-                    ],
-                  )
-                )
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor),
               )
-            ),
-            Positioned(
-              top: size.height-100,
-              left: size.width*0.5-130,
-              child: Column( 
+            : Stack(
                 children: [
-                  TextButton(
-                    onPressed: (){},
-                    child:const Text(
-                      'Forgot Password?',
+                  Container(
+                    padding: EdgeInsets.only(
+                        top: size.height * 0.25, left: size.width * 0.5 - 130),
+                    child: Text(
+                      'Welcome Back',
                       style: TextStyle(
-                        color: Color.fromARGB(255, 15, 17, 26),
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal
-                      ),
-                    )
+                          //color: Color.fromARGB(113, 255, 255, 255),
+                          fontSize: 40,
+                          foreground: Paint()
+                            ..blendMode = BlendMode.xor
+                            ..color = const Color.fromARGB(112, 11, 7, 7)),
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Don't have an account ? ",
-                        style: TextStyle(
-                          color: Colors.white30,
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: (){
-                          Navigator.popAndPushNamed(context, 'register');
-                        },
-                        child: const Text(
-                          "Sign Up",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 28, 52, 189),
-                            fontSize: 20,
-                            fontWeight: FontWeight.normal
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ]
-              )
-            )
-          ],
-        ),
+                  SingleChildScrollView(
+                      child: Container(
+                          height: size.height,
+                          padding: EdgeInsets.only(
+                              top: size.height * 0.5,
+                              left: 40,
+                              right: 40,
+                              bottom: 0),
+                          child: Form(
+                              key: _key,
+                              child: Column(
+                                children: [
+                                  DynamicInputWidget(
+                                    controller: emailController,
+                                    obscureText: false,
+                                    currentFocusNode: emailFocusNode,
+                                    toggleObscureText: toggleObscureText,
+                                    validator: authValidators.emailValidator,
+                                    prefIcon: const Icon(Icons.person),
+                                    labelText: 'Email',
+                                    isNonPasswordField: true,
+                                  ),
+                                  const SizedBox(height: 30),
+                                  DynamicInputWidget(
+                                    controller: passwordController,
+                                    obscureText: obscureText,
+                                    currentFocusNode: passwordFocusNode,
+                                    toggleObscureText: toggleObscureText,
+                                    validator: authValidators.passwordVlidator,
+                                    prefIcon: const Icon(Icons.lock),
+                                    labelText: 'Password',
+                                    isNonPasswordField: false,
+                                  ),
+                                  const SizedBox(height: 30),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          login();
+                                          // if (_key.currentState!.validate()) {
+                                          //   Navigator.popAndPushNamed(
+                                          //       context, 'home');
+                                          // }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    231, 44, 0, 121),
+                                            foregroundColor: Colors.white54,
+                                            disabledBackgroundColor:
+                                                Colors.black12,
+                                            elevation: 2.0,
+                                            padding: const EdgeInsets.fromLTRB(
+                                                60, 10, 60, 10),
+                                            textStyle: const TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(45))),
+                                        child: const Text(
+                                          'Sign In',
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              )))),
+                  Positioned(
+                      top: size.height - 100,
+                      left: size.width * 0.5 - 130,
+                      child: Column(children: [
+                        TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 15, 17, 26),
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal),
+                            )),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Don't have an account ? ",
+                              style: TextStyle(
+                                  color: Colors.white30,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.popAndPushNamed(context, 'register');
+                              },
+                              child: const Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 28, 52, 189),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            )
+                          ],
+                        )
+                      ]))
+                ],
+              ),
       ),
     );
+  }
+
+  // login() async {
+  //   if (_key.currentState!.validate()) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     await authService
+  //         .loginWithUserNameandPassword(email, password)
+  //         .then((value) async {
+  //       if (value == true) {
+  //         QuerySnapshot snapshot =
+  //             await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+  //                 .gettingUserData(email);
+  //         // saving the values to our shared preferences
+  //         await HelperFunctions.saveUserLoggedInStatus(true);
+  //         // await HelperFunctions.saveUserEmailSF(email);
+  //         // await HelperFunctions.saveUserNameSF(snapshot.docs[2]['userName']);
+
+  //         Navigator.popAndPushNamed(context, 'home');
+  //       } else {
+  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //           backgroundColor: const Color.fromARGB(205, 219, 30, 30),
+  //           content: Text(
+  //             value.toString(),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //           duration: const Duration(seconds: 4),
+  //         ));
+  //         setState(() {
+  //           _isLoading = false;
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
+  Future<void> login() async {
+    if (_key.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        final UserCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email, password: password);
+        Navigator.popAndPushNamed(context, 'home');
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: const Color.fromARGB(205, 219, 30, 30),
+          content: Text(
+            e.code.toString(),
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(seconds: 4),
+        ));
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      // print("LOMGIN FAIMLED: $e");
+    }
   }
 }
 
 class DynamicInputWidget extends StatelessWidget {
-  DynamicInputWidget(
-    {required this.controller,
-    required this.obscureText,
-    required this.currentFocusNode,
-    required this.toggleObscureText,
-    required this.validator,
-    required this.prefIcon,
-    required this.labelText,
-    required this.isNonPasswordField,
-    Key? key}
-  ) : super(key: key);
+  const DynamicInputWidget(
+      {required this.controller,
+      required this.obscureText,
+      required this.currentFocusNode,
+      required this.toggleObscureText,
+      required this.validator,
+      required this.prefIcon,
+      required this.labelText,
+      required this.isNonPasswordField,
+      Key? key})
+      : super(key: key);
 
   final bool isNonPasswordField;
   final TextEditingController controller;
@@ -244,7 +303,7 @@ class DynamicInputWidget extends StatelessWidget {
       duration: const Duration(seconds: 4),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -261,16 +320,16 @@ class DynamicInputWidget extends StatelessWidget {
         ),
         label: Text(labelText),
         prefixIcon: prefIcon,
-        suffixIcon: isNonPasswordField? null : IconButton(
-          onPressed: toggleObscureText,
-          icon: obscureText
-                  ? const Icon(Icons.visibility)
-                  : const Icon(Icons.visibility_off),
-        ),
+        suffixIcon: isNonPasswordField
+            ? null
+            : IconButton(
+                onPressed: toggleObscureText,
+                icon: obscureText
+                    ? const Icon(Icons.visibility)
+                    : const Icon(Icons.visibility_off),
+              ),
         //floatingLabelBehavior: FloatingLabelBehavior.auto,
-        errorStyle:const TextStyle(
-          fontSize: 0
-        ),
+        errorStyle: const TextStyle(fontSize: 0),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(45),
           borderSide: const BorderSide(color: Colors.black),
@@ -284,9 +343,9 @@ class DynamicInputWidget extends StatelessWidget {
       },
       onEditingComplete: () {
         if (validator!(controller.text) != null) {
-          ScaffoldMessenger.of(context).showSnackBar(msgPopUp(validator!(controller.text)));
-        }
-        else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(msgPopUp(validator!(controller.text)));
+        } else {
           FocusScope.of(context).nextFocus();
         }
       },
