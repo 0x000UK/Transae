@@ -11,12 +11,12 @@ class ScrollableUserList extends StatefulWidget {
 class _ScrollableUserListState extends State<ScrollableUserList>
   with TickerProviderStateMixin {
 
-    final List<UserChatModel> userList= [
-      UserChatModel(id: '1', name: 'Alexendra', imageURL: 'https//www.example.com/pic.png', messageText: 'hello', time: '1:30'),
-      UserChatModel(id: '2', name: 'Alexe', imageURL: 'https//www.example.com/pic1.png', messageText: 'whats up', time: 'yesterday'),
-    ];
 
-  final List<IconData> _tabAddIcons = [Icons.person_add_alt, Icons.group_add_outlined, Icons.add_circle_outline];
+  final List<IconData> _tabAddIcons = [
+    Icons.person_add_alt,
+    Icons.group_add_outlined,
+    Icons.add_circle_outline
+  ];
   late TabController tabController;
   late AnimationController _animationController;
 
@@ -27,33 +27,32 @@ class _ScrollableUserListState extends State<ScrollableUserList>
   int activeTab = 0;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
-    tabController = TabController(length: 3, vsync: this, initialIndex: activeTab);
+    tabController =
+        TabController(length: 3, vsync: this, initialIndex: activeTab);
     _animationController = AnimationController(
-      vsync: this,
-      duration: tabController.animationDuration
-    );
+        vsync: this, duration: tabController.animationDuration);
 
     tabController.addListener(() {
-      if(tabController.index != activeTab) {
+      if (tabController.index != activeTab) {
         setState(() {
           activeTab = tabController.index;
           _animationController.reset();
           _animationController.forward();
         });
       }
-      if(tabController.index == 2){
+      if (tabController.index == 2) {
         setState(() {
-        _isExpanded = false;
-        _currIndex = 0;
+          _isExpanded = false;
+          _currIndex = 0;
         });
       }
       if (tabController.indexIsChanging) {
         if (tabController.animation!.value == tabController.index) {
           _animationController.value = tabController.animation!.value;
-    }
+        }
       }
     });
   }
@@ -64,10 +63,15 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     _animationController.dispose();
     super.dispose();
   }
+  final List<UserChatModel> userList = [
+    UserChatModel(id: "1", name: 'Alexandre', imageURL: 'https//www.bla.com/pic.png', messageText: 'heheheh', time: '1:32'),
+    UserChatModel(id: "2", name: 'Alex', imageURL: 'https//www.bla.com/pic.png', messageText: 'hey', time: '2:20'),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> tabs = <Widget>[
+
+    final List<Widget> tabs = <Widget> [
       UserTab(count: userList.length, user: userList),
       const GroupsTab(count: 0),
       const Story()
@@ -269,9 +273,8 @@ class Tabs extends SliverPersistentHeaderDelegate {
         indicatorColor: const Color.fromARGB(225, 250, 79, 79),
         labelColor: const Color.fromARGB(255, 250, 79, 79),
         unselectedLabelColor: Colors.white60,
-        tabs:const <Widget>[
-
-          Tab(child: Icon(Icons.chat_outlined	, size: 25)),
+        tabs: const <Widget>[
+          Tab(child: Icon(Icons.chat_outlined, size: 25)),
           Tab(child: Icon(Icons.question_answer_outlined, size: 25)),
           Tab(child: Icon(Icons.camera, size: 28)),
         ],
@@ -302,70 +305,74 @@ class UserTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return count == 0 ? SliverToBoxAdapter( 
-      child : Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 100,),
-            Container(
-            width: 300,
-            height: 300,
-            alignment: Alignment.bottomCenter,
-            decoration: const BoxDecoration(
-              image: DecorationImage(image: AssetImage("assets/images/Worried-amico.png"),
-                fit: BoxFit.fill
+    return count == 0
+        ? SliverToBoxAdapter(
+            child: Center(
+                child: Column(
+            children: [
+              const SizedBox(
+                height: 100,
               ),
-            ),
-          ),
-          const SizedBox(height: 20,),
-          const Text.rich(
-            TextSpan(
-              text: 'OOPS!!',
-              children: [
-                TextSpan(text: '  Sorry', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                TextSpan(text: " Can't see anyone ", style: TextStyle(fontSize: 20)),
-                TextSpan(text: '\nMay be Try Invite Someone if they are free'),
-              ]
-            ),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18
+              Container(
+                width: 300,
+                height: 300,
+                alignment: Alignment.bottomCenter,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/Worried-amico.png"),
+                      fit: BoxFit.fill),
+                ),
               ),
-            ),
-          ],
-        )
-      ) 
-    )
-    :
-    SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return  ListTile(
-            leading:  Hero(
-              tag: user[index].id,
-              child:const CircleAvatar(
-                radius: 30,
-                backgroundImage:NetworkImage(
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            title: Text(user[index].name, style: const TextStyle( fontSize: 20)),
-            subtitle:  Text(user[index].messageText),
-            minVerticalPadding: 20,
-            trailing:  Text(user[index].time),
-            onTap: (){
-              Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MyMessagesPage(id: user[index].id,name: user[index].name),
+              const Text.rich(
+                TextSpan(text: 'OOPS!!', children: [
+                  TextSpan(
+                      text: '  Sorry',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: " Can't see anyone ",
+                      style: TextStyle(fontSize: 20)),
+                  TextSpan(
+                      text: '\nMay be Try Invite Someone if they are free'),
+                ]),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
-            );
-            },
+            ],
+          )))
+        : SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return ListTile(
+                leading: Hero(
+                  tag: 'profilepic$index',
+                  child: const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+                  ),
+                ),
+                title: const Text(
+                  "Mr. H",
+                  style: TextStyle(fontSize: 20),
+                ),
+                subtitle: const Text("Hey there, Isn't it cool ?"),
+                minVerticalPadding: 20,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyMessagesPage(
+                        id: user[index].id,
+                        name: user[index].name,
+                      ),
+                    ),
+                  );
+                },
+              );
+            }, childCount: count),
           );
-        },
-        childCount: user.length
-      ),
-    );
   }
 }
 
@@ -376,115 +383,110 @@ class GroupsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return count == 0 ? SliverToBoxAdapter( 
-      child : Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 100,),
-            Container(
-            width: 400,
-            height: 280,
-            alignment: Alignment.centerLeft,
-            decoration: const BoxDecoration(
-              image: DecorationImage(image: AssetImage("assets/images/group.png"),
-                fit: BoxFit.cover
+    return count == 0
+        ? SliverToBoxAdapter(
+            child: Center(
+                child: Column(
+            children: [
+              const SizedBox(
+                height: 100,
               ),
-            ),
-          ),
-          const SizedBox(height: 20,),
-          const Text.rich(
-            TextSpan(
-              text: 'OOPS!!',
-              children: [
-                TextSpan(text: '  Sorry', style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: " Can't see anyone ", style: TextStyle(fontSize: 20)),
-                TextSpan(text: '\nMay be Try joining any group'),
-              ]
-            ),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20
+              Container(
+                width: 400,
+                height: 280,
+                alignment: Alignment.centerLeft,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage("assets/images/group.png"),
+                      fit: BoxFit.cover),
+                ),
               ),
-            ),
-          ],
-        )
-      ) 
-    )
-    :
-    SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return  ListTile(
-            leading:  Hero(
-              tag: 'profilepic$index',
-              child:const CircleAvatar(
-                radius: 30,
-                backgroundImage:NetworkImage(
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            title:const Text(
-              "Mr. H",
-              style: TextStyle(
-                fontSize: 20
+              const Text.rich(
+                TextSpan(text: 'OOPS!!', children: [
+                  TextSpan(
+                      text: '  Sorry',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: " Can't see anyone ",
+                      style: TextStyle(fontSize: 20)),
+                  TextSpan(text: '\nMay be Try joining any group'),
+                ]),
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
-            
-            ),
-            subtitle: const Text("Hey there, Isn't it cool ?"),
-            minVerticalPadding: 20,
-            onTap: (){
-              Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MyMessagesPage(id: '1',name: "Mr. k",),
-              ),
-            );
-            },
+            ],
+          )))
+        : SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return ListTile(
+                leading: Hero(
+                  tag: 'profilepic$index',
+                  child: const CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
+                  ),
+                ),
+                title: const Text(
+                  "Mr. H",
+                  style: TextStyle(fontSize: 20),
+                ),
+                subtitle: const Text("Hey there, Isn't it cool ?"),
+                minVerticalPadding: 20,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MyMessagesPage(
+                        id: "2",
+                        name: "Mr. k",
+                      ),
+                    ),
+                  );
+                },
+              );
+            }, childCount: count),
           );
-        },
-        childCount: count
-      ),
-    );
   }
 }
+
 class Story extends StatelessWidget {
-  const Story ({Key? key}) : super(key: key);
+  const Story({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return  ListTile(
-            leading:  Hero(
-              tag: 'profilepic$index',
-              child:const CircleAvatar(
-                radius: 30,
-                backgroundImage:NetworkImage(
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
-              ),
+      delegate: SliverChildBuilderDelegate((context, index) {
+        return ListTile(
+          leading: Hero(
+            tag: 'profilepic$index',
+            child: const CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
             ),
-            title:const Text(
-              "Mr. H",
-              style: TextStyle(
-                fontSize: 20
-              ),
-            
-            ),
-            subtitle: const Text("Hey there, Isn't it cool ?"),
-            minVerticalPadding: 20,
-            onTap: (){
-              Navigator.push(
+          ),
+          title: const Text(
+            "Mr. H",
+            style: TextStyle(fontSize: 20),
+          ),
+          subtitle: const Text("Hey there, Isn't it cool ?"),
+          minVerticalPadding: 20,
+          onTap: () {
+            Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const MyMessagesPage(id: '1',name: "Mr. k",),
+                builder: (context) =>const MyMessagesPage(
+                  id: "1",
+                  name: "Mr. k",
+                ),
               ),
             );
-            },
-          );
-        },
-        childCount: 1
-      ),
+          },
+        );
+      }, childCount: 1),
     );
   }
 }
