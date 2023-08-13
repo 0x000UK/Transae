@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_app/widgets/message_tile.dart';
+import 'package:firebase_app/service/database_services.dart';
 class ChatMessage{
   String messageContent;
   String messageType;
@@ -92,14 +93,12 @@ class _MyHomePageState extends State<MyMessagesPage> {
             ),
           ),
           Expanded(
-            child: Padding(padding: EdgeInsets.all(10),
+            child: Padding(padding: const EdgeInsets.all(10),
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
-              color:  Color.fromARGB(200, 255, 186, 186),
+              color: const Color.fromARGB(200, 255, 186, 186),
               ),
-              child: Center(
-                child: Text('This is your home page'), // body: SingleChildScrollView(...)
-              ),
+              child:chatMessages()
             ),
             )
           ),
@@ -173,9 +172,9 @@ class _MyHomePageState extends State<MyMessagesPage> {
         "time": DateTime.now().millisecondsSinceEpoch,
       };
 
-      // DatabaseService().sendMessage(widget.groupId, chatMessageMap);
+      // DatabaseService().sendMessage(widget.id, chatMessageMap);
       // setState(() {
-      //   messageController.clear();
+      //   mssgController.clear();
       // });
     }
   }

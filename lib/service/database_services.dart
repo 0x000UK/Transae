@@ -8,7 +8,7 @@ class DatabaseService {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection("users");
   final CollectionReference groupCollection =
-      FirebaseFirestore.instance.collection("groups");
+      FirebaseFirestore.instance.collection("chats");
 
   // saving the userdata
   Future savingUserData(
@@ -30,5 +30,20 @@ class DatabaseService {
     QuerySnapshot snapshot =
         await userCollection.where("email", isEqualTo: email).get();
     return snapshot;
+
+  //
   }
+
+    Future savingChatData(
+      String text, String translatedTxt, String senderId) async {
+    return await userCollection.doc(uid).set({
+      "messages": text,
+      "TranslatedTex": translatedTxt,
+      "initialLanguage": "",
+      "desiredLanguage": "",
+      "sender" : senderId,
+      "timeStamp" : FieldValue.serverTimestamp(),
+    });
+  }
+
 }
