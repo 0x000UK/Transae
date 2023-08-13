@@ -353,9 +353,9 @@ class UserTab extends StatelessWidget {
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
                   ),
                 ),
-                title: const Text(
-                  "Mr. H",
-                  style: TextStyle(fontSize: 20),
+                title:  Text(
+                  user[index].name,
+                  style:const TextStyle(fontSize: 20),
                 ),
                 subtitle: const Text("Hey there, Isn't it cool ?"),
                 minVerticalPadding: 20,

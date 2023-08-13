@@ -43,15 +43,17 @@ class _MyHomePageState extends State<MyMessagesPage> {
   @override
   Widget build(BuildContext context) {
  
-    return  Scaffold(
-      backgroundColor: const Color.fromARGB(200, 255, 186, 186),
-      appBar: AppBar(
-        toolbarHeight: 70,
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 255, 151, 151), // const Color.fromARGB(255, 255, 151, 151),
-        flexibleSpace: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.only(right: 16),
+    return Scaffold(
+      backgroundColor:const  Color.fromARGB(255, 255, 151, 151),
+        
+      body: Column(
+        children: [
+
+          Container(
+            decoration:const BoxDecoration(
+              color:  Color.fromARGB(255, 255, 151, 151)
+            ),
+            padding: const EdgeInsets.only(top: 50),
             child: Row(
               children: <Widget>[
                 IconButton(
@@ -89,57 +91,58 @@ class _MyHomePageState extends State<MyMessagesPage> {
               ],
             ),
           ),
-        ),
-        
-      ),
-      body: Stack(
-        children: <Widget>[
-          // chat messages here
-          chatMessages(),
-          Container(
-            alignment: Alignment.bottomCenter,
-            width: MediaQuery.of(context).size.width,
+          Expanded(
+            child: Padding(padding: EdgeInsets.all(10),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-              width: MediaQuery.of(context).size.width,
-              color: Colors.grey[700],
-              child: Row(children: [
-                Expanded(
-                    child: TextFormField(
-                  controller: mssgController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    hintText: "Send a message...",
-                    hintStyle: TextStyle(color: Colors.white, fontSize: 16),
-                    border: InputBorder.none,
-                  ),
-                )),
-                const SizedBox(
-                  width: 12,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    sendMessage();
-                  },
-                  child: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: const Center(
-                        child: Icon(
-                      Icons.send,
-                      color: Colors.white,
-                    )),
-                  ),
-                )
-              ]),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
+              color:  Color.fromARGB(200, 255, 186, 186),
+              ),
+              child: Center(
+                child: Text('This is your home page'), // body: SingleChildScrollView(...)
+              ),
             ),
+            )
+          ),
+          Container(
+            color:const Color.fromARGB(255, 255, 151, 151),
+            child: Row (
+              children : [
+                Container(
+                  padding: EdgeInsets.only(left: 12),  
+                  width: MediaQuery.of(context).size.width-80,
+                  height: 75,
+                  child :
+                const TextField(
+                decoration: InputDecoration(
+                  contentPadding:  EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0),
+                  hintText: 'Enter text....',
+                  fillColor: Color.fromARGB(234, 165, 126, 126),
+                  filled: true,
+                  hintStyle:  TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(123, 0, 0, 0),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(Radius.circular(45.0)),
+                  ),
+                ),
+              ),
+                ),
+                const SizedBox(width: 10),
+                Padding(padding:const EdgeInsets.only(bottom: 20),
+                child : IconButton(
+                  onPressed: (){}, 
+                  icon:const Icon(Icons.send), 
+                  iconSize: 40,
+                ),
+                )
+              ]
+            )
           )
         ],
       ),
+      
     );
   }
     chatMessages() {

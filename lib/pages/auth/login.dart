@@ -1,5 +1,6 @@
 import 'package:firebase_app/service/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app/helper/helper_function.dart';
 import 'package:flutter/material.dart';
 import '../../auth_validator.dart';
 
@@ -252,6 +253,8 @@ class _MyLoginState extends State<MyLogin> {
       try {
         final UserCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
+            await HelperFunctions.saveUserEmailSF(email);
+            await HelperFunctions.saveUserPassSF(password);
         Navigator.popAndPushNamed(context, 'home');
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
