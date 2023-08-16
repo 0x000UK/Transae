@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Models/chat_room_model.dart';
 import 'package:firebase_app/Widgets/Tabs.dart';
+import 'package:firebase_app/pages/search_page.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:flutter/material.dart';
 import 'chats.dart';
@@ -167,6 +168,12 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                             ),
                             onPressed: () {
                               setState(() {
+                                switch (tabController.index) {
+                                  case 1 : Navigator.push(context, MaterialPageRoute(builder: (context) => const MysearchPage())); break;
+                                  case 2 : Navigator.push(context, MaterialPageRoute(builder: (context) => const MysearchPage())); break;
+
+                                  default:  Navigator.push(context, MaterialPageRoute(builder: (context) => const MysearchPage())); break;
+                                }
                               });
                               // Do something when IconButton is pressed
                             },

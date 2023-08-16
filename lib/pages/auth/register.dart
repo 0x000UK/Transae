@@ -1,5 +1,5 @@
 import 'package:firebase_app/pages/auth/login.dart';
-import 'package:firebase_app/pages/home.dart';
+import 'package:firebase_app/pages/navigation.dart';
 import 'package:firebase_app/service/auth_validator.dart';
 import 'package:firebase_app/service/FireBase/auth_service.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
@@ -361,7 +361,7 @@ class _MyRegisterState extends State<MyRegister> {
           fullname: fullName,
           profilepic: ""
         );
-        await DatabaseService.userCollection.doc(uid).set(newUser.toMap()).then((value) async{
+        await DatabaseService(uid: uid).savingUserData(fullName,email,password,userName).then((value) async{
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage(userModel: newUser)));
         });
       } 

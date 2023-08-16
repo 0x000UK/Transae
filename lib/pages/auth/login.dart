@@ -3,10 +3,9 @@ import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/pages/auth/register.dart';
 import 'package:firebase_app/service/FireBase/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_app/service/FireBase/helper_function.dart';
 import 'package:flutter/material.dart';
 import '../../service/auth_validator.dart';
-import "package:firebase_app/pages/home.dart";
+import 'package:firebase_app/pages/navigation.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
