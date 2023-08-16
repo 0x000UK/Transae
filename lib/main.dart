@@ -1,9 +1,10 @@
-import 'package:firebase_app/firebase_options.dart';
-import 'package:firebase_app/helper/helper_function.dart';
+import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/service/FireBase/database_services.dart';
+import 'package:firebase_app/service/FireBase/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'pages/auth/login.dart';
-import 'pages/auth/register.dart';
 import 'pages/home.dart';
 
 
@@ -14,47 +15,49 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
-}
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  User? currentUser = FirebaseAuth.instance.currentUser;
+  if(currentUser != null) {
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  // #me start
-
-  bool _isSignedIn = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getUserLoggedInStatus() async {
-      await HelperFunctions.getUserLoggedInStatus().then((value) {
-        if (value != null) {
-          setState(() {
-            _isSignedIn = value;
-          });
-        }
-      });
+    UserModel? userModel = await DatabaseService.getUserDataByID(currentUser.uid);
+    if(userModel != null) {
+      runApp(Home(userModel: userModel));
+    }
+    else {
+    runApp(const Login());
     }
   }
-  // #meBlock Over
+  else {
+    runApp(const Login());
+  }
+}
+
+class Login extends StatelessWidget {
+
+  const Login({Key? key}):super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context ){
+
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: _isSignedIn ? 'home' : 'login',
-      routes: {
-        'login': (context) => const MyLogin(),
-        'register': (context) => const MyRegister(),
-        'home': (context) => const MyHomePage(),
-      },
+      home: MyLogin(),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+
+  final UserModel userModel;
+
+  const Home({super.key, required this.userModel});
+
+  @override
+  Widget build(BuildContext context ){
+
+    return  MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MyHomePage(userModel: userModel),
     );
   }
 }

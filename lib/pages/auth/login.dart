@@ -1,8 +1,12 @@
-import 'package:firebase_app/service/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/pages/auth/register.dart';
+import 'package:firebase_app/service/FireBase/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_app/helper/helper_function.dart';
+import 'package:firebase_app/service/FireBase/helper_function.dart';
 import 'package:flutter/material.dart';
-import '../../auth_validator.dart';
+import '../../service/auth_validator.dart';
+import "package:firebase_app/pages/home.dart";
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -32,6 +36,9 @@ class _MyLoginState extends State<MyLogin> {
   String email = "";
   String password = "";
   bool _isLoading = false;
+  bool _allClear = false;
+
+  UserModel? userModel;
 
   // Instantiate all the *text editing controllers* and focus nodes on *initState* function
   @override
@@ -67,6 +74,18 @@ class _MyLoginState extends State<MyLogin> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(_allClear) {
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context){
+            return MyHomePage(userModel: userModel);
+          }
+        )
+      );
+    }
     email = emailController.text;
     password = passwordController.text;
     Size size = MediaQuery.of(context).size;
@@ -192,7 +211,7 @@ class _MyLoginState extends State<MyLogin> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.popAndPushNamed(context, 'register');
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MyRegister()));
                               },
                               child: const Text(
                                 "Sign Up",
@@ -210,52 +229,18 @@ class _MyLoginState extends State<MyLogin> {
       ),
     );
   }
-
-  // login() async {
-  //   if (_key.currentState!.validate()) {
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-  //     await authService
-  //         .loginWithUserNameandPassword(email, password)
-  //         .then((value) async {
-  //       if (value == true) {
-  //         QuerySnapshot snapshot =
-  //             await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-  //                 .gettingUserData(email);
-  //         // saving the values to our shared preferences
-  //         await HelperFunctions.saveUserLoggedInStatus(true);
-  //         // await HelperFunctions.saveUserEmailSF(email);
-  //         // await HelperFunctions.saveUserNameSF(snapshot.docs[2]['userName']);
-
-  //         Navigator.popAndPushNamed(context, 'home');
-  //       } else {
-  //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //           backgroundColor: const Color.fromARGB(205, 219, 30, 30),
-  //           content: Text(
-  //             value.toString(),
-  //             textAlign: TextAlign.center,
-  //           ),
-  //           duration: const Duration(seconds: 4),
-  //         ));
-  //         setState(() {
-  //           _isLoading = false;
-  //         });
-  //       }
-  //     });
-  //   }
-  // }
+  
   Future<void> login() async {
     if (_key.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
+      UserCredential? userCredential;
       try {
-        final UserCredential = await FirebaseAuth.instance
+          userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
-            await HelperFunctions.saveUserEmailSF(email);
-            await HelperFunctions.saveUserPassSF(password);
-        Navigator.popAndPushNamed(context, 'home');
+            //await HelperFunctions.saveUserEmailSF(email);
+            //await HelperFunctions.saveUserPassSF(password);
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: const Color.fromARGB(205, 219, 30, 30),
@@ -269,10 +254,18 @@ class _MyLoginState extends State<MyLogin> {
           _isLoading = false;
         });
       }
-      // print("LOMGIN FAIMLED: $e");
+
+      if(userCredential != null) {
+        String uid = userCredential.user!.uid;
+        DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        userModel = UserModel.fromMap(userData.data() as Map<String,dynamic>);
+        _allClear = true;
+      }
     }
   }
 }
+
+
 
 class DynamicInputWidget extends StatelessWidget {
   const DynamicInputWidget(

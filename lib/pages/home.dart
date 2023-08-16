@@ -1,17 +1,21 @@
 
+import 'package:firebase_app/Models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'account_settings.dart';
-import 'chats.dart';
 import 'users.dart';
 
 class MyHomePage extends StatefulWidget {
 
-  const MyHomePage({super.key});
+  const MyHomePage({super.key, required this.userModel});
+  final UserModel? userModel;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 class _MyHomePageState extends State<MyHomePage> {
+
+  //Map arguments = {};
+
  Color homeColor = const Color.fromARGB(255, 255, 168, 168);
   Color chatColor = const Color.fromARGB(255, 255, 168, 168);
   Color grpColor = const Color.fromARGB(255, 255, 168, 168);
@@ -62,19 +66,18 @@ class _MyHomePageState extends State<MyHomePage> {
       _currentIndex = 3;
     });
   }
-
-  final List<Widget> _screens = [
-    const ScrollableUserList(),
-    const MyMessagesPage(id: '1',name: "qwerty",),
-    const MyMessagesPage(id : '2',name: "asdfgh",),
-    const MySettings(),
-  ];
-
   int _currentIndex = 0;
   
  
   @override
   Widget build(BuildContext context) {
+
+    final List<Widget> screens = [
+      ScrollableUserList(userModel : widget.userModel),
+      //const MyMessagesPage(id: '1',name: "qwerty",),
+      //const MyMessagesPage(id : '2',name: "asdfgh",),
+      const MySettings(),
+    ];
 
     Size size = MediaQuery.of(context).size;
 
@@ -156,32 +159,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
-    ),
-      body: _screens[_currentIndex]
+      ),
+      body: screens[_currentIndex]
     );
   }
 }
-
-//   void _navigateToScreen(int index) {
-//     var route = PageRouteBuilder(
-//       pageBuilder: (context, animation, secondaryAnimation) {
-//         return _screens[index];
-//       },
-//       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//         const begin = Offset(0.0, 1.0);
-//         const end = Offset.zero;
-//         const curve = Curves.easeInOut;
-
-//         var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-//         return SlideTransition(
-//           position: animation.drive(tween),
-//           child: child,
-//         );
-//       },
-//     );
-
-//     Navigator.push(context, route);
-    
-//   }
-// }

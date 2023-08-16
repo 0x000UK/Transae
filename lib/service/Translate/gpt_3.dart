@@ -1,20 +1,19 @@
 import 'dart:convert';
 import 'api_key.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_app/pages/chats.dart';
 
 class ChatGPt {
 
-  ChatGPt({required this.controller, required this.initialLanguage, required this.desiredLanguage});
+  ChatGPt({required this.text, required this.initialLanguage, required this.desiredLanguage});
 
-  final TextEditingController controller;
+  final String text;
   final String initialLanguage;
   final String desiredLanguage;
 
   void onSendMessage() async {
 
-    String message = controller.text.trim();
+    String message = text.trim();
 
     if(message.isNotEmpty) {
       String translatedText = await translateMessage(initialLanguage, message, desiredLanguage);

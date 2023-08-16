@@ -1,5 +1,5 @@
-import 'package:firebase_app/helper/helper_function.dart';
-import 'package:firebase_app/service/database_services.dart';
+import 'package:firebase_app/service/FireBase/helper_function.dart';
+import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
@@ -29,7 +29,7 @@ class AuthService {
       await DatabaseService(uid: user.uid)
           .savingUserData(fullName, email, userName, password);
 
-      return true;
+      return user;
     } on FirebaseAuthException catch (e) {
       // print(e);
       return e.message;

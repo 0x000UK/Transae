@@ -1,6 +1,12 @@
-import 'package:firebase_app/auth_validator.dart';
-import 'package:firebase_app/helper/helper_function.dart';
-import 'package:firebase_app/service/auth_service.dart';
+import 'package:firebase_app/pages/auth/login.dart';
+import 'package:firebase_app/pages/home.dart';
+import 'package:firebase_app/service/auth_validator.dart';
+import 'package:firebase_app/service/FireBase/helper_function.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app/service/FireBase/auth_service.dart';
+import 'package:firebase_app/service/FireBase/database_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app/Models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -109,11 +115,6 @@ class _MyRegisterState extends State<MyRegister> {
 
   @override
   Widget build(BuildContext context) {
-    fullName = fullNameController.text;
-    userName = usrNameController.text;
-    email = emailController.text;
-    password = passwordController.text;
-    // lang = langController.text;
 
     Size size = MediaQuery.of(context).size;
 
@@ -210,36 +211,26 @@ class _MyRegisterState extends State<MyRegister> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
+                                          fullName = fullNameController.text;
+                                          userName = usrNameController.text;
+                                          email = emailController.text;
+                                          password = passwordController.text;
                                           register();
-                                          // if (_key.currentState!.validate()) {
-                                          //   Navigator.popAndPushNamed(
-                                          //       context, 'home');
-                                          // }
-                                          // {
-                                          //   DynamicInputWidget.msgPopUp(
-                                          //       _key.currentState);
-                                          // }
                                         },
                                         style: ElevatedButton.styleFrom(
-                                            shadowColor: Colors.white,
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    255, 185, 0, 182),
-                                            foregroundColor:
-                                                const Color.fromARGB(
-                                                    255, 233, 227, 227),
-                                            disabledBackgroundColor:
-                                                const Color.fromARGB(
-                                                    254, 255, 254, 254),
-                                            elevation: 2.0,
-                                            padding: const EdgeInsets.fromLTRB(
-                                                30, 10, 30, 10),
-                                            textStyle: const TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(45))),
+                                          shadowColor: Colors.white,
+                                          backgroundColor:const Color.fromRGBO(185, 0, 182, 1),
+                                          foregroundColor:const Color.fromRGBO(233, 227, 227, 1),
+                                          disabledBackgroundColor:const Color.fromARGB(254, 255, 254, 254),
+                                          elevation: 2.0,
+                                          padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                                          textStyle: const TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(45)
+                                          )
+                                        ),
                                         child: const Text(
                                           'Sign Up',
                                         ),
@@ -323,7 +314,7 @@ class _MyRegisterState extends State<MyRegister> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.popAndPushNamed(context, 'login');
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const MyLogin()));
                             },
                             child: const Text(
                               "Sign In",
@@ -341,29 +332,20 @@ class _MyRegisterState extends State<MyRegister> {
     );
   }
 
-  register() async {
+  Future <void> register() async {
+    User? user;
     if (_key.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      await authService
-          .registerUserWithEmailandPassword(fullName, email, password, userName)
-          .then((value) async {
-        if (value == true) {
-          // saving the shared preference state
-          await HelperFunctions.saveUserLoggedInStatus(true);
-          await HelperFunctions.saveUserEmailSF(email);
-          await HelperFunctions.saveUserNameSF(userName);
-          await HelperFunctions.saveUserPassSF(password);
-          Navigator.popAndPushNamed(context, 'home');
-          // Navigator.of(context).pushNamed('home');
-          // await Future.delayed(const Duration(seconds: 2));
-          // if (context.mounted) Navigator.of(context).pop();
-        } else {
+      try {
+        user = await authService
+          .registerUserWithEmailandPassword(fullName, email, password, userName);
+      } on FirebaseAuthException catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: const Color.fromARGB(205, 219, 30, 30),
             content: Text(
-              value.toString(),
+              e.message.toString(),
               textAlign: TextAlign.center,
             ),
             duration: const Duration(seconds: 4),
@@ -372,7 +354,19 @@ class _MyRegisterState extends State<MyRegister> {
             _isLoading = false;
           });
         }
-      });
+        if(user != null) {
+        String uid = user.uid;
+        UserModel newUser = UserModel(
+          uid: uid,
+          email: email,
+          userName: userName,
+          fullname: fullName,
+          profilepic: ""
+        );
+        await DatabaseService.userCollection.doc(uid).set(newUser.toMap()).then((value) async{
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage(userModel: newUser)));
+        });
+      } 
     }
   }
 }

@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app/Models/UserModel.dart';
 
 class DatabaseService {
   final String? uid;
   DatabaseService({this.uid});
 
   // reference for our collections
-  final CollectionReference userCollection =
+  static final CollectionReference userCollection =
       FirebaseFirestore.instance.collection("users");
-  final CollectionReference groupCollection =
+  static final CollectionReference chatsCollection =
       FirebaseFirestore.instance.collection("chats");
 
   // saving the userdata
@@ -17,26 +18,32 @@ class DatabaseService {
       "fullName": fullName,
       "email": email,
       "userName": userName,
-      "groups": [],
       "profilePic": "",
       "uid": uid,
-      "friends": [],
       "password": password,
     });
   }
 
-  // getting user data
+  // getting user data by email
   Future gettingUserData(String email) async {
     QuerySnapshot snapshot =
         await userCollection.where("email", isEqualTo: email).get();
     return snapshot;
+  }
+  // get User data by uid
+  static Future<UserModel?> getUserDataByID( String uid) async {
+    UserModel? userModel;
+    DocumentSnapshot docSnap = await userCollection.doc(uid).get();
 
-  //
+    if(docSnap.data() != null){
+      userModel = UserModel.fromMap(docSnap.data() as Map<String,dynamic>);
+    }
+    return userModel;
   }
 
-    Future savingChatData(
-      String text, String translatedTxt, String senderId) async {
-    return await userCollection.doc(uid).set({
+
+  Future savingChatData( String text, String translatedTxt, String senderId) async {
+    return await chatsCollection.doc(uid).set({
       "messages": text,
       "TranslatedTex": translatedTxt,
       "initialLanguage": "",
@@ -44,6 +51,9 @@ class DatabaseService {
       "sender" : senderId,
       "timeStamp" : FieldValue.serverTimestamp(),
     });
+  }
+  sendMessage( Map<String, dynamic> chatMessageData) async {
+    chatsCollection.add(chatMessageData);
   }
 
 }
