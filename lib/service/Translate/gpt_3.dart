@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'api_key.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_app/pages/chats.dart';
 
 class ChatGPt {
 
@@ -11,12 +10,15 @@ class ChatGPt {
   final String initialLanguage;
   final String desiredLanguage;
 
-  void onSendMessage() async {
+  Future<dynamic> onSendMessage() async {
 
     String message = text.trim();
 
     if(message.isNotEmpty) {
-      String translatedText = await translateMessage(initialLanguage, message, desiredLanguage);
+      return await translateMessage(initialLanguage, message, desiredLanguage);
+    }
+    else {
+      return null;
     }
   }
   Future<String> translateMessage(String initialLang, String message, String targetLanguage) async {

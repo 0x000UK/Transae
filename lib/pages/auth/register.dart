@@ -1,8 +1,6 @@
 import 'package:firebase_app/pages/auth/login.dart';
 import 'package:firebase_app/pages/home.dart';
 import 'package:firebase_app/service/auth_validator.dart';
-import 'package:firebase_app/service/FireBase/helper_function.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/service/FireBase/auth_service.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';

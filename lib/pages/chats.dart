@@ -1,8 +1,6 @@
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Models/chat_room_model.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_app/Models/messageModel.dart';
-import 'package:firebase_app/service/FireBase/database_services.dart';
 class ChatMessage{
   String messageContent;
   String messageType;

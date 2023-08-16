@@ -12,7 +12,7 @@ class AuthService {
               email: email, password: password))
           .user!;
 
-      return true;
+      return user;
     } on FirebaseAuthException catch (e) {
       return e.message;
     }
