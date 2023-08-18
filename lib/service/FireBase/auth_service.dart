@@ -20,14 +20,14 @@ class AuthService {
 
   // register
   Future registerUserWithEmailandPassword(
-      String fullName, String email, String password, String userName) async {
+      String fullName, String email, String password) async {
     try {
       User user = (await firebaseAuth.createUserWithEmailAndPassword(
               email: email, password: password))
           .user!;
 
       await DatabaseService(uid: user.uid)
-          .savingUserData(fullName, email, userName, password);
+          .savingUserData(fullName, email, password);
 
       return user;
     } on FirebaseAuthException catch (e) {

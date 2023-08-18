@@ -80,7 +80,7 @@ class _MyLoginState extends State<MyLogin> {
         context,
         MaterialPageRoute(
           builder: (context){
-            return MyHomePage(userModel: userModel);
+            return MyHomePage(userModel: userModel!);
           }
         )
       );

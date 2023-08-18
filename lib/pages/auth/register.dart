@@ -124,208 +124,216 @@ class _MyRegisterState extends State<MyRegister> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor))
-            : Stack(
-                children: [
-                  SingleChildScrollView(
-                      child: Container(
-                          height: size.height,
-                          padding: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.1,
-                              left: 40,
-                              right: 40),
-                          child: Form(
-                              key: _key,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Hello there',
-                                    style: TextStyle(
-                                      fontSize: 40,
-                                      foreground: Paint()
-                                        ..color = const Color.fromRGBO(
-                                            219, 126, 193, 0.612),
-                                    ),
-                                  ),
-                                  SizedBox(height: size.height * 0.05),
-                                  DynamicInputWidget(
-                                      controller: fullNameController,
-                                      obscureText: false,
-                                      currentFocusNode: fullNameFocusNode,
-                                      toggleObscureText: toggleObscureText,
-                                      validator: authValidators.check,
-                                      hintText: 'Full Name',
-                                      textInputAction: TextInputAction.next,
-                                      isNonPasswordField: true),
-                                  SizedBox(height: size.height * 0.025),
-                                  DynamicInputWidget(
-                                      controller: usrNameController,
-                                      obscureText: false,
-                                      currentFocusNode: usrNameFocusNode,
-                                      toggleObscureText: toggleObscureText,
-                                      validator: authValidators.check,
-                                      hintText: 'User Name',
-                                      textInputAction: TextInputAction.next,
-                                      isNonPasswordField: true),
-                                  SizedBox(height: size.height * 0.025),
-                                  DynamicInputWidget(
-                                      controller: emailController,
-                                      obscureText: false,
-                                      currentFocusNode: emailFocusNode,
-                                      toggleObscureText: toggleObscureText,
-                                      validator: authValidators.emailValidator,
-                                      hintText: 'Email',
-                                      textInputAction: TextInputAction.next,
-                                      isNonPasswordField: true),
-                                  SizedBox(height: size.height * 0.025),
-                                  DynamicInputWidget(
-                                      controller: passwordController,
-                                      currentFocusNode: passwordFocusNode,
-                                      obscureText: obscureText,
-                                      toggleObscureText: toggleObscureText,
-                                      validator:
-                                          authValidators.passwordVlidator,
-                                      hintText: 'Password',
-                                      textInputAction: TextInputAction.next,
-                                      isNonPasswordField: false),
-                                  SizedBox(height: size.height * 0.025),
-                                  DynamicInputWidget(
-                                    controller: confirmPassController,
-                                    obscureText: true,
-                                    currentFocusNode: confirmPassFocusNode,
-                                    toggleObscureText: toggleObscureText,
-                                    validator:
-                                        authValidators.confirmPasswordValidator,
-                                    hintText: 'confirm Password',
-                                    isNonPasswordField: true,
-                                    textInputAction: TextInputAction.done,
-                                  ),
-                                  SizedBox(height: size.height * 0.07),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          fullName = fullNameController.text;
-                                          userName = usrNameController.text;
-                                          email = emailController.text;
-                                          password = passwordController.text;
-                                          register();
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          shadowColor: Colors.white,
-                                          backgroundColor:const Color.fromRGBO(185, 0, 182, 1),
-                                          foregroundColor:const Color.fromRGBO(233, 227, 227, 1),
-                                          disabledBackgroundColor:const Color.fromARGB(254, 255, 254, 254),
-                                          elevation: 2.0,
-                                          padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                                          textStyle: const TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(45)
-                                          )
-                                        ),
-                                        child: const Text(
-                                          'Sign Up',
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.04),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0),
-                                        child: Container(
-                                          height: 1.0,
-                                          width: 130.0,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      const Text(
-                                        'OR',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 15),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0),
-                                        child: Container(
-                                          height: 1.0,
-                                          width: 130.0,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.015),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      IconButton(
-                                          color: Colors.red,
-                                          padding: const EdgeInsets.all(4),
-                                          onPressed: () {},
-                                          icon: Image.asset(
-                                            'assets/images/twitter.png',
-                                            color: Colors.blue,
-                                          )),
-                                      IconButton.filled(
-                                          padding: const EdgeInsets.all(4),
-                                          onPressed: () {},
-                                          icon: Image.asset(
-                                            'assets/images/apple.png',
-                                            color: Colors.white,
-                                          )),
-                                      IconButton.filled(
-                                          padding: const EdgeInsets.all(4),
-                                          onPressed: () {},
-                                          icon: Image.asset(
-                                            'assets/images/google.png',
-                                          )),
-                                    ],
-                                  )
-                                ],
-                              )))),
-                  Positioned(
-                      top: size.height - 40,
-                      left: size.width * 0.5 - 150,
-                      child: Row(
-                        children: [
-                          const Text(
-                            "Already have an account ? ",
-                            style: TextStyle(
-                                color: Colors.white30,
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const MyLogin()));
-                            },
-                            child: const Text(
-                              "Sign In",
-                              style: TextStyle(
-                                  color: Color.fromARGB(156, 219, 126, 193),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal),
-                            ),
+        ? Center(
+            child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor))
+        : Stack(
+            children: [
+              SingleChildScrollView(
+                  physics:const ClampingScrollPhysics(),
+                  child: Container(
+                      height: size.height,
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.1,
+                          left: 40,
+                          right: 40),
+                      child: Form(
+                          key: _key,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Hello there',
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  foreground: Paint()
+                                    ..color = const Color.fromRGBO(
+                                        219, 126, 193, 0.612),
+                                ),
+                              ),
+                              SizedBox(height: size.height * 0.2),
+                              DynamicInputWidget(
+                                  controller: fullNameController,
+                                  obscureText: false,
+                                  currentFocusNode: fullNameFocusNode,
+                                  toggleObscureText: toggleObscureText,
+                                  validator: authValidators.check,
+                                  hintText: 'Full Name',
+                                  textInputAction: TextInputAction.next,
+                                  isNonPasswordField: true),
+                              SizedBox(height: size.height * 0.025),
+                              DynamicInputWidget(
+                                  controller: emailController,
+                                  obscureText: false,
+                                  currentFocusNode: emailFocusNode,
+                                  toggleObscureText: toggleObscureText,
+                                  validator: authValidators.emailValidator,
+                                  hintText: 'Email',
+                                  textInputAction: TextInputAction.next,
+                                  isNonPasswordField: true),
+                              SizedBox(height: size.height * 0.025),
+                              DynamicInputWidget(
+                                  controller: passwordController,
+                                  currentFocusNode: passwordFocusNode,
+                                  obscureText: obscureText,
+                                  toggleObscureText: toggleObscureText,
+                                  validator:
+                                      authValidators.passwordVlidator,
+                                  hintText: 'Password',
+                                  textInputAction: TextInputAction.next,
+                                  isNonPasswordField: false),
+                              SizedBox(height: size.height * 0.025),
+                              DynamicInputWidget(
+                                controller: confirmPassController,
+                                obscureText: true,
+                                currentFocusNode: confirmPassFocusNode,
+                                toggleObscureText: toggleObscureText,
+                                validator:
+                                    authValidators.confirmPasswordValidator,
+                                hintText: 'confirm Password',
+                                isNonPasswordField: true,
+                                textInputAction: TextInputAction.done,
+                              ),
+                              SizedBox(height: size.height * 0.07),
+                              
+                            ],
                           )
+                      )
+                    )
+                  ),
+                  Positioned(
+                    top: size.height- 250,
+                    width: size.width,
+                    child: Container(
+                      child: Column( 
+                        children: [
+                          Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          fullName = fullNameController.text;
+                          userName = usrNameController.text;
+                          email = emailController.text;
+                          password = passwordController.text;
+                          register();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shadowColor: Colors.white,
+                          backgroundColor:const Color.fromRGBO(185, 0, 182, 1),
+                          foregroundColor:const Color.fromRGBO(233, 227, 227, 1),
+                          disabledBackgroundColor:const Color.fromARGB(254, 255, 254, 254),
+                          elevation: 2.0,
+                          padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                          textStyle: const TextStyle(
+                            fontSize: 20,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(45)
+                          )
+                        ),
+                        child: const Text(
+                          'Sign Up',
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.04),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0),
+                        child: Container(
+                          height: 1.0,
+                          width: 130.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const Text(
+                        'OR',
+                        style: TextStyle(
+                            color: Colors.white, fontSize: 15),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0),
+                        child: Container(
+                          height: 1.0,
+                          width: 130.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.015),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        color: Colors.red,
+                        padding: const EdgeInsets.all(4),
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/images/twitter.png',
+                          color: Colors.blue,
+                        )
+                      ),
+                      IconButton.filled(
+                        padding: const EdgeInsets.all(4),
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/images/apple.png',
+                          color: Colors.white,
+                        )
+                      ),
+                      IconButton.filled(
+                        padding: const EdgeInsets.all(4),
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/images/google.png',
+                        )
+                      ),
+                    ],
+                  ),
                         ],
-                      ))
-                ],
-              ),
+                      ),
+                    )
+                  ),
+                  
+              Positioned(
+                  top: size.height - 40,
+                  left: size.width * 0.5 - 150,
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Already have an account ? ",
+                        style: TextStyle(
+                            color: Colors.white30,
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const MyLogin()));
+                        },
+                        child: const Text(
+                          "Sign In",
+                          style: TextStyle(
+                              color: Color.fromARGB(156, 219, 126, 193),
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal),
+                        ),
+                      )
+                    ],
+                  )
+                )
+            ],
+          ),
       ),
     );
   }
@@ -338,7 +346,7 @@ class _MyRegisterState extends State<MyRegister> {
       });
       try {
         user = await authService
-          .registerUserWithEmailandPassword(fullName, email, password, userName);
+          .registerUserWithEmailandPassword(fullName, email, password);
       } on FirebaseAuthException catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             backgroundColor: const Color.fromARGB(205, 219, 30, 30),
@@ -357,11 +365,11 @@ class _MyRegisterState extends State<MyRegister> {
         UserModel newUser = UserModel(
           uid: uid,
           email: email,
-          userName: userName,
+          userName: "",
           fullname: fullName,
           profilepic: ""
         );
-        await DatabaseService(uid: uid).savingUserData(fullName,email,password,userName).then((value) async{
+        await DatabaseService(uid: uid).savingUserData(fullName,email,password).then((value) async{
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage(userModel: newUser)));
         });
       } 
@@ -414,7 +422,7 @@ class DynamicInputWidget extends StatelessWidget {
       decoration: InputDecoration(
           hintText: hintText,
           hintStyle: const TextStyle(
-            color: Color.fromARGB(166, 244, 237, 237),
+            color: Colors.white38,
           ),
           prefixIcon: prefIcon,
           suffixIcon: isNonPasswordField
@@ -426,7 +434,12 @@ class DynamicInputWidget extends StatelessWidget {
                       : const Icon(Icons.visibility_off),
                 ),
           floatingLabelBehavior: FloatingLabelBehavior.auto,
-          errorStyle: const TextStyle(fontSize: 12)),
+          errorStyle: const TextStyle(fontSize: 12)
+        ),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 20
+        ),
       onChanged: (value) {
         if (isNonPasswordField == false) {
           AuthValidators.firstPass = value;

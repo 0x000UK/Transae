@@ -13,11 +13,11 @@ class DatabaseService {
 
   // saving the userdata
   Future savingUserData(
-      String fullName, String email, String userName, String password) async {
+      String fullName, String email, String password) async {
     return await userCollection.doc(uid).set({
       "fullName": fullName,
       "email": email,
-      "userName": userName,
+      "userName": "" ,
       "profilePic": "",
       "uid": uid,
       "password": password,
@@ -44,10 +44,10 @@ class DatabaseService {
 
   Future savingChatData( String text, String translatedTxt, String senderId) async {
     return await chatsCollection.doc(uid).set({
-      "messages": text,
-      "TranslatedTex": translatedTxt,
+      "text": text,
+      "translatedTex": translatedTxt,
       "initialLanguage": "",
-      "desiredLanguage": "",
+      "finalLanguage": "",
       "sender" : senderId,
       "timeStamp" : FieldValue.serverTimestamp(),
     });

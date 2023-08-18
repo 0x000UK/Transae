@@ -1,12 +1,6 @@
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Models/chat_room_model.dart';
 import 'package:flutter/material.dart';
-class ChatMessage{
-  String messageContent;
-  String messageType;
-
-  ChatMessage({required this.messageContent, required this.messageType});
-}
 
 class MyMessagesPage extends StatefulWidget {
   const MyMessagesPage({
@@ -39,14 +33,6 @@ class _MyHomePageState extends State<MyMessagesPage> {
     super.dispose();
     mssgController.dispose();
   }
-
-  List<ChatMessage> messages = [
-    ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-    ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-    ChatMessage(messageContent: "Hey Alexe, I am doing fine dude. wbu?", messageType: "sender"),
-    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-    ChatMessage(messageContent: "Is there any thing wrong?", messageType: "sender"),
-  ];
 
   @override
   Widget build(BuildContext context) {

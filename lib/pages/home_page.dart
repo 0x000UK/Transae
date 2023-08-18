@@ -10,7 +10,7 @@ import 'chats.dart';
 class ScrollableUserList extends StatefulWidget {
   const ScrollableUserList({super.key, required this.userModel});
 
-  final UserModel? userModel;
+  final UserModel userModel;
 
   @override
   State<ScrollableUserList> createState() => _ScrollableUserListState();
@@ -98,94 +98,91 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   floating: true,
                   elevation: 0.0,
                   flexibleSpace:AppBar(
-                      backgroundColor:const Color.fromARGB(255, 255, 151, 151),
-                      title: const Text('BoomBam',
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Color.fromARGB(225, 250, 79, 79)
+                    backgroundColor:const Color.fromARGB(255, 255, 151, 151),
+                    title: const Text('BoomBam',
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: Color.fromARGB(225, 250, 79, 79)
+                      ),
+                    ),
+                    actions: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        width: _isExpanded ? 250.0 : 0.0,
+                        height: 50.0,
+                        child: TextField(
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: const Color.fromARGB(200, 255, 186, 186),
+                            border: const OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(Radius.circular(45.0)),
+                            ),
+                            hintText: "Search...",
+                            suffixIcon: IconButton(onPressed: (){}, icon:const Icon(Icons.search), iconSize: _isExpanded? 30: 0 ,)
+                          ),
+                          enabled: _isExpanded,
                         ),
                       ),
-                      actions: [
-                        
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          width: _isExpanded ? 250.0 : 0.0,
-                          height: 50.0,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: const Color.fromARGB(200, 255, 186, 186),
-                              border: const OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.all(Radius.circular(45.0)),
-                              ),
-                              hintText: "Search...",
-                              suffixIcon: IconButton(onPressed: (){}, icon:const Icon(Icons.search), iconSize: _isExpanded? 30: 0 ,)
-                            ),
-                            enabled: _isExpanded,
+                      IconButton(
+                        splashRadius: 1,
+                        iconSize: 30,
+                        color: const Color.fromARGB(225, 250, 79, 79),
+                        icon: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 350),
+                            transitionBuilder: (child, anim) => RotationTransition(
+                                  turns: child.key == const ValueKey('search')
+                                      ? Tween<double>(begin: 0.75, end: 1.0).animate(anim)
+                                      : Tween<double>(begin: 1.0, end: 0.75).animate(anim),
+                                  child: ScaleTransition(scale: anim, child: child),
+                                ),
+                            child: tabController.index == 2? null: _currIndex == 0
+                                ? const Icon(Icons.search, key:ValueKey('search'))
+                                : const Icon(
+                                    Icons.close,
+                                    key: ValueKey('close'),
+                                  )),
+                        onPressed: () {
+                          if(tabController.index != 2) {
+                          setState(() {
+                            _currIndex = _currIndex == 0 ? 1 : 0;
+                            _isExpanded = !_isExpanded;
+                          });
+                          }
+                        },
+                      ),
+                      AnimatedSwitcher(
+                        duration: tabController.animationDuration,
+                        transitionBuilder: (Widget child, Animation<double> animation) {
+                          return ScaleTransition(
+                            scale: _animationController, 
+                            child: child
+                          );
+                        },
+                        child: IconButton(
+                          key: ValueKey<int>(tabController.index),
+                          icon: Icon(_tabAddIcons[tabController.index],
+                            color: const Color.fromARGB(225, 250, 79, 79),
+                            size: 30,
                           ),
-                        ),
-                        IconButton(
-                          splashRadius: 1,
-                          iconSize: 30,
-                          color: const Color.fromARGB(225, 250, 79, 79),
-                          icon: AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 350),
-                              transitionBuilder: (child, anim) => RotationTransition(
-                                    turns: child.key == const ValueKey('search')
-                                        ? Tween<double>(begin: 0.75, end: 1.0).animate(anim)
-                                        : Tween<double>(begin: 1.0, end: 0.75).animate(anim),
-                                    child: ScaleTransition(scale: anim, child: child),
-                                  ),
-                              child: tabController.index == 2? null: _currIndex == 0
-                                  ? const Icon(Icons.search, key:ValueKey('search'))
-                                  : const Icon(
-                                      Icons.close,
-                                      key: ValueKey('close'),
-                                    )),
                           onPressed: () {
-                            if(tabController.index != 2) {
                             setState(() {
-                              _currIndex = _currIndex == 0 ? 1 : 0;
-                              _isExpanded = !_isExpanded;
+                              switch (tabController.index) {
+                                case 0 : Navigator.of(context).push(slideTransitionBuilder( MysearchPage(userModel: widget.userModel,))); break;
+                                case 1 : break;
+                                default: break;
+                              }
                             });
-                            }
                           },
                         ),
-                        AnimatedSwitcher(
-                          duration: tabController.animationDuration,
-                          transitionBuilder: (Widget child, Animation<double> animation) {
-                            return ScaleTransition(
-                              scale: _animationController, 
-                              child: child
-                            );
-                          },
-                          child: IconButton(
-                            key: ValueKey<int>(tabController.index),
-                            icon: Icon(_tabAddIcons[tabController.index],
-                              color: const Color.fromARGB(225, 250, 79, 79),
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                switch (tabController.index) {
-                                  case 1 : Navigator.push(context, MaterialPageRoute(builder: (context) => const MysearchPage())); break;
-                                  case 2 : Navigator.push(context, MaterialPageRoute(builder: (context) => const MysearchPage())); break;
-
-                                  default:  Navigator.push(context, MaterialPageRoute(builder: (context) => const MysearchPage())); break;
-                                }
-                              });
-                              // Do something when IconButton is pressed
-                            },
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => {},
-                          icon:const Icon(Icons.more_vert, size: 30,),
-                          color: const Color.fromARGB(225, 250, 79, 79),
-                          splashRadius: 1,
-                        )
-                      ],
+                      ),
+                      IconButton(
+                        onPressed: () => {},
+                        icon:const Icon(Icons.more_vert, size: 30,),
+                        color: const Color.fromARGB(225, 250, 79, 79),
+                        splashRadius: 1,
+                      )
+                    ],
                       elevation: 0.0,
                     )
                   ),
@@ -210,12 +207,12 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                     children: tabNames.map(
                       (content ) {
                         return  StreamBuilder(
-                          stream: FirebaseFirestore.instance.collection(content).where('members.${widget.userModel!.uid}', isEqualTo: true).snapshots(),
+                          stream: FirebaseFirestore.instance.collection(content).where('members.${widget.userModel.uid}', isEqualTo: true).snapshots(),
                           builder: (context, snapshot){
                             return CustomScrollView(
                               slivers: [
                                 switch (content) {
-                                  "chats" => UserTab(snapshot: snapshot, userModel: widget.userModel!),
+                                  "chats" => UserTab(snapshot: snapshot, userModel: widget.userModel),
                                   "groups" => const GroupsTab(count: 0),
                                   "story" => const Story(),
                                     _ => const SliverToBoxAdapter(child: Center(
@@ -475,13 +472,15 @@ class Story extends StatelessWidget {
                 height: 100,
               ),
               Container(
+                
                 width: 400,
-                height: 280,
+                height: 400,
                 alignment: Alignment.centerLeft,
                 decoration: const BoxDecoration(
+                  //color: Colors.black,
                   image: DecorationImage(
-                      image: AssetImage("assets/images/group.png"),
-                      fit: BoxFit.cover),
+                      image: AssetImage("assets/images/activity.png"),
+                      fit: BoxFit.contain),
                 ),
               ),
               const SizedBox(
@@ -533,5 +532,22 @@ class Story extends StatelessWidget {
     //   }, childCount: 1),
     // );
   }
+}
+
+PageRouteBuilder slideTransitionBuilder(Widget page) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1.0, 0.0); // Start the slide from right
+      const end = Offset.zero;
+      const curve = Curves.easeInOut;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      var offsetAnimation = animation.drive(tween);
+
+      return SlideTransition(position: offsetAnimation, child: child);
+    },
+  );
 }
 
