@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/chat_room_model.dart';
+import 'package:firebase_app/main.dart';
+import 'package:firebase_app/pages/chats.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +25,37 @@ class _MysearchPageState extends State<MysearchPage> {
     super.initState();
     searchController = TextEditingController();
     searchfocusNode = FocusNode();
+  }
+
+  Future<ChatRoomModel?> getChatRoomModel (UserModel targetUser) async {
+    ChatRoomModel? chatRoom;
+
+    QuerySnapshot snapshot = await DatabaseService.chatsCollection.
+    where("members.${widget.userModel.uid}", isEqualTo: true).
+    where("members.${targetUser.uid}", isEqualTo: true).get();
+
+    if(snapshot.docs.isNotEmpty) {
+      // Fetch the existing one
+      var docData = snapshot.docs[0].data();
+      ChatRoomModel existingChatroom = ChatRoomModel.fromMap(docData as Map<String, dynamic>);
+
+      chatRoom = existingChatroom;
+    }
+    else {
+      // Create a new one
+      ChatRoomModel newChatroom = ChatRoomModel(
+        chatroomid: uuid.v1(),
+        lastMessage: "",
+        members: {
+          widget.userModel.uid.toString(): true,
+          targetUser.uid.toString(): true,
+        },
+      );
+      await DatabaseService.chatsCollection.doc(newChatroom.chatroomid).set(newChatroom.toMap());
+
+      chatRoom = newChatroom;
+    }
+    return chatRoom;
   }
 
   @override
@@ -151,10 +185,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                                 Radius.circular(30.0),
                                             bottomRight:
                                                 Radius.circular(30.0))),
-                                    child: searching? 
-                                    const CircularProgressIndicator()
-                                    
-                                    : IconButton(
+                                    child: IconButton(
                                       splashRadius: 1,
                                       onPressed: () {
                                         setState(() { searching = true;});
@@ -171,10 +202,10 @@ class _MysearchPageState extends State<MysearchPage> {
                               ]
                             )
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 40),
                           searching? StreamBuilder(
                             stream: searchController.text.contains('@')? 
-                                    DatabaseService.userCollection.where('emial', isEqualTo: searchController.text).where('email', isNotEqualTo: widget.userModel.email).snapshots(): 
+                                    DatabaseService.userCollection.where('email', isEqualTo: searchController.text).where('email', isNotEqualTo: widget.userModel.email).snapshots(): 
                                     DatabaseService.userCollection.where('username', isEqualTo: searchController.text).snapshots(),
 
                             builder: (context, snapshot){
@@ -186,21 +217,35 @@ class _MysearchPageState extends State<MysearchPage> {
                                   if(dataSnapshot.docs.isNotEmpty) {
 
                                     Map<String,dynamic> userMap = dataSnapshot.docs[0].data() as Map<String, dynamic>;
-                                    UserModel searchUser = UserModel.fromMap(userMap);
-                                    return ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundImage: NetworkImage(searchUser.profilepic!),
-
+                                    UserModel searchedUser = UserModel.fromMap(userMap);
+                                    return Container(
+                                      width: size.width-50,
+                                      height: 100,
+                                      padding:const EdgeInsets.all(0),
+                                    child : ListTile(
+                                      leading: const Hero(
+                                        tag: 0,
+                                        child: CircleAvatar(
+                                          radius: 28,
+                                          //backgroundImage:NetworkImage(),
+                                        ),
                                       ),
-                                      title: Text(searchUser.fullname!),
-                                      subtitle: Text(searchUser.email!),
-                                      trailing: Row(
+
+                                      title: Text(searchedUser.fullName!),
+                                      subtitle: Text(searchedUser.email!),
+                                      trailing: SizedBox(
+                                        width: 50,
+                                        height: 50,
+                                      child : Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        //crossAxisAlignment: CrossAxisAlignment.baseline,
                                         children: [
                                           IconButton(
                                             onPressed: (){}, 
                                             icon:const Icon(Icons.person_add_alt),
                                             iconSize: 30,
                                           ),
+                                          SizedBox(width: 5,),
                                           IconButton(
                                             onPressed: (){}, 
                                             icon:const Icon(Icons.chat_outlined),
@@ -208,6 +253,25 @@ class _MysearchPageState extends State<MysearchPage> {
                                           )
                                         ]
                                       ),
+                                      ),
+                                      onTap: () async {
+                                        ChatRoomModel? chatRoomModel = await getChatRoomModel(searchedUser);
+
+                                         if(chatRoomModel != null) {
+                                            Navigator.pop(context);
+                                            Navigator.push(context, MaterialPageRoute(
+                                              builder: (context) {
+                                                return MyChatRoom(
+                                                  targetUser: searchedUser,
+                                                  user: widget.userModel,
+                                                  chatroom: chatRoomModel,
+                                                  heroId: 0,
+                                                );
+                                              }
+                                            ));
+                                          }
+                                      },
+                                    )
                                     );
 
                                   }else{

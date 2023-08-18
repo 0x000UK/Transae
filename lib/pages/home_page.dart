@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Models/chat_room_model.dart';
 import 'package:firebase_app/Widgets/Tabs.dart';
+import 'package:firebase_app/pages/auth/login.dart';
 import 'package:firebase_app/pages/search_page.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'chats.dart';
 
@@ -177,7 +179,36 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                         ),
                       ),
                       IconButton(
-                        onPressed: () => {},
+                        onPressed: () => {
+                          showMenu(
+                            context: context, 
+                            position: const RelativeRect.fromLTRB(100, 50, 50, 0), 
+                            elevation: 10,
+                            items: [
+                              PopupMenuItem(
+                                child: ListTile(
+                                  leading:const Icon(Icons.logout_outlined),
+                                  title:const Text('Logout'),
+                                  onTap: () async {
+                                    try {
+                                      await FirebaseAuth.instance.signOut();
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const MyLogin()));
+                                    } catch (error) {
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        backgroundColor: const Color.fromARGB(205, 219, 30, 30),
+                                        content: Text(
+                                          error.toString(),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        duration: const Duration(seconds: 4),
+                                      ));
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          )
+                        },
                         icon:const Icon(Icons.more_vert, size: 30,),
                         color: const Color.fromARGB(225, 250, 79, 79),
                         splashRadius: 1,
@@ -194,7 +225,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
               ];
             },
             body: Padding(
-              padding:const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding:const EdgeInsets.fromLTRB(15, 15,15, 15),
               child :Container(
                 padding:const EdgeInsets.all(5.0),
                 decoration: const BoxDecoration(
@@ -203,25 +234,31 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                 ),
                 child : TabBarView(
                   controller: tabController,
-                  physics:const PageScrollPhysics(),
+                  physics:const BouncingScrollPhysics(),
                     children: tabNames.map(
                       (content ) {
                         return  StreamBuilder(
                           stream: FirebaseFirestore.instance.collection(content).where('members.${widget.userModel.uid}', isEqualTo: true).snapshots(),
                           builder: (context, snapshot){
-                            return CustomScrollView(
-                              slivers: [
-                                switch (content) {
-                                  "chats" => UserTab(snapshot: snapshot, userModel: widget.userModel),
-                                  "groups" => const GroupsTab(count: 0),
-                                  "story" => const Story(),
-                                    _ => const SliverToBoxAdapter(child: Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      ),
-                                }
-                              ],
-                            );
+                          Widget tabContent;
+                          switch (content) {
+                            case "chats": tabContent = UserTab( snapshot: snapshot,userModel: widget.userModel); break;
+                            case "groups": tabContent = const GroupsTab(count: 0); break;
+                            case "story": tabContent = const Story(); break;
+                            default:
+                              tabContent = const Center(
+                                child: CircularProgressIndicator(),
+                              ); break;
+                          }
+                          return CustomScrollView(
+                            slivers: [
+                            SliverFillRemaining(
+                              hasScrollBody: false,
+                              fillOverscroll: true,
+                              child: tabContent
+                            )
+                            ],
+                          );
                           }
                         );
                       },
@@ -324,14 +361,14 @@ class UserTab extends StatelessWidget {
                     if(userData.connectionState == ConnectionState.done){
                       // print("userdata connection done");
                       if(userData.data != null) {
-                        // print("userdata not null");
+
                         UserModel targetUser = userData.data as UserModel;
                         return ListTile(
                           leading: Hero(
                             tag: 'profilepic$index',
                             child: CircleAvatar(
                               radius: 30,
-                              backgroundImage: NetworkImage(targetUser.profilepic.toString()),
+                              //backgroundImage: NetworkImage(targetUser.profilepic.toString()),
                             ),
                           ),
                           title:  Text(
@@ -344,10 +381,11 @@ class UserTab extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MyMessagesPage(
+                                builder: (context) => MyChatRoom(
                                   chatroom: chatRoomModel,
                                   user: userModel,
                                   targetUser: targetUser,
+                                  heroId: index
                                 ),
                               ),
                             );
@@ -374,11 +412,9 @@ class UserTab extends StatelessWidget {
         return emptyTabContent(tab: 'chats');
       }
     }else {
-      return const SliverToBoxAdapter(
-        child: Center(
+      return  const Center(
           child: CircularProgressIndicator(),
-        )
-      );
+        );
     }
   }
 }
@@ -391,40 +427,32 @@ class GroupsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return //count == 0?
-        SliverToBoxAdapter(
-            child: Center(
-                child: Column(
-            children: [
-              const SizedBox(
-                height: 100,
+      Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 100),
+            Container(
+              width: 400,
+              height: 250,
+              alignment: Alignment.centerLeft,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/group.png"),
+                    fit: BoxFit.contain),
               ),
-              Container(
-                width: 400,
-                height: 280,
-                alignment: Alignment.centerLeft,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/group.png"),
-                      fit: BoxFit.cover),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text.rich(
-                TextSpan(text: 'OOPS!!', children: [
-                  TextSpan(
-                      text: '  Sorry',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(
-                      text: " Can't see anyone ",
-                      style: TextStyle(fontSize: 20)),
-                  TextSpan(text: '\nMay be Try joining any group'),
-                ]),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-            ],
-          )));
+            ),
+            const SizedBox(height: 20),
+            const Text.rich(
+              TextSpan(text: 'OOPS!!', children: [
+                TextSpan(text: '  Sorry', style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan( text: " Can't see anyone ", style: TextStyle(fontSize: 20)),
+                TextSpan(text: '\nMay be Try joining any group'),
+              ]),
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ],
+        )
+      );
         // : SliverList(
         //     delegate: SliverChildBuilderDelegate((context, index) {
         //       return ListTile(
@@ -464,42 +492,32 @@ class Story extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-            child: Center(
-                child: Column(
-            children: [
-              const SizedBox(
-                height: 100,
+    return Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 100),
+            Container(
+              width: 400,
+              height: 250,
+              alignment: Alignment.centerLeft,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/activity.png"),
+                    fit: BoxFit.contain),
               ),
-              Container(
-                
-                width: 400,
-                height: 400,
-                alignment: Alignment.centerLeft,
-                decoration: const BoxDecoration(
-                  //color: Colors.black,
-                  image: DecorationImage(
-                      image: AssetImage("assets/images/activity.png"),
-                      fit: BoxFit.contain),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text.rich(
-                TextSpan(text: 'OOPS!!', children: [
-                  TextSpan(
-                      text: '  Sorry',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(
-                      text: " Can't see anyone ",
-                      style: TextStyle(fontSize: 20)),
-                  TextSpan(text: '\nMay be Try joining any group'),
-                ]),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-            ],
-          )));
+            ),
+            const SizedBox(height: 20),
+            const Text.rich(
+              TextSpan(text: 'OOPS!!', children: [
+                TextSpan(text: '  Sorry', style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan( text: " Can't see anyone ", style: TextStyle(fontSize: 20)),
+                TextSpan(text: '\nMay be Try joining any group'),
+              ]),
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ],
+        )
+      );
     // return SliverList(
     //   delegate: SliverChildBuilderDelegate((context, index) {
     //     return ListTile(

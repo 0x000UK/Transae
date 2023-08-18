@@ -9,7 +9,7 @@ class DatabaseService {
   static final CollectionReference userCollection =
       FirebaseFirestore.instance.collection("users");
   static final CollectionReference chatsCollection =
-      FirebaseFirestore.instance.collection("chats");
+      FirebaseFirestore.instance.collection("chatrooms");
 
   // saving the userdata
   Future savingUserData(
@@ -25,7 +25,7 @@ class DatabaseService {
   }
 
   // getting user data by email
-  Future gettingUserData(String email) async {
+  static Future gettingUserData(String email) async {
     QuerySnapshot snapshot =
         await userCollection.where("email", isEqualTo: email).get();
     return snapshot;

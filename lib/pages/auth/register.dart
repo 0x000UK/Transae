@@ -366,8 +366,8 @@ class _MyRegisterState extends State<MyRegister> {
           uid: uid,
           email: email,
           userName: "",
-          fullname: fullName,
-          profilepic: ""
+          fullName: fullName,
+          profilePic: ""
         );
         await DatabaseService(uid: uid).savingUserData(fullName,email,password).then((value) async{
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage(userModel: newUser)));

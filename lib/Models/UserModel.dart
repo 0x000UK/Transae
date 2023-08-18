@@ -1,27 +1,27 @@
 class UserModel {
   String? uid;
   String? userName;
-  String? fullname;
+  String? fullName;
   String? email;
-  String? profilepic;
+  String? profilePic;
 
-  UserModel({this.uid, this.fullname,this.userName, this.email, this.profilepic});
+  UserModel({this.uid, this.fullName,this.userName, this.email, this.profilePic});
 
   UserModel.fromMap(Map<String, dynamic> map) {
     uid = map["uid"];
-    fullname = map["fullname"];
+    fullName = map["fullName"];
     userName = map["userName"];
     email = map["email"];
-    profilepic = map["profilepic"];
+    profilePic = map["profilePic"];
   }
 
   Map<String, dynamic> toMap() {
     return {
       "uid": uid,
-      "fullname": fullname,
+      "fullname": fullName,
       "username" : userName,
       "email": email,
-      "profilepic": profilepic,
+      "profilepic": profilePic,
     };
   }
 }

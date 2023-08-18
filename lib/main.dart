@@ -4,11 +4,11 @@ import 'package:firebase_app/service/FireBase/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'pages/auth/login.dart';
 import 'pages/navigation.dart';
 
-
-
+Uuid uuid = const Uuid();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
