@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
-
+import 'package:firebase_app/Models/chat_room_model.dart';
+import 'package:firebase_app/Models/message_model.dart';
+import 'package:firebase_app/main.dart';
 class DatabaseService {
-  final String? uid;
-  DatabaseService({this.uid});
+  static String? uid;
 
   // reference for our collections
   static final CollectionReference userCollection =
@@ -12,8 +13,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection("chatrooms");
 
   // saving the userdata
-  Future savingUserData(
-      String fullName, String email, String password) async {
+  static Future savingUserData( String fullName, String email, String password) async {
     return await userCollection.doc(uid).set({
       "fullName": fullName,
       "email": email,
@@ -25,11 +25,12 @@ class DatabaseService {
   }
 
   // getting user data by email
-  static Future gettingUserData(String email) async {
+  static Future gettingUserData(String email ) async {
     QuerySnapshot snapshot =
         await userCollection.where("email", isEqualTo: email).get();
     return snapshot;
   }
+
   // get User data by uid
   static Future<UserModel?> getUserDataByID( String uid) async {
     UserModel? userModel;
@@ -41,19 +42,48 @@ class DatabaseService {
     return userModel;
   }
 
+  static Future<ChatRoomModel?> getChatRoomModel (UserModel targetUser) async {
+    ChatRoomModel? chatRoom;
 
-  Future savingChatData( String text, String translatedTxt, String senderId) async {
-    return await chatsCollection.doc(uid).set({
-      "text": text,
-      "translatedTex": translatedTxt,
-      "initialLanguage": "",
-      "finalLanguage": "",
-      "sender" : senderId,
-      "timeStamp" : FieldValue.serverTimestamp(),
-    });
+    QuerySnapshot snapshot = await DatabaseService.chatsCollection.
+    where("members.$uid", isEqualTo: true).
+    where("members.${targetUser.uid}", isEqualTo: true).get();
+
+    if(snapshot.docs.isNotEmpty) {
+      // Fetch the existing one
+      var docData = snapshot.docs[0].data();
+      ChatRoomModel existingChatroom = ChatRoomModel.fromMap(docData as Map<String, dynamic>);
+
+      chatRoom = existingChatroom;
+    }
+    else {
+      // Create a new one
+      ChatRoomModel newChatroom = ChatRoomModel(
+        chatroomid: uuid.v1(),
+        lastMessage: "",
+        members: {
+          uid.toString(): true,
+          targetUser.uid.toString(): true,
+        },
+      );
+      await DatabaseService.chatsCollection.doc(newChatroom.chatroomid).set(newChatroom.toMap());
+
+      chatRoom = newChatroom;
+    }
+    return chatRoom;
   }
-  sendMessage( Map<String, dynamic> chatMessageData) async {
-    chatsCollection.add(chatMessageData);
+
+  static dynamic getChatRooms() async {
+     dynamic snapshot = await chatsCollection.where('members.$uid', isEqualTo: true).snapshots();
+    return snapshot;
+  }
+
+  static savingChatData(String chatRoomId, String messageID , MessageModel message) async {
+    return chatsCollection
+    .doc(chatRoomId)
+    .collection("messages")
+    .doc(messageID)
+    .set( message.toMap());
   }
 
 }

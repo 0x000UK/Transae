@@ -1,5 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Models/chat_room_model.dart';
+import 'package:firebase_app/Models/message_model.dart';
+import 'package:firebase_app/Models/message_type.dart';
+import 'package:firebase_app/Widgets/colors.dart';
+import 'package:firebase_app/main.dart';
+import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:flutter/material.dart';
 
 class MyChatRoom extends StatefulWidget {
@@ -41,14 +47,14 @@ class _MyChatRoom extends State<MyChatRoom> {
     //return const Scaffold();
  
     return Scaffold(
-      backgroundColor:const  Color.fromARGB(255, 255, 151, 151),
+      backgroundColor: ThemeColors.orange,
         
       body: Column(
         children: [
 
           Container(
             decoration:const BoxDecoration(
-              color:  Color.fromARGB(255, 255, 151, 151)
+              color:  ThemeColors.orange
             ),
             padding: const EdgeInsets.only(top: 50),
             child: Row(
@@ -59,11 +65,11 @@ class _MyChatRoom extends State<MyChatRoom> {
                   },
                   icon: const Icon(Icons.arrow_back,color: Colors.black,),
                 ),
-                const SizedBox(width: 2,),
+                const SizedBox(width: 2),
                 Hero(
                   tag: 'profilepic${widget.heroId}',
                   child: const CircleAvatar(
-                    radius: 28,
+                    radius: 25,
                     backgroundImage:NetworkImage(
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
                   ),
@@ -74,9 +80,9 @@ class _MyChatRoom extends State<MyChatRoom> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(widget.targetUser.fullName!, style: const TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),),
+                      Text(widget.targetUser.fullName!, style: const TextStyle( fontSize: 20 ,fontWeight: FontWeight.w600),),
                       const SizedBox(height: 6,),
-                      Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
+                      Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 15),),
                     ],
                   ),
                 ),
@@ -89,49 +95,65 @@ class _MyChatRoom extends State<MyChatRoom> {
             ),
           ),
           Expanded(
-            child: Padding(padding: const EdgeInsets.all(10),
+            child: Padding(padding: const EdgeInsets.all(15),
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
-              color: const Color.fromARGB(200, 255, 186, 186),
+              color: ThemeColors.lightorange,
               ),
               child:Container()
             ),
             )
           ),
           Container(
-            color:const Color.fromARGB(255, 255, 151, 151),
+            color:ThemeColors.orange,
+            padding: const EdgeInsets.only(bottom: 10),
             child: Row (
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children : [
-                Container(
-                  padding: EdgeInsets.only(left: 12),  
-                  width: MediaQuery.of(context).size.width-80,
-                  height: 75,
+                SizedBox(  
+                  width: MediaQuery.of(context).size.width-100,
+                  height: 60,
                   child :
                 TextField(
                   controller: mssgController,
                   maxLines: null,
+                  style: const TextStyle(fontSize: 20),
                   decoration: const InputDecoration(
                   contentPadding:  EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0),
-                  hintText: 'Enter text....',
-                  fillColor: Color.fromARGB(234, 165, 126, 126),
+                  hintText: 'Enter text...',
+                  fillColor: ThemeColors.lightorange,
                   filled: true,
+                  
                   hintStyle:  TextStyle(
                     fontSize: 20,
                     color: Color.fromARGB(123, 0, 0, 0),
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.all(Radius.circular(45.0)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        bottomLeft: Radius.circular(30.0)),
                   ),
                 ),
               ),
                 ),
-                const SizedBox(width: 10),
-                Padding(padding:const EdgeInsets.only(bottom: 20),
-                child : IconButton(
-                  onPressed: (){}, 
-                  icon:const Icon(Icons.send), 
-                  iconSize: 40,
+              Padding(
+                padding:const EdgeInsets.only(bottom: 0),
+                child : Container(
+                  decoration:const BoxDecoration(
+                    color: ThemeColors.lightorange,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(30.0),
+                      bottomRight: Radius.circular(30.0)
+                    )
+                  ),
+                  child: IconButton(
+                    color: ThemeColors.redorange,
+                    onPressed: (){}, 
+                    icon:const Icon(Icons.send), 
+                    iconSize: 43,
+                  )
                 ),
                 )
               ]
@@ -142,49 +164,62 @@ class _MyChatRoom extends State<MyChatRoom> {
       
     );
   }
-  //   chatMessages() {
-  //   return StreamBuilder(
-  //     //stream: chats,
-  //     builder: (context, AsyncSnapshot snapshot) {
-  //       return snapshot.hasData
-  //           ? ListView.builder(
-  //               itemCount: snapshot.data.docs.length,
-  //               itemBuilder: (context, index) {
-  //                 return MessageModel(
-  //                     message: snapshot.data.docs[index]['message'],
-  //                     sender: snapshot.data.docs[index]['sender'],
-  //                     sentByMe: widget.name ==
-  //                         snapshot.data.docs[index]['sender'],
-  //                     time: ,);
-  //               },
-  //             )
-  //           : Container();
-  //     },
-  //   );
-  // }
 
-  //  sendMessage() async {
-  //   if (mssgController.text.isNotEmpty) {
+   sendMessage() async {
+    String msg = mssgController.text.trim();
+    mssgController.clear();
 
-  //     MessageModel newMessage = MessageModel(
-  //       message: mssgController.text.trim(), 
-  //       sender: sender, 
-  //       sentByMe: sentByMe, 
-  //       time: time
-  //     )
-  //     // Map<String, dynamic> chatMessageMap = {
-  //     //   "message": mssgController.text,
-  //     //   "sender": ,
-  //     //   "time": DateTime.now().millisecondsSinceEpoch,
-  //     // };
+    if (msg.isNotEmpty) {
+      MessageModel newMessage = MessageModel(
+        senderId: widget.user.uid!, 
+        receiverId: widget.targetUser.uid!, 
+        textMessage: msg, 
+        type: MessageType.text, 
+        timeSent: DateTime.now(), 
+        messageId: uuid.v1(),
+        isSeen: false
+      );
 
-  //     DatabaseService().sendMessage( chatMessageMap);
-  //     // DatabaseService().sendMassage(widget.id, chatMessageMap);
-  //     setState(() {
-  //        mssgController.clear();
-  //     });
-  //   }
-  // }
+      DatabaseService.savingChatData(widget.chatroom.chatroomid!, newMessage.messageId, newMessage);
+    }
+  }
+
+  chatMessages() {
+    return StreamBuilder(
+      stream: DatabaseService.getchats(widget.chatroom.chatroomid!),
+      builder: (context, AsyncSnapshot snapshot) {
+        if(snapshot.connectionState == ConnectionState.active){
+          if(snapshot.hasData) {
+
+            QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
+            return SliverList(
+              delegate: SliverChildBuilderDelegate((context, index){
+                return Container();
+              },
+              childCount: dataSnapshot.docs.length
+              )
+            );
+
+          }else if(snapshot.hasError){
+            return  Center(
+              child: Text("${snapshot.error.toString()}\nplease check your internet connection "),
+            );
+          }else {
+            return const Center(
+              child: Text("No messages"),
+            );
+          }
+        }
+        else{
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+      }
+        
+    );
+  }
 }
 
  

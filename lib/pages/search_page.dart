@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Models/chat_room_model.dart';
-import 'package:firebase_app/main.dart';
+import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/pages/chats.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:flutter/material.dart';
@@ -21,48 +21,18 @@ class _MysearchPageState extends State<MysearchPage> {
   late FocusNode searchfocusNode;
   bool searching =  false;
 
+  @override
   void initState() {
     super.initState();
     searchController = TextEditingController();
     searchfocusNode = FocusNode();
   }
 
-  Future<ChatRoomModel?> getChatRoomModel (UserModel targetUser) async {
-    ChatRoomModel? chatRoom;
-
-    QuerySnapshot snapshot = await DatabaseService.chatsCollection.
-    where("members.${widget.userModel.uid}", isEqualTo: true).
-    where("members.${targetUser.uid}", isEqualTo: true).get();
-
-    if(snapshot.docs.isNotEmpty) {
-      // Fetch the existing one
-      var docData = snapshot.docs[0].data();
-      ChatRoomModel existingChatroom = ChatRoomModel.fromMap(docData as Map<String, dynamic>);
-
-      chatRoom = existingChatroom;
-    }
-    else {
-      // Create a new one
-      ChatRoomModel newChatroom = ChatRoomModel(
-        chatroomid: uuid.v1(),
-        lastMessage: "",
-        members: {
-          widget.userModel.uid.toString(): true,
-          targetUser.uid.toString(): true,
-        },
-      );
-      await DatabaseService.chatsCollection.doc(newChatroom.chatroomid).set(newChatroom.toMap());
-
-      chatRoom = newChatroom;
-    }
-    return chatRoom;
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 151, 151),
+      backgroundColor: ThemeColors.orange,
       body: SizedBox(
         height: size.height,
         child: Column(
@@ -102,6 +72,7 @@ class _MysearchPageState extends State<MysearchPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         //SizedBox.shrink(child: SizedBox(height: 100,),),
                         children: [
+                          const SizedBox(height: 100),
                           Image.asset(
                             'assets/images/search.png',
                             scale: 3.5,
@@ -136,12 +107,11 @@ class _MysearchPageState extends State<MysearchPage> {
                           const SizedBox(height: 30),
                           Container(
                             padding: const EdgeInsets.only(left: 20),
-                            color: const Color.fromARGB(
-                                255, 255, 151, 151),
+                            color:ThemeColors.orange,
                             child: Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.only(left: 12),
+                                  padding: const EdgeInsets.only(left: 12),
                                   width: MediaQuery.of(context).size.width-140,
                                   height: 75,
                                   child: TextField(
@@ -150,8 +120,9 @@ class _MysearchPageState extends State<MysearchPage> {
                                     style: const TextStyle(fontSize: 18),
                                     decoration: const InputDecoration(
                                       filled: true,
-                                      fillColor: Color.fromARGB(
-                                          200, 255, 186, 186),
+                                      fillColor: ThemeColors.lightorange,
+                                      //  Color.fromARGB(
+                                      //     200, 255, 186, 186),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                         borderRadius: BorderRadius.only(
@@ -178,13 +149,10 @@ class _MysearchPageState extends State<MysearchPage> {
                                     width: 80,
                                     height: 52,
                                     decoration: const BoxDecoration(
-                                        color: Color.fromARGB(
-                                            230, 76, 242, 206),
+                                        color: ThemeColors.aqua,
                                         borderRadius: BorderRadius.only(
-                                            topRight:
-                                                Radius.circular(30.0),
-                                            bottomRight:
-                                                Radius.circular(30.0))),
+                                            topRight: Radius.circular(30.0),
+                                            bottomRight: Radius.circular(30.0))),
                                     child: IconButton(
                                       splashRadius: 1,
                                       onPressed: () {
@@ -194,15 +162,14 @@ class _MysearchPageState extends State<MysearchPage> {
                                         Icons.search,
                                         size: 30,
                                       ),
-                                      color: const Color.fromARGB(
-                                          255, 255, 151, 151),
+                                      color: ThemeColors.orange
                                     ),
                                   )
                                 )
                               ]
                             )
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 30),
                           searching? StreamBuilder(
                             stream: searchController.text.contains('@')? 
                                     DatabaseService.userCollection.where('email', isEqualTo: searchController.text).where('email', isNotEqualTo: widget.userModel.email).snapshots(): 
@@ -218,11 +185,12 @@ class _MysearchPageState extends State<MysearchPage> {
 
                                     Map<String,dynamic> userMap = dataSnapshot.docs[0].data() as Map<String, dynamic>;
                                     UserModel searchedUser = UserModel.fromMap(userMap);
-                                    return Container(
-                                      width: size.width-50,
-                                      height: 100,
-                                      padding:const EdgeInsets.all(0),
-                                    child : ListTile(
+                                    return Padding(
+                                      //width: size.width,
+                                      //height: 80,
+                                      padding:const EdgeInsets.all(20),
+                                    
+                                    child: ListTile(
                                       leading: const Hero(
                                         tag: 0,
                                         child: CircleAvatar(
@@ -230,46 +198,43 @@ class _MysearchPageState extends State<MysearchPage> {
                                           //backgroundImage:NetworkImage(),
                                         ),
                                       ),
-
+                                      minVerticalPadding: 1,
                                       title: Text(searchedUser.fullName!),
                                       subtitle: Text(searchedUser.email!),
-                                      trailing: SizedBox(
-                                        width: 50,
-                                        height: 50,
-                                      child : Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      trailing: Row(
+                                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         //crossAxisAlignment: CrossAxisAlignment.baseline,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           IconButton(
                                             onPressed: (){}, 
                                             icon:const Icon(Icons.person_add_alt),
                                             iconSize: 30,
                                           ),
-                                          SizedBox(width: 5,),
                                           IconButton(
-                                            onPressed: (){}, 
+                                            onPressed: () async {
+                                               ChatRoomModel? chatRoomModel = await DatabaseService.getChatRoomModel(searchedUser);
+                                              if(chatRoomModel != null) {
+                                                  Navigator.pop(context);
+                                                  Navigator.push(context, MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return MyChatRoom(
+                                                        targetUser: searchedUser,
+                                                        user: widget.userModel,
+                                                        chatroom: chatRoomModel,
+                                                        heroId: 0,
+                                                      );
+                                                    }
+                                                  )
+                                                );
+                                              }
+                                            }, 
                                             icon:const Icon(Icons.chat_outlined),
                                             iconSize: 30,
                                           )
                                         ]
                                       ),
-                                      ),
                                       onTap: () async {
-                                        ChatRoomModel? chatRoomModel = await getChatRoomModel(searchedUser);
-
-                                         if(chatRoomModel != null) {
-                                            Navigator.pop(context);
-                                            Navigator.push(context, MaterialPageRoute(
-                                              builder: (context) {
-                                                return MyChatRoom(
-                                                  targetUser: searchedUser,
-                                                  user: widget.userModel,
-                                                  chatroom: chatRoomModel,
-                                                  heroId: 0,
-                                                );
-                                              }
-                                            ));
-                                          }
                                       },
                                     )
                                     );

@@ -348,20 +348,21 @@ class _MyRegisterState extends State<MyRegister> {
         user = await authService
           .registerUserWithEmailandPassword(fullName, email, password);
       } on FirebaseAuthException catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: const Color.fromARGB(205, 219, 30, 30),
-            content: Text(
-              e.message.toString(),
-              textAlign: TextAlign.center,
-            ),
-            duration: const Duration(seconds: 4),
-          ));
-          setState(() {
-            _isLoading = false;
-          });
-        }
-        if(user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: const Color.fromARGB(205, 219, 30, 30),
+          content: Text(
+            e.message.toString(),
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(seconds: 4),
+        ));
+        setState(() {
+          _isLoading = false;
+        });
+      }
+      if(user != null) {
         String uid = user.uid;
+        DatabaseService.uid = uid;
         UserModel newUser = UserModel(
           uid: uid,
           email: email,
@@ -369,7 +370,7 @@ class _MyRegisterState extends State<MyRegister> {
           fullName: fullName,
           profilePic: ""
         );
-        await DatabaseService(uid: uid).savingUserData(fullName,email,password).then((value) async{
+        await DatabaseService.savingUserData(fullName,email,password).then((value) async{
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage(userModel: newUser)));
         });
       } 

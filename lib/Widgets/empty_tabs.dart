@@ -36,7 +36,7 @@ Widget emptyTabContent({ required String tab, String? text}) {
           Text(text),
         ],
       )
-    );
+  );
 }
 
 Widget emptyTabContainer({ required String tab, String? text}) {

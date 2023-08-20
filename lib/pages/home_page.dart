@@ -1,13 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
-import 'package:firebase_app/Models/chat_room_model.dart';
-import 'package:firebase_app/Widgets/Tabs.dart';
+import 'package:firebase_app/Widgets/colors.dart';
+import 'package:firebase_app/Widgets/warnings.dart';
+import 'package:firebase_app/pages/Tabs/chat_page.dart';
+import 'package:firebase_app/pages/Tabs/group_page.dart';
+import 'package:firebase_app/pages/Tabs/story_page.dart';
 import 'package:firebase_app/pages/auth/login.dart';
 import 'package:firebase_app/pages/search_page.dart';
-import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'chats.dart';
 
 class ScrollableUserList extends StatefulWidget {
   const ScrollableUserList({super.key, required this.userModel});
@@ -29,6 +29,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
   ];
   late TabController tabController;
   late AnimationController _animationController;
+  late ScrollController scrollController;
 
   bool _isExpanded = false;
   int lastTab = 0;
@@ -43,14 +44,17 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     tabController =
         TabController(length: 3, vsync: this, initialIndex: activeTab);
     _animationController = AnimationController(
-        vsync: this, duration: tabController.animationDuration);
+        vsync: this, duration:const Duration(milliseconds: 400));
+    
+    scrollController = ScrollController();
+
+
+
 
     tabController.addListener(() {
       if (tabController.index != activeTab) {
         setState(() {
           activeTab = tabController.index;
-          _animationController.reset();
-          _animationController.forward();
         });
       }
       if (tabController.index == 2) {
@@ -60,11 +64,17 @@ class _ScrollableUserListState extends State<ScrollableUserList>
         });
       }
       if (tabController.indexIsChanging) {
-        if (tabController.animation!.value == tabController.index) {
-          _animationController.value = tabController.animation!.value;
+        setState(() {
+        if (tabController.animation!.value == tabController.index.toDouble()) {
+          _animationController.forward();
+        } else {
+          _animationController.reverse();
         }
+        });
       }
     });
+
+    
   }
 
   @override
@@ -73,15 +83,15 @@ class _ScrollableUserListState extends State<ScrollableUserList>
     _animationController.dispose();
     super.dispose();
   }
-  final List<UserChatModel> userList = [
-    UserChatModel(id: "1", name: 'Alexandre', imageURL: 'https//www.bla.com/pic.png', messageText: 'heheheh', time: '1:32'),
-    UserChatModel(id: "2", name: 'Alex', imageURL: 'https//www.bla.com/pic.png', messageText: 'hey', time: '2:20'),
-  ];
 
   @override
   Widget build(BuildContext context) {
 
-    final List<String> tabNames =  [ 'chats', 'groups', 'story'];
+    final List<Widget> tabs = <Widget> [
+      MyChatPageTab(userModel: widget.userModel),
+      MyGroupTabPage(userModel: widget.userModel),
+      const MyStoryPage()
+    ];
 
     return SafeArea(
       maintainBottomViewPadding: true,
@@ -89,8 +99,9 @@ class _ScrollableUserListState extends State<ScrollableUserList>
       length: 3,
       initialIndex: 1,
         child: Scaffold(
-          backgroundColor:const Color.fromARGB(255, 255, 151, 151),
+          backgroundColor:ThemeColors.orange,
           body: NestedScrollView(
+            controller: scrollController,
             floatHeaderSlivers: true,
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
@@ -104,7 +115,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                     title: const Text('BoomBam',
                       style: TextStyle(
                         fontSize: 30,
-                        color: Color.fromARGB(225, 250, 79, 79)
+                        color: ThemeColors.redorange
                       ),
                     ),
                     actions: [
@@ -115,7 +126,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                         child: TextField(
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: const Color.fromARGB(200, 255, 186, 186),
+                            fillColor: ThemeColors.lightorange,
                             border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius: BorderRadius.all(Radius.circular(45.0)),
@@ -129,7 +140,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                       IconButton(
                         splashRadius: 1,
                         iconSize: 30,
-                        color: const Color.fromARGB(225, 250, 79, 79),
+                        color: ThemeColors.redorange,
                         icon: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
                             transitionBuilder: (child, anim) => RotationTransition(
@@ -154,17 +165,17 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                         },
                       ),
                       AnimatedSwitcher(
-                        duration: tabController.animationDuration,
+                        duration: const Duration(milliseconds: 300),
                         transitionBuilder: (Widget child, Animation<double> animation) {
                           return ScaleTransition(
-                            scale: _animationController, 
+                            scale: animation,
                             child: child
                           );
                         },
                         child: IconButton(
                           key: ValueKey<int>(tabController.index),
                           icon: Icon(_tabAddIcons[tabController.index],
-                            color: const Color.fromARGB(225, 250, 79, 79),
+                            color: ThemeColors.redorange,
                             size: 30,
                           ),
                           onPressed: () {
@@ -194,14 +205,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                                       await FirebaseAuth.instance.signOut();
                                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const MyLogin()));
                                     } catch (error) {
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        backgroundColor: const Color.fromARGB(205, 219, 30, 30),
-                                        content: Text(
-                                          error.toString(),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        duration: const Duration(seconds: 4),
-                                      ));
+                                      showWarning(context, error);
                                     }
                                   },
                                 ),
@@ -210,7 +214,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                           )
                         },
                         icon:const Icon(Icons.more_vert, size: 30,),
-                        color: const Color.fromARGB(225, 250, 79, 79),
+                        color: ThemeColors.redorange,
                         splashRadius: 1,
                       )
                     ],
@@ -220,52 +224,29 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                 SliverPersistentHeader(
                   pinned: true,
                   floating: true,
-                  delegate: Tabs(60.0, tabController),
+                  delegate: Tabs(50.0, tabController),
                 ),
               ];
             },
-            body: Padding(
+            body:Padding(
               padding:const EdgeInsets.fromLTRB(15, 15,15, 15),
               child :Container(
-                padding:const EdgeInsets.all(5.0),
+                padding:const EdgeInsets.all(10.0),
                 decoration: const BoxDecoration(
-                  color: Color.fromARGB(200, 255, 186, 186),
+                  color: ThemeColors.lightorange,
                   borderRadius:  BorderRadius.all(Radius.circular(30))
                 ),
                 child : TabBarView(
                   controller: tabController,
                   physics:const BouncingScrollPhysics(),
-                    children: tabNames.map(
-                      (content ) {
-                        return  StreamBuilder(
-                          stream: FirebaseFirestore.instance.collection(content).where('members.${widget.userModel.uid}', isEqualTo: true).snapshots(),
-                          builder: (context, snapshot){
-                          Widget tabContent;
-                          switch (content) {
-                            case "chats": tabContent = UserTab( snapshot: snapshot,userModel: widget.userModel); break;
-                            case "groups": tabContent = const GroupsTab(count: 0); break;
-                            case "story": tabContent = const Story(); break;
-                            default:
-                              tabContent = const Center(
-                                child: CircularProgressIndicator(),
-                              ); break;
-                          }
-                          return CustomScrollView(
-                            slivers: [
-                            SliverFillRemaining(
-                              hasScrollBody: false,
-                              fillOverscroll: true,
-                              child: tabContent
-                            )
-                            ],
-                          );
-                          }
-                        );
-                      },
-                    ).toList(),
+                  children: tabs.map((content ) {
+                    return CustomScrollView(
+                      key: Key(content.toString()),
+                      slivers: [ content],);
+                  }).toList(),
                   )
-               )
-             )
+                )
+              )
             )
           )
         )
@@ -299,13 +280,14 @@ class Tabs extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: const Color.fromARGB(255, 255, 151, 151),
+      color: ThemeColors.orange,
       height: size,
       child: TabBar(
         controller: tabController,
+        indicatorSize: TabBarIndicatorSize.label,
         indicatorWeight: 3,
-        indicatorColor: const Color.fromARGB(225, 250, 79, 79),
-        labelColor: const Color.fromARGB(255, 250, 79, 79),
+        indicatorColor: ThemeColors.redorange,
+        labelColor: ThemeColors.redorange,
         unselectedLabelColor: Colors.white60,
         tabs: const <Widget>[
           Tab(child: Icon(Icons.chat_outlined, size: 25)),
@@ -328,229 +310,6 @@ class Tabs extends SliverPersistentHeaderDelegate {
   }
 }
 
-class UserTab extends StatelessWidget {
-  const UserTab({Key? key, required this.snapshot, required this.userModel}) : super(key: key);
-
-  final AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot;
-  final UserModel userModel;
-
-  @override
-  Widget build(BuildContext context) {
-    if(snapshot.connectionState == ConnectionState.active) {
-      if(snapshot.hasData) {
-        QuerySnapshot chatRoomSnapshot = snapshot.data as QuerySnapshot;
-
-        if(chatRoomSnapshot.docs.isNotEmpty){
-          return  SliverList(
-            delegate: SliverChildBuilderDelegate( 
-              (context, index) {
-                // getting chatroommodel of snapshot
-                ChatRoomModel chatRoomModel = ChatRoomModel.fromMap(
-                  chatRoomSnapshot.docs[index].data() as Map<String, dynamic>);
-                //extracting members of chatroom as map
-                Map<String, dynamic> members = chatRoomModel.members!;
-                // converting member id to list
-                List<String> memberKeys = members.keys.toList();
-
-                // remove my key so that i know who is the other person
-                memberKeys.remove(userModel.uid);
-
-                return FutureBuilder(
-                  future: DatabaseService.getUserDataByID(memberKeys[0]),
-                  builder: (context, userData) {
-                    if(userData.connectionState == ConnectionState.done){
-                      // print("userdata connection done");
-                      if(userData.data != null) {
-
-                        UserModel targetUser = userData.data as UserModel;
-                        return ListTile(
-                          leading: Hero(
-                            tag: 'profilepic$index',
-                            child: CircleAvatar(
-                              radius: 30,
-                              //backgroundImage: NetworkImage(targetUser.profilepic.toString()),
-                            ),
-                          ),
-                          title:  Text(
-                            targetUser.userName.toString(),
-                            style:const TextStyle(fontSize: 20),
-                          ),
-                          subtitle: Text(chatRoomModel.lastMessage.toString()),
-                          minVerticalPadding: 20,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MyChatRoom(
-                                  chatroom: chatRoomModel,
-                                  user: userModel,
-                                  targetUser: targetUser,
-                                  heroId: index
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      }else {
-                        return emptyTabContent(tab: 'chats');
-                      }
-                    }else{
-                      return emptyTabContent(tab: 'chats', text: 'connecton faild');
-                    }
-                  }
-                );  
-              },
-              childCount: chatRoomSnapshot.docs.length,
-            ),
-          );
-        } else {
-          return emptyTabContent(tab: 'chats');
-        }
-      }else if(snapshot.hasError){
-        return emptyTabContent(tab: 'chats', text: snapshot.error.toString());
-      }else {
-        return emptyTabContent(tab: 'chats');
-      }
-    }else {
-      return  const Center(
-          child: CircularProgressIndicator(),
-        );
-    }
-  }
-}
-
-class GroupsTab extends StatelessWidget {
-  const GroupsTab({Key? key, required this.count}) : super(key: key);
-
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    return //count == 0?
-      Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 100),
-            Container(
-              width: 400,
-              height: 250,
-              alignment: Alignment.centerLeft,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/group.png"),
-                    fit: BoxFit.contain),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text.rich(
-              TextSpan(text: 'OOPS!!', children: [
-                TextSpan(text: '  Sorry', style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan( text: " Can't see anyone ", style: TextStyle(fontSize: 20)),
-                TextSpan(text: '\nMay be Try joining any group'),
-              ]),
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ],
-        )
-      );
-        // : SliverList(
-        //     delegate: SliverChildBuilderDelegate((context, index) {
-        //       return ListTile(
-        //         leading: Hero(
-        //           tag: 'profilepic$index',
-        //           child: const CircleAvatar(
-        //             radius: 30,
-        //             backgroundImage: NetworkImage(
-        //                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
-        //           ),
-        //         ),
-        //         title: const Text(
-        //           "Mr. H",
-        //           style: TextStyle(fontSize: 20),
-        //         ),
-        //         subtitle: const Text("Hey there, Isn't it cool ?"),
-        //         minVerticalPadding: 20,
-        //         onTap: () {
-        //           Navigator.push(
-        //             context,
-        //             MaterialPageRoute(
-        //               builder: (context) => const MyMessagesPage(
-        //                 id: "2",
-        //                 name: "Mr. k",
-        //               ),
-        //             ),
-        //           );
-        //         },
-        //       );
-        //     }, childCount: count),
-        //   );
-  }
-}
-
-class Story extends StatelessWidget {
-  const Story({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 100),
-            Container(
-              width: 400,
-              height: 250,
-              alignment: Alignment.centerLeft,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/activity.png"),
-                    fit: BoxFit.contain),
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text.rich(
-              TextSpan(text: 'OOPS!!', children: [
-                TextSpan(text: '  Sorry', style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan( text: " Can't see anyone ", style: TextStyle(fontSize: 20)),
-                TextSpan(text: '\nMay be Try joining any group'),
-              ]),
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ],
-        )
-      );
-    // return SliverList(
-    //   delegate: SliverChildBuilderDelegate((context, index) {
-    //     return ListTile(
-    //       leading: Hero(
-    //         tag: 'profilepic$index',
-    //         child: const CircleAvatar(
-    //           radius: 30,
-    //           backgroundImage: NetworkImage(
-    //               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
-    //         ),
-    //       ),
-    //       title: const Text(
-    //         "Mr. H",
-    //         style: TextStyle(fontSize: 20),
-    //       ),
-    //       subtitle: const Text("Hey there, Isn't it cool ?"),
-    //       minVerticalPadding: 20,
-    //       onTap: () {
-    //         Navigator.push(
-    //           context,
-    //           MaterialPageRoute(
-    //             builder: (context) =>const MyMessagesPage(
-    //               id: "1",
-    //               name: "Mr. k",
-    //             ),
-    //           ),
-    //         );
-    //       },
-    //     );
-    //   }, childCount: 1),
-    // );
-  }
-}
 
 PageRouteBuilder slideTransitionBuilder(Widget page) {
   return PageRouteBuilder(
