@@ -25,7 +25,7 @@ class DatabaseService {
   }
 
   // getting user data by email
-  static Future gettingUserData(String email ) async {
+  static Future getUserDataByEmail(String email ) async {
     QuerySnapshot snapshot =
         await userCollection.where("email", isEqualTo: email).get();
     return snapshot;
@@ -45,7 +45,7 @@ class DatabaseService {
   static Future<ChatRoomModel?> getChatRoomModel (UserModel targetUser) async {
     ChatRoomModel? chatRoom;
 
-    QuerySnapshot snapshot = await DatabaseService.chatsCollection.
+    QuerySnapshot snapshot = await chatsCollection.
     where("members.$uid", isEqualTo: true).
     where("members.${targetUser.uid}", isEqualTo: true).get();
 
@@ -61,20 +61,26 @@ class DatabaseService {
       ChatRoomModel newChatroom = ChatRoomModel(
         chatroomid: uuid.v1(),
         lastMessage: "",
+        sender: "",
         members: {
           uid.toString(): true,
-          targetUser.uid.toString(): true,
+          targetUser.uid.toString(): false,
         },
       );
-      await DatabaseService.chatsCollection.doc(newChatroom.chatroomid).set(newChatroom.toMap());
+      await chatsCollection.doc(newChatroom.chatroomid).set(newChatroom.toMap());
 
       chatRoom = newChatroom;
     }
     return chatRoom;
   }
 
-  static dynamic getChatRooms() async {
-     dynamic snapshot = await chatsCollection.where('members.$uid', isEqualTo: true).snapshots();
+  static dynamic getChatRooms() {
+     dynamic snapshot = chatsCollection.where('members.$uid', isEqualTo: true).snapshots();
+    return snapshot;
+  }
+
+  static dynamic getchats(String chatRoomId) {
+    dynamic snapshot = chatsCollection.doc(chatRoomId).collection('messages').orderBy("timeSent", descending: true).snapshots();
     return snapshot;
   }
 
@@ -85,5 +91,4 @@ class DatabaseService {
     .doc(messageID)
     .set( message.toMap());
   }
-
 }

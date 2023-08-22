@@ -111,7 +111,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   floating: true,
                   elevation: 0.0,
                   flexibleSpace:AppBar(
-                    backgroundColor:const Color.fromARGB(255, 255, 151, 151),
+                    backgroundColor: ThemeColors.orange,
                     title: const Text('BoomBam',
                       style: TextStyle(
                         fontSize: 30,
@@ -242,7 +242,8 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   children: tabs.map((content ) {
                     return CustomScrollView(
                       key: Key(content.toString()),
-                      slivers: [ content],);
+                      slivers: [ content],
+                    );
                   }).toList(),
                   )
                 )
@@ -289,7 +290,7 @@ class Tabs extends SliverPersistentHeaderDelegate {
         indicatorColor: ThemeColors.redorange,
         labelColor: ThemeColors.redorange,
         unselectedLabelColor: Colors.white60,
-        tabs: const <Widget>[
+        tabs: const <Widget> [
           Tab(child: Icon(Icons.chat_outlined, size: 25)),
           Tab(child: Icon(Icons.question_answer_outlined, size: 25)),
           Tab(child: Icon(Icons.camera, size: 28)),

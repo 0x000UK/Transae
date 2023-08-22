@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/pages/auth/register.dart';
 import 'package:firebase_app/service/FireBase/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -257,8 +258,12 @@ class _MyLoginState extends State<MyLogin> {
       if(userCredential != null) {
         String uid = userCredential.user!.uid;
         DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-        userModel = UserModel.fromMap(userData.data() as Map<String,dynamic>);
-        _allClear = true;
+          userModel = UserModel.fromMap(userData.data() as Map<String,dynamic>);
+          _allClear = true;
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage(userModel: userModel!)));
+      }
+      else {
+        showWarning(context, "UserData is null");
       }
     }
   }

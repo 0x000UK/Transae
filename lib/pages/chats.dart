@@ -4,6 +4,7 @@ import 'package:firebase_app/Models/chat_room_model.dart';
 import 'package:firebase_app/Models/message_model.dart';
 import 'package:firebase_app/Models/message_type.dart';
 import 'package:firebase_app/Widgets/colors.dart';
+import 'package:firebase_app/Widgets/message_boxes.dart';
 import 'package:firebase_app/main.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:flutter/material.dart';
@@ -27,12 +28,13 @@ class MyChatRoom extends StatefulWidget {
 }
 class _MyChatRoom extends State<MyChatRoom> {
 
-  //Stream<QuerySnapshot>
   late TextEditingController mssgController;
+  late FocusNode msgFocusNode;
 
   @override
   void initState() {
     mssgController = TextEditingController();
+    msgFocusNode = FocusNode();
     super.initState();
   }
 
@@ -42,9 +44,10 @@ class _MyChatRoom extends State<MyChatRoom> {
     mssgController.dispose();
   }
 
+  bool _isFirstMessage = true;
+
   @override
   Widget build(BuildContext context) {
-    //return const Scaffold();
  
     return Scaffold(
       backgroundColor: ThemeColors.orange,
@@ -100,7 +103,7 @@ class _MyChatRoom extends State<MyChatRoom> {
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
               color: ThemeColors.lightorange,
               ),
-              child:Container()
+              child: chatMessages()
             ),
             )
           ),
@@ -114,30 +117,31 @@ class _MyChatRoom extends State<MyChatRoom> {
                 SizedBox(  
                   width: MediaQuery.of(context).size.width-100,
                   height: 60,
-                  child :
-                TextField(
-                  controller: mssgController,
-                  maxLines: null,
-                  style: const TextStyle(fontSize: 20),
-                  decoration: const InputDecoration(
-                  contentPadding:  EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0),
-                  hintText: 'Enter text...',
-                  fillColor: ThemeColors.lightorange,
-                  filled: true,
-                  
-                  hintStyle:  TextStyle(
-                    fontSize: 20,
-                    color: Color.fromARGB(123, 0, 0, 0),
+                  child : TextField(
+                    controller: mssgController,
+                    maxLines: null,
+                    style: const TextStyle(fontSize: 20),
+                    decoration: const InputDecoration(
+                    contentPadding:  EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0),
+                    hintText: 'Enter text...',
+                    fillColor: ThemeColors.lightorange,
+                    filled: true,
+                    hintStyle:  TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(123, 0, 0, 0),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          bottomLeft: Radius.circular(30.0)),
+                      ),
+                    ),
+                    onTapOutside: (event) {
+                      msgFocusNode.unfocus();
+                    },
                   ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        bottomLeft: Radius.circular(30.0)),
-                  ),
-                ),
               ),
-                ),
               Padding(
                 padding:const EdgeInsets.only(bottom: 0),
                 child : Container(
@@ -150,7 +154,12 @@ class _MyChatRoom extends State<MyChatRoom> {
                   ),
                   child: IconButton(
                     color: ThemeColors.redorange,
-                    onPressed: (){}, 
+                    onPressed: (){
+                      sendMessage(_isFirstMessage);
+                      setState(() {
+                        _isFirstMessage = false;
+                      });
+                    }, 
                     icon:const Icon(Icons.send), 
                     iconSize: 43,
                   )
@@ -165,7 +174,7 @@ class _MyChatRoom extends State<MyChatRoom> {
     );
   }
 
-   sendMessage() async {
+  sendMessage(bool isFirstMessage) async {
     String msg = mssgController.text.trim();
     mssgController.clear();
 
@@ -180,7 +189,16 @@ class _MyChatRoom extends State<MyChatRoom> {
         isSeen: false
       );
 
-      DatabaseService.savingChatData(widget.chatroom.chatroomid!, newMessage.messageId, newMessage);
+    if(isFirstMessage) {
+      DatabaseService.chatsCollection.doc(widget.chatroom.chatroomid!).update({ "members.${widget.targetUser.uid!}": true});
+    }
+
+    DatabaseService.chatsCollection.doc(widget.chatroom.chatroomid!)
+    .update({ 
+      "lastmessage": newMessage.textMessage,
+      "sender" : widget.user.uid
+    });
+    DatabaseService.savingChatData(widget.chatroom.chatroomid!, newMessage.messageId, newMessage);
     }
   }
 
@@ -192,14 +210,19 @@ class _MyChatRoom extends State<MyChatRoom> {
           if(snapshot.hasData) {
 
             QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
-            return SliverList(
-              delegate: SliverChildBuilderDelegate((context, index){
-                return Container();
-              },
-              childCount: dataSnapshot.docs.length
-              )
-            );
+            return ListView.builder(
+              reverse: true,
+              itemBuilder: (context, index){
 
+                MessageModel currentMessage = MessageModel.fromMap(dataSnapshot.docs[index].data() as Map<String, dynamic>);
+                return MessageBox(
+                  message: currentMessage.textMessage, 
+                  senderId: currentMessage.senderId, 
+                  currentUser: widget.user.uid!,
+                );
+              },
+              itemCount: dataSnapshot.docs.length
+              );
           }else if(snapshot.hasError){
             return  Center(
               child: Text("${snapshot.error.toString()}\nplease check your internet connection "),
@@ -211,7 +234,7 @@ class _MyChatRoom extends State<MyChatRoom> {
           }
         }
         else{
-          return const Center(
+          return const Center (
             child: CircularProgressIndicator(),
           );
         }

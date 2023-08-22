@@ -20,7 +20,7 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
   Widget build(BuildContext context) {
  
     return StreamBuilder(
-        stream: DatabaseService.getChatRooms(),
+        stream: DatabaseService.chatsCollection.where('members.${widget.userModel.uid}', isEqualTo: true).snapshots(),
         builder: (context, snapshot){
           if(snapshot.connectionState == ConnectionState.active)  {
             if(snapshot.hasData) {
@@ -55,15 +55,13 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
                                   tag: 'profilepic$index',
                                   child: const CircleAvatar(
                                     radius: 30,
-                                    //backgroundImage: NetworkImage(targetUser.profilepic.toString()),
                                   ),
                                 ),
-                                //style: ListTileStyle.list,
                                 title: Text(
                                   targetUser.fullName!,
                                   style:const TextStyle(fontSize: 20),
                                 ),
-                                subtitle: Text(chatRoomModel.lastMessage.toString()),
+                                subtitle:Text( chatRoomModel.lastMessage.toString()),
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -79,7 +77,7 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
                                 },
                               );
                             }else {
-                              return emptyTabContent(tab: 'chats');
+                              return emptyTabContent(tab: 'chats', text: "no user data");
                             }
                           }else{
                             return const Center(
@@ -94,12 +92,12 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
                   ),
                 );
               } else {
-                return SliverToBoxAdapter(child: emptyTabContent(tab: 'chats'));
+                return SliverToBoxAdapter(child: emptyTabContent(tab: 'chats', text: "no data in database"));
               }
             }else if(snapshot.hasError){
               return SliverToBoxAdapter(child: emptyTabContent(tab: 'chats', text: snapshot.error.toString()));
             }else {
-              return SliverToBoxAdapter(child : emptyTabContent(tab: 'chats'));
+              return SliverToBoxAdapter(child : emptyTabContent(tab: 'chats', text: "snapshot error"));
             }
           }else {
             return const SliverToBoxAdapter(child: Center(
