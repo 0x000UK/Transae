@@ -61,7 +61,6 @@ class DatabaseService {
       ChatRoomModel newChatroom = ChatRoomModel(
         chatroomid: uuid.v1(),
         lastMessage: "",
-        sender: "",
         members: {
           uid.toString(): true,
           targetUser.uid.toString(): false,

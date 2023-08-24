@@ -229,9 +229,9 @@ class _ScrollableUserListState extends State<ScrollableUserList>
               ];
             },
             body:Padding(
-              padding:const EdgeInsets.fromLTRB(15, 15,15, 15),
+              padding:const EdgeInsets.fromLTRB(15, 15,15, 10),
               child :Container(
-                padding:const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.only(top: 20),
                 decoration: const BoxDecoration(
                   color: ThemeColors.lightorange,
                   borderRadius:  BorderRadius.all(Radius.circular(30))

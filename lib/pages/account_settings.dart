@@ -1,23 +1,5 @@
+import 'package:firebase_app/Widgets/colors.dart';
 import 'package:flutter/material.dart';
-
-class page2 extends StatefulWidget {
-  const page2({super.key});
-
-  @override
-  State<page2> createState() => _page2State();
-}
-
-class _page2State extends State<page2> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: const Center(
-        child: Text('Page 2'),
-      ),
-    );
-  }
-}
 
 class MySettings extends StatefulWidget {
   const MySettings({super.key});
@@ -27,95 +9,142 @@ class MySettings extends StatefulWidget {
 }
 
 class _MySettingsState extends State<MySettings> {
+
+  late ScrollController scrollController;
+  late double expandedHight;
+  late double horizontalPos;
+
+  double _avatarRadius = 60.0;
+
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+    scrollController.addListener(() => setState(() {
+       _avatarRadius = 60.0 - (scrollController.offset * 0.1);
+      // Ensure the radius doesn't go below a certain value
+      _avatarRadius = _avatarRadius.clamp(30.0, 60.0);
+    }));
+  }
+
+    @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  double get vertical {
+    double res = expandedHight;
+    if (scrollController.hasClients) {
+      double offset = scrollController.offset;
+      if (offset < (res - kToolbarHeight)) {
+        res -= offset;
+      } else {
+        res = kToolbarHeight;
+      }
+    }
+    return res;
+  }
+
+    double get horizontal {
+    double res = horizontalPos;
+    if (scrollController.hasClients) {
+      double offset = scrollController.offset;
+      if (offset < (res + kToolbarHeight)) {
+        res -= offset;
+      } else {
+        res = kToolbarHeight;
+      }
+    }
+    return res;
+  }
   @override
   Widget build(BuildContext context) {
+
+    Size size  =  MediaQuery.of(context).size;
+    expandedHight = size.height*0.25;
+    horizontalPos = size.width*0.2;
+
     return Scaffold(
-        body: Container(
-      color: const Color.fromARGB(255, 255, 168, 168),
-      child: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-              expandedHeight: 200,
-              collapsedHeight: 80,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Image.asset(
-                  // Image background for the top widget
-                  'assets/images/landscape.jpg',
-                  fit: BoxFit.cover,
+      backgroundColor: ThemeColors.orange,
+
+      body: Stack(
+        children: [
+          NestedScrollView(
+            physics:const BouncingScrollPhysics(),
+            controller: scrollController,
+            headerSliverBuilder: (context, value) {
+              return [
+                SliverAppBar(
+                  // leading: AnimatedPositioned(
+                  //   duration: ,
+                  //   child: ,
+                  // ),
+                  backgroundColor:ThemeColors.orange,
+                  title:const Text("   Settings", style: TextStyle(fontSize: 25),),
+                  //expandedHeight:180, //MediaQuery.of(context).size.height*0.2,
+                  actions: [
+                    IconButton(onPressed: (){}, icon: const Icon(Icons.edit))
+                  ],
+                  expandedHeight: size.height*0.25,
+                  flexibleSpace: FlexibleSpaceBar(
+                    
+                    background: Image.asset(
+                      // Image background for the top widget
+                      'assets/images/landscape.jpg',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  pinned: true,
+                  elevation: 0,
+                  shape: const RoundedRectangleBorder(side: BorderSide.none , borderRadius: BorderRadius.all(Radius.circular(25))),
                 ),
-              )),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return ListTile(
-                  title: Text('Item $index'),
-                );
-              },
-              childCount: 20, // Number of items in the ListView
-            ),
+                // const SliverToBoxAdapter(
+                //   child: SizedBox(height: 60,),
+                // )
+              ];
+            },
+            body:Padding (
+              padding:const EdgeInsets.all(15),
+              child: Container ( 
+                decoration: const BoxDecoration(
+                  color: ThemeColors.lightorange,
+                  borderRadius:  BorderRadius.all(Radius.circular(30))
+                ),
+                child : ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(25)),
+                 child : ListView.builder(
+                  physics:const NeverScrollableScrollPhysics(),
+                  itemCount: 80,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Text(
+                      'text_string $index'.toUpperCase(),
+                      style:const TextStyle(
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                ),
+                )
+              )
+            )
+          ),
+          Positioned(
+            right: -horizontal,
+            top: vertical,
+            width: MediaQuery.of(context).size.width,
+            child: CircleAvatar(
+              backgroundColor: ThemeColors.orange,
+              radius: _avatarRadius,
+              child: Image.asset(
+                'assets/images/Profile.png',
+                width: 110,
+              ),
+            )
           )
         ],
-      ),
-    )
-        //appBar: ,
-        // body: Container (
-        //   height: size.height,
-        //   width: size.width,
-        //   child:
-
-        //   Stack(
-        //   children: [
-        //     Positioned(
-        //       top: size.height * 0.25,
-        //       child: Container(
-        //         width: size.width,
-        //         child :ListView.builder(
-        //         itemCount: 50, // Replace with your actual item count
-        //         itemBuilder: (context, index) {
-        //           return ListTile(
-        //             title: Text('Item $index'),
-        //           );
-        //         },
-        //       ),
-        //       )
-        //     ),
-        //     Container(
-        //       height: size.height * 0.25,
-        //       width: size.width, // Half of the screen height
-        //       decoration:const BoxDecoration(
-        //         image: DecorationImage(
-        //           image: NetworkImage(
-        //             'https://imgs.search.brave.com/5Uk7BTqjpysZm6SjIGFU9XWbkdM6gFCIwMUE8mIsJdA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9h/YnN0cmFjdC1zcGFj/ZS13YWxscGFwZXIt/YmFja2dyb3VuZC1k/YXJrLXNtb2tlLWRl/c2lnbl81Mzg3Ni0x/MjgyNzguanBnP3Np/emU9NjI2JmV4dD1q/cGc', // Replace with your background image URL
-        //           ),
-        //           fit: BoxFit.cover,
-        //         ),
-        //       ),
-        //       child:const Padding(
-        //         padding: EdgeInsets.only(left: 20, top: 40),
-        //         child: Text(
-        //           'Account Settings',
-        //           style: TextStyle(
-        //             fontSize: 25,
-        //             color: Colors.white
-        //           ),
-
-        //         ),
-        //       ),
-        //     ),
-        //     Positioned(
-        //       top: size.height * 0.2, // Adjust the positioning as needed
-        //       left: size.width * 0.2-50, // Center the profile picture
-        //       child: const CircleAvatar(
-        //         radius: 50,
-        //         backgroundColor: Colors.white,
-        //         backgroundImage: NetworkImage('https://imgs.search.brave.com/VtuLHgcddG8TLDGhaJKjTncbbvvSBk_shiTxgEnwGFs/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9mcmVl/c3ZnLm9yZy9pbWcv/YWJzdHJhY3QtdXNl/ci1mbGF0LTQucG5n'),
-        //       )
-
-        //     ),
-
-        //   ],
-        // ),
-        // )
-        );
+      )
+    );
   }
 }

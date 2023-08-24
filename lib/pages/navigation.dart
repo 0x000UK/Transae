@@ -1,5 +1,6 @@
 
 import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'account_settings.dart';
 import 'home_page.dart';
@@ -7,7 +8,7 @@ import 'home_page.dart';
 class MyHomePage extends StatefulWidget {
 
   const MyHomePage({super.key, required this.userModel});
-  final UserModel userModel;
+  final UserModel  userModel;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -63,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       freindsIcon = Icons.groups_2_outlined;
       notifyIcon = Icons.notifications_outlined;
       accIcon = Icons.account_circle;
-      _currentIndex = 3;
+      _currentIndex = 1;
     });
   }
   int _currentIndex = 0;
@@ -82,22 +83,23 @@ class _MyHomePageState extends State<MyHomePage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 151, 151),
+      backgroundColor: ThemeColors.orange,
       bottomNavigationBar: SizedBox(
         height: size.height* 0.08,
         child: Padding(
-          padding:const EdgeInsets.only(bottom: 5,left: 10, right: 10),
+          padding:const EdgeInsets.only(bottom: 5,left: 15, right: 15),
           child: 
           Container(
             height: MediaQuery.of(context).size.height*0.08,
             decoration: const  BoxDecoration(
               borderRadius: BorderRadius.all( Radius.circular(45)),
               gradient: SweepGradient(
-                center: Alignment.topCenter,
-                startAngle: 1.0,
-                endAngle: 9.0,
+                center: Alignment.topRight,
+                startAngle: 2,
+                endAngle:9,
                 tileMode: TileMode.clamp,
-                colors: [Color.fromARGB(255, 240, 75, 97), Color.fromARGB(236, 230, 122, 46)]
+               // colors: [Color.fromARGB(255, 240, 75, 97), Color.fromARGB(236, 230, 122, 46)]
+               colors: [Color.fromARGB(242, 235, 36, 246), Color.fromRGBO(107, 46, 230, 0.922)]
               )
             ),
             child: Row(

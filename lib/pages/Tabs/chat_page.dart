@@ -61,7 +61,13 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
                                   targetUser.fullName!,
                                   style:const TextStyle(fontSize: 20),
                                 ),
-                                subtitle:Text( chatRoomModel.lastMessage.toString()),
+                                subtitle:Text( 
+                                  chatRoomModel.lastMessage.toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  maxLines: 1,
+                                ),
+                                trailing:const Text('Time'),
                                 onTap: () {
                                   Navigator.push(
                                     context,

@@ -30,11 +30,16 @@ class _MyChatRoom extends State<MyChatRoom> {
 
   late TextEditingController mssgController;
   late FocusNode msgFocusNode;
+  //late OpenAI openAI;
 
   @override
   void initState() {
     mssgController = TextEditingController();
     msgFocusNode = FocusNode();
+    // openAI = OpenAI.instance.build(
+    //   token: APIKey.key,
+    //   baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 60))
+    // );
     super.initState();
   }
 
@@ -99,12 +104,16 @@ class _MyChatRoom extends State<MyChatRoom> {
           ),
           Expanded(
             child: Padding(padding: const EdgeInsets.all(15),
-            child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
-              color: ThemeColors.lightorange,
+              child: Container(
+                padding: const EdgeInsets.only(top: 0, bottom: 0),
+                decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)),
+                color: ThemeColors.lightorange,
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(25)),
+                  child : chatMessages()
+                ),
               ),
-              child: chatMessages()
-            ),
             )
           ),
           Container(
@@ -112,10 +121,10 @@ class _MyChatRoom extends State<MyChatRoom> {
             padding: const EdgeInsets.only(bottom: 10),
             child: Row (
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children : [
                 SizedBox(  
-                  width: MediaQuery.of(context).size.width-100,
+                  width: MediaQuery.of(context).size.width-90,
                   height: 60,
                   child : TextField(
                     controller: mssgController,
@@ -143,7 +152,7 @@ class _MyChatRoom extends State<MyChatRoom> {
                   ),
               ),
               Padding(
-                padding:const EdgeInsets.only(bottom: 0),
+                padding:const EdgeInsets.only(bottom: 1),
                 child : Container(
                   decoration:const BoxDecoration(
                     color: ThemeColors.lightorange,
@@ -177,6 +186,11 @@ class _MyChatRoom extends State<MyChatRoom> {
   sendMessage(bool isFirstMessage) async {
     String msg = mssgController.text.trim();
     mssgController.clear();
+    
+    // dynamic req = await Chat.sendRequest(msg, "english");
+    // if (req != null ) {
+    //   msg = req;
+    // }
 
     if (msg.isNotEmpty) {
       MessageModel newMessage = MessageModel(
@@ -196,7 +210,6 @@ class _MyChatRoom extends State<MyChatRoom> {
     DatabaseService.chatsCollection.doc(widget.chatroom.chatroomid!)
     .update({ 
       "lastmessage": newMessage.textMessage,
-      "sender" : widget.user.uid
     });
     DatabaseService.savingChatData(widget.chatroom.chatroomid!, newMessage.messageId, newMessage);
     }

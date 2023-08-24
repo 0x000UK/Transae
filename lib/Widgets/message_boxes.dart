@@ -27,18 +27,22 @@ class _MessageBoxState extends State<MessageBox> {
 
     isSentByMe = widget.currentUser == widget.senderId;
     return Container(
+      decoration:const BoxDecoration(
+      // color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(30))
+      ),
       padding: EdgeInsets.only(
         top: 4,
-        bottom: 4,
-        left: isSentByMe ? 0 : 15,
-        right: isSentByMe ? 15 : 0
+        bottom: 0,
+        left: isSentByMe ? 0 : 5,
+        right: isSentByMe ? 5 : 0
       ),
-      alignment: isSentByMe ? Alignment.bottomRight : Alignment.bottomLeft,
+      alignment: isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: isSentByMe
             ? const EdgeInsets.only(left: 30)
             : const EdgeInsets.only(right: 30),
-        padding: const EdgeInsets.only(top: 17, bottom: 17, left: 20, right: 20),
+        padding: const EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
         decoration: BoxDecoration(
             borderRadius: isSentByMe
                 ? const BorderRadius.only(
@@ -71,7 +75,7 @@ class _MessageBoxState extends State<MessageBox> {
             // ),
             Text(widget.message,
                 textAlign: TextAlign.start,
-                style: const TextStyle(fontSize: 16, color: Colors.white))
+                style: const TextStyle(fontSize: 18, color: Colors.white))
           ],
         ),
       ),
