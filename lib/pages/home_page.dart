@@ -1,5 +1,6 @@
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Widgets/colors.dart';
+import 'package:firebase_app/Widgets/navigation_routes.dart';
 import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/pages/Tabs/chat_page.dart';
 import 'package:firebase_app/pages/Tabs/group_page.dart';
@@ -106,7 +107,9 @@ class _ScrollableUserListState extends State<ScrollableUserList>
             headerSliverBuilder:
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
-                SliverAppBar(
+                SliverOverlapAbsorber(
+                  handle:NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
                   snap: true,
                   floating: true,
                   elevation: 0.0,
@@ -221,6 +224,10 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                       elevation: 0.0,
                     )
                   ),
+              ),
+              // SliverOverlapInjector(
+              //             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              //           ),
                 SliverPersistentHeader(
                   pinned: true,
                   floating: true,
@@ -241,8 +248,11 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   physics:const BouncingScrollPhysics(),
                   children: tabs.map((content ) {
                     return CustomScrollView(
+
                       key: Key(content.toString()),
-                      slivers: [ content],
+                      slivers: [
+                        
+                        content],
                     );
                   }).toList(),
                   )
@@ -312,20 +322,20 @@ class Tabs extends SliverPersistentHeaderDelegate {
 }
 
 
-PageRouteBuilder slideTransitionBuilder(Widget page) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0); // Start the slide from right
-      const end = Offset.zero;
-      const curve = Curves.easeInOut;
+// PageRouteBuilder slideTransitionBuilder(Widget page) {
+//   return PageRouteBuilder(
+//     pageBuilder: (context, animation, secondaryAnimation) => page,
+//     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//       const begin = Offset(1.0, 0.0); // Start the slide from right
+//       const end = Offset.zero;
+//       const curve = Curves.easeInOut;
 
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+//       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-      var offsetAnimation = animation.drive(tween);
+//       var offsetAnimation = animation.drive(tween);
 
-      return SlideTransition(position: offsetAnimation, child: child);
-    },
-  );
-}
+//       return SlideTransition(position: offsetAnimation, child: child);
+//     },
+//   );
+// }
 

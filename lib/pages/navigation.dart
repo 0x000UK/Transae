@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ScrollableUserList(userModel : widget.userModel),
       //const MyMessagesPage(id: '1',name: "qwerty",),
       //const MyMessagesPage(id : '2',name: "asdfgh",),
-      const MySettings(),
+      MySettings(userModel : widget.userModel),
     ];
 
     Size size = MediaQuery.of(context).size;
