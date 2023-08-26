@@ -1,5 +1,7 @@
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Widgets/colors.dart';
+import 'package:firebase_app/Widgets/navigation_routes.dart';
+import 'package:firebase_app/pages/Settings/Edits/edit.dart';
 import 'package:flutter/material.dart';
 
  
@@ -66,7 +68,11 @@ class _MyAccountState extends State<MyAccount> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(widget.userModel.userName!, style: const TextStyle(fontSize: 20)),
-                              IconButton(onPressed: (){}, icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
+                              IconButton(
+                                onPressed: (){
+                                  Navigator.of(context).push(slideTransitionBuilder( MyEdits(userModel: widget.userModel,)));
+                                },
+                                 icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
                             ],
                           ))
                         ],
@@ -109,7 +115,7 @@ class _MyAccountState extends State<MyAccount> {
                       child : Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("change Password", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          const Text("Change Password", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                           Expanded(child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -119,13 +125,9 @@ class _MyAccountState extends State<MyAccount> {
                         ],
                       )
                     ),
-
                   ],
                 ),
               )
-                
-                
-                
               )
             )
           ],

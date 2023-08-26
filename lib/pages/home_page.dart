@@ -222,9 +222,11 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                       )
                     ],
                       elevation: 0.0,
-                    )
+                    ),
+                    //bottom: TabBars(50, tabController)
                   ),
-              ),
+                ),
+              
               // SliverOverlapInjector(
               //             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               //           ),
@@ -233,11 +235,14 @@ class _ScrollableUserListState extends State<ScrollableUserList>
                   floating: true,
                   delegate: Tabs(50.0, tabController),
                 ),
+                
               ];
             },
             body:Padding(
               padding:const EdgeInsets.fromLTRB(15, 15,15, 10),
-              child :Container(
+              child :
+              
+              Container(
                 padding: const EdgeInsets.only(top: 20),
                 decoration: const BoxDecoration(
                   color: ThemeColors.lightorange,
@@ -251,7 +256,13 @@ class _ScrollableUserListState extends State<ScrollableUserList>
 
                       key: Key(content.toString()),
                       slivers: [
-                        
+                        // SliverOverlapInjector(
+                        //   // This is the flip side of the SliverOverlapAbsorber
+                        //   // above.
+                        //   handle:
+                        //       NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        //           context),
+                        // ),
                         content],
                     );
                   }).toList(),
@@ -263,22 +274,6 @@ class _ScrollableUserListState extends State<ScrollableUserList>
         )
     );
   }
-}
-
-class UserChatModel {
-  final String id;
-  final String name;
-  final String messageText;
-  final String imageURL;
-  final String time;
-
-  UserChatModel({
-    required this.id, 
-    required this.name,
-    required this.imageURL,
-    required this.messageText,
-    required this.time,
-  });
 }
 
 class Tabs extends SliverPersistentHeaderDelegate {
@@ -320,22 +315,4 @@ class Tabs extends SliverPersistentHeaderDelegate {
     return oldDelegate.size != size;
   }
 }
-
-
-// PageRouteBuilder slideTransitionBuilder(Widget page) {
-//   return PageRouteBuilder(
-//     pageBuilder: (context, animation, secondaryAnimation) => page,
-//     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//       const begin = Offset(1.0, 0.0); // Start the slide from right
-//       const end = Offset.zero;
-//       const curve = Curves.easeInOut;
-
-//       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-//       var offsetAnimation = animation.drive(tween);
-
-//       return SlideTransition(position: offsetAnimation, child: child);
-//     },
-//   );
-// }
 

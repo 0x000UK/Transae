@@ -30,16 +30,11 @@ class _MyChatRoom extends State<MyChatRoom> {
 
   late TextEditingController mssgController;
   late FocusNode msgFocusNode;
-  //late OpenAI openAI;
 
   @override
   void initState() {
     mssgController = TextEditingController();
     msgFocusNode = FocusNode();
-    // openAI = OpenAI.instance.build(
-    //   token: APIKey.key,
-    //   baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 60))
-    // );
     super.initState();
   }
 
@@ -47,6 +42,7 @@ class _MyChatRoom extends State<MyChatRoom> {
   void dispose() {
     super.dispose();
     mssgController.dispose();
+    msgFocusNode.dispose();
   }
 
   bool _isFirstMessage = true;
@@ -129,6 +125,7 @@ class _MyChatRoom extends State<MyChatRoom> {
                   child : TextField(
                     controller: mssgController,
                     maxLines: null,
+                    expands: true,
                     style: const TextStyle(fontSize: 20),
                     decoration: const InputDecoration(
                     contentPadding:  EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0),
