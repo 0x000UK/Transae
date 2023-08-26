@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Widgets/colors.dart';
+import 'package:firebase_app/Widgets/warnings.dart';
+import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:flutter/material.dart';
  
 class MyEdits extends StatefulWidget {
@@ -33,7 +36,7 @@ class _MyEditsState extends State<MyEdits> {
  
   @override
   Widget build(BuildContext context) {
-
+   // userNameController = TextEditingController(text: widget.userModel.userName);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: ThemeColors.orange,
@@ -79,7 +82,6 @@ class _MyEditsState extends State<MyEdits> {
                       padding:const EdgeInsets.only(top: 40, left: 20, right: 20),
                       child : TextField(
                         cursorColor: Colors.white38,
-                        //restorationId: "hello",
                         undoController: UndoHistoryController(),
                         controller: userNameController,
                         style: const TextStyle(fontSize: 20),
@@ -96,6 +98,9 @@ class _MyEditsState extends State<MyEdits> {
                         onTapOutside: (event) {
                           userNameFocusNode.unfocus();
                         },
+                        onTap: () {
+                          userNameFocusNode.requestFocus();
+                        },
                         onChanged: (value) {
                           setState(() {
                             showSaveButton = true;
@@ -107,6 +112,10 @@ class _MyEditsState extends State<MyEdits> {
                             }
                           });
                         },
+                        onSubmitted:(value) {
+                          userNameController.text = value.trim();
+                          
+                        },
                       ),
                     ),
                     // const SizedBox(height: 550,),
@@ -117,8 +126,11 @@ class _MyEditsState extends State<MyEdits> {
                         padding: const EdgeInsets.only(right: 20,bottom: 20),
                         alignment: Alignment.bottomRight,
                         child: FloatingActionButton.extended(
-                          
-                          onPressed: (){}, 
+                          onPressed: () async {
+                            await updateUsername(userNameController.text);
+                            // setState(() {
+                            // });
+                          }, 
                           label: const Text("Save", style: TextStyle(fontSize: 15),),
                           icon: const Icon(Icons.save, size: 30,),
                           shape:const RoundedRectangleBorder(
@@ -137,4 +149,26 @@ class _MyEditsState extends State<MyEdits> {
       )
     );
   }
+
+ Future<void> updateUsername(String newUsername) async {
+    try {
+      // Check if the new username already exists
+      QuerySnapshot querySnapshot = await DatabaseService.userCollection.where('userName', isEqualTo: newUsername).get();
+
+      // If the querySnapshot is empty, the username is available
+      if (querySnapshot.docs.isEmpty) {
+        // Update the user's username
+        DocumentReference userDocRef = DatabaseService.userCollection.doc(widget.userModel.uid);
+        await userDocRef.update({
+          'userName': newUsername,
+        });
+        showWarning(context, "successfully updated Useraname");
+      } else {
+        showWarning(context, "Username not availbale, Try different one");
+      }
+    } catch (e) {
+      showWarning(context, e);
+    }
+  }
+
 }
