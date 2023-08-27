@@ -1,21 +1,22 @@
-import 'package:firebase_app/Models/UserModel.dart';
 import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/navigation_routes.dart';
 import 'package:firebase_app/pages/Settings/Edits/edit.dart';
+import 'package:firebase_app/service/Provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
  
-class MyAccount extends StatefulWidget {
-  const MyAccount({super.key, required this.userModel});
+class MyAccount extends ConsumerStatefulWidget {
+  const MyAccount({super.key});
  
-  final UserModel userModel;
   @override
-  State<MyAccount> createState() => _MyAccountState();
+  ConsumerState<MyAccount> createState() => _MyAccountState();
 }
-class _MyAccountState extends State<MyAccount> {
- 
+class _MyAccountState extends ConsumerState<MyAccount> {
+  
   @override
   Widget build(BuildContext context) {
+    final userModel = ref.watch(userModelProviderState.notifier).state;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: ThemeColors.orange,
@@ -67,10 +68,11 @@ class _MyAccountState extends State<MyAccount> {
                           Expanded(child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(widget.userModel.userName!, style: const TextStyle(fontSize: 20)),
+                              Text(userModel!.userName!, style: const TextStyle(fontSize: 20)),
                               IconButton(
-                                onPressed: (){
-                                  Navigator.of(context).push(slideTransitionBuilder( MyEdits(userModel: widget.userModel,)));
+                                onPressed: () {
+                                  
+                                  Navigator.of(context).push(slideTransitionBuilder( MyEdits(userModel: userModel,)));
                                 },
                                  icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
                             ],
@@ -87,7 +89,7 @@ class _MyAccountState extends State<MyAccount> {
                           Expanded(child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(widget.userModel.fullName!, style: const TextStyle(fontSize: 20),),
+                              Text(userModel.fullName!, style: const TextStyle(fontSize: 20),),
                               IconButton(onPressed: (){}, icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
                             ],
                           ))
@@ -103,7 +105,7 @@ class _MyAccountState extends State<MyAccount> {
                           Expanded(child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(widget.userModel.email!, style: const TextStyle(fontSize: 20),overflow: TextOverflow.ellipsis,),
+                              Text(userModel.email!, style: const TextStyle(fontSize: 20),overflow: TextOverflow.ellipsis,),
                               IconButton(onPressed: (){}, icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
                             ],
                           ))

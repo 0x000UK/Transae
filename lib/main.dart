@@ -1,36 +1,39 @@
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_app/service/FireBase/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'pages/auth/login.dart';
 import 'pages/navigation.dart';
 
 Uuid uuid = const Uuid();
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  User? currentUser = FirebaseAuth.instance.currentUser;
-  if(currentUser != null) {
-    DatabaseService.uid = currentUser.uid;
-    UserModel? userModel = await DatabaseService.getUserDataByID(currentUser.uid);
-    if(userModel != null) {
-      runApp(Home(userModel: userModel));
+void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+    );
+
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if(currentUser != null) {
+      DatabaseService.current_uid = currentUser.uid;
+      UserModel? userModel = await DatabaseService.getUserDataByID(null);
+      if(userModel != null) {
+        runApp(ProviderScope(child: Home(userModel: userModel)));
+      }
+      else {
+      runApp( const Login());
+      }
     }
     else {
-    runApp(const Login());
+      runApp(const Login());
     }
-  }
-  else {
-    runApp(const Login());
-  }
 }
+
 
 class Login extends StatelessWidget {
 
@@ -39,9 +42,11 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context ){
 
-    return const MaterialApp(
+    return  const ProviderScope(
+    child : MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyLogin(),
+    )
     );
   }
 }
@@ -55,9 +60,10 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context ){
 
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyHomePage(userModel: userModel),
-    );
+    return ProviderScope(
+      child : MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: MyHomePage(userModel: userModel),
+    ));
   }
 }

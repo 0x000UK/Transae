@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
  
 class MyGroupTabPage extends StatefulWidget {
   const MyGroupTabPage({super.key, required this.userModel});

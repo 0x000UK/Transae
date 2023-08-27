@@ -1,21 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/pages/auth/register.dart';
 import 'package:firebase_app/service/FireBase/auth_service.dart';
+import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../service/auth_validator.dart';
 import 'package:firebase_app/pages/navigation.dart';
+import 'package:firebase_app/service/Provider/provider.dart';
 
-class MyLogin extends StatefulWidget {
+
+class MyLogin extends ConsumerStatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
 
   @override
-  _MyLoginState createState() => _MyLoginState();
+  ConsumerState<MyLogin> createState() => _MyLoginState();
 }
 
-class _MyLoginState extends State<MyLogin> {
+class _MyLoginState extends ConsumerState<MyLogin> {
   //Global key to connect buttons
   final _key = GlobalKey<FormState>();
 
@@ -36,7 +40,6 @@ class _MyLoginState extends State<MyLogin> {
   String email = "";
   String password = "";
   bool _isLoading = false;
-  bool _allClear = false;
 
   UserModel? userModel;
 
@@ -75,17 +78,6 @@ class _MyLoginState extends State<MyLogin> {
   @override
   Widget build(BuildContext context) {
 
-    if(_allClear) {
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context){
-            return MyHomePage(userModel: userModel!);
-          }
-        )
-      );
-    }
     email = emailController.text;
     password = passwordController.text;
     Size size = MediaQuery.of(context).size;
@@ -105,8 +97,7 @@ class _MyLoginState extends State<MyLogin> {
             : Stack(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(
-                        top: size.height * 0.25, left: size.width * 0.5 - 130),
+                    padding: EdgeInsets.only(top: size.height * 0.25, left: size.width * 0.5 - 130),
                     child: Text(
                       'Welcome Back',
                       style: TextStyle(
@@ -223,7 +214,9 @@ class _MyLoginState extends State<MyLogin> {
                             )
                           ],
                         )
-                      ]))
+                      ]
+                    )
+                  )
                 ],
               ),
       ),
@@ -242,14 +235,7 @@ class _MyLoginState extends State<MyLogin> {
             //await HelperFunctions.saveUserEmailSF(email);
             //await HelperFunctions.saveUserPassSF(password);
       } on FirebaseAuthException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: const Color.fromARGB(205, 219, 30, 30),
-          content: Text(
-            e.code.toString(),
-            textAlign: TextAlign.center,
-          ),
-          duration: const Duration(seconds: 4),
-        ));
+        showWarning(context, e.code.toString());
         setState(() {
           _isLoading = false;
         });
@@ -257,10 +243,11 @@ class _MyLoginState extends State<MyLogin> {
 
       if(userCredential != null) {
         String uid = userCredential.user!.uid;
+        DatabaseService.current_uid = uid;
         DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(uid).get();
-          userModel = UserModel.fromMap(userData.data() as Map<String,dynamic>);
-          _allClear = true;
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage(userModel: userModel!)));
+        userModel = UserModel.fromMap(userData.data() as Map<String,dynamic>);
+        ref.read(userModelProviderState.notifier).state = userModel;
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage(userModel: userModel!)));
       }
       else {
         showWarning(context, "UserData is null");
@@ -352,144 +339,3 @@ class DynamicInputWidget extends StatelessWidget {
     );
   }
 }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Auth Form',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: AuthForm(),
-//     );
-//   }
-// }
-
-// class AuthForm extends StatefulWidget {
-//   @override
-//   _AuthFormState createState() => _AuthFormState();
-// }
-
-// class _AuthFormState extends State<AuthForm> {
-//   final AuthValidators authValidators = AuthValidators();
-//   final _formKey = GlobalKey<FormState>();
-//   //final _formKey1 = GlobalKey<FormFieldState>();
-//   //List <GlobalKey<FormFieldState>> form = [];
-//   TextEditingController _emailController = TextEditingController();
-//   TextEditingController _passwordController = TextEditingController();
-//   late FocusNode _focusNode;
-//   late FocusNode _focusNode1;
-
-//   void initState() {
-//     super.initState();
-
-//     _emailController = TextEditingController();
-//     _passwordController = TextEditingController();
-//     //form[0] = GlobalKey<FormFieldState>();
-//     //form[1] = GlobalKey<FormFieldState>();
-//     _focusNode = FocusNode();
-//     _focusNode1 = FocusNode();
-//   }
-
-//   void dispose() {
-//     super.dispose();
-
-//     _emailController.dispose();
-//     _passwordController.dispose();
-//     _focusNode.dispose();
-//     _focusNode1.dispose();
-//   }
-
-//   SnackBar msgPopUp(msg) {
-    
-//     return SnackBar(
-//       content: Text(
-//         msg,
-//         textAlign: TextAlign.center,
-//       ),
-//       backgroundColor: Colors.black45,
-      
-//       duration: Duration(seconds: 4),
-//     );
-//   }
-//   // void _requestFocus() {
-//   //   setState(() {
-//   //     FocusScope.of(context).requestFocus(_focusNode);
-//   //   });
-//   // }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Auth Form'),
-//       ),
-//       body: Padding(
-//         padding: EdgeInsets.all(16.0),
-//         child: Form(
-//           key: _formKey,
-//           child: Column(
-//             children: [
-//               TextFormField(
-//                 focusNode: _focusNode,
-//                 controller: _emailController,
-//                 textInputAction: TextInputAction.next,
-//                 onTapOutside: (event) {
-//                      _focusNode.unfocus();
-//                      //FocusScope.of(context).requestFocus(null);
-//                 },
-                
-//                 decoration: InputDecoration(
-//                   labelText: 'Email',
-//                   errorStyle: TextStyle(
-//                     fontSize:0
-//                   )
-//                 ),
-//                 validator: authValidators.emialValidator,
-//                 onEditingComplete: () {
-//                   if (authValidators.emialValidator(_emailController.text) != null) {
-//                     ScaffoldMessenger.of(context).showSnackBar(msgPopUp(AuthValidators.emailErrMsg));
-//                   }
-//                   else {
-//                     FocusScope.of(context).nextFocus();
-//                   }
-//                 },
-//               ),
-//               TextFormField(
-//                 focusNode: _focusNode1,
-//                 controller: _passwordController,
-//                 textInputAction: TextInputAction.done,
-                
-//                 onTapOutside: (event) {
-//                      _focusNode1.unfocus();
-//                      //FocusScope.of(context).requestFocus(null);
-//                 },
-//                 decoration: InputDecoration(
-//                   labelText: 'Password',
-//                   //focusedBorder: OutlineInputBorder()
-//                 ),
-//                 obscureText: true,
-//                 //4onTap: ,
-//                 validator: authValidators.passwordVlidator,
-//                 onEditingComplete: () {
-//                   if (authValidators.passwordVlidator(_passwordController.text) != null) {
-//                     ScaffoldMessenger.of(context).showSnackBar(msgPopUp(AuthValidators.passwordErrMsg));
-//                   }
-//                   else {
-//                     _focusNode1.unfocus();
-//                   }
-//                 },
-//               ),
-//               SizedBox(height: 16.0),
-//               ElevatedButton(
-//                 onPressed:(){},
-//                 child: Text('Submit'),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

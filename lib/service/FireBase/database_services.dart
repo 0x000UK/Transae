@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Models/chat_room_model.dart';
 import 'package:firebase_app/Models/message_model.dart';
 import 'package:firebase_app/main.dart';
 class DatabaseService {
-  static String? uid;
+  static String? current_uid;
 
   // reference for our collections
   static final CollectionReference userCollection =
@@ -14,12 +14,12 @@ class DatabaseService {
 
   // saving the userdata
   static Future savingUserData( String fullName, String email, String password) async {
-    return await userCollection.doc(uid).set({
+    return await userCollection.doc(current_uid).set({
       "fullName": fullName,
       "email": email,
       "userName": "" ,
       "profilePic": "",
-      "uid": uid,
+      "uid": current_uid,
       "password": password,
     });
   }
@@ -32,9 +32,10 @@ class DatabaseService {
   }
 
   // get User data by uid
-  static Future<UserModel?> getUserDataByID( String uid) async {
+  static Future<UserModel?> getUserDataByID( String? uid) async {
     UserModel? userModel;
-    DocumentSnapshot docSnap = await userCollection.doc(uid).get();
+    String? id = uid ?? current_uid;
+    DocumentSnapshot docSnap = await userCollection.doc(id).get();
 
     if(docSnap.data() != null){
       userModel = UserModel.fromMap(docSnap.data() as Map<String,dynamic>);
@@ -46,7 +47,7 @@ class DatabaseService {
     ChatRoomModel? chatRoom;
 
     QuerySnapshot snapshot = await chatsCollection.
-    where("members.$uid", isEqualTo: true).
+    where("members.$current_uid", isEqualTo: true).
     where("members.${targetUser.uid}", isEqualTo: true).get();
 
     if(snapshot.docs.isNotEmpty) {
@@ -62,7 +63,7 @@ class DatabaseService {
         chatroomid: uuid.v1(),
         lastMessage: "",
         members: {
-          uid.toString(): true,
+          current_uid.toString(): true,
           targetUser.uid.toString(): false,
         },
       );
@@ -74,7 +75,7 @@ class DatabaseService {
   }
 
   static dynamic getChatRooms() {
-     dynamic snapshot = chatsCollection.where('members.$uid', isEqualTo: true).snapshots();
+     dynamic snapshot = chatsCollection.where('members.$current_uid', isEqualTo: true).snapshots();
     return snapshot;
   }
 

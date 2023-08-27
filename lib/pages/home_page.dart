@@ -1,4 +1,4 @@
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/navigation_routes.dart';
 import 'package:firebase_app/Widgets/warnings.dart';
@@ -7,19 +7,21 @@ import 'package:firebase_app/pages/Tabs/group_page.dart';
 import 'package:firebase_app/pages/Tabs/story_page.dart';
 import 'package:firebase_app/pages/auth/login.dart';
 import 'package:firebase_app/pages/search_page.dart';
+import 'package:firebase_app/service/Provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ScrollableUserList extends StatefulWidget {
+class ScrollableUserList extends ConsumerStatefulWidget {
   const ScrollableUserList({super.key, required this.userModel});
 
   final UserModel userModel;
 
   @override
-  State<ScrollableUserList> createState() => _ScrollableUserListState();
+  ConsumerState<ScrollableUserList> createState() => _ScrollableUserListState();
 }
 
-class _ScrollableUserListState extends State<ScrollableUserList>
+class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
   with TickerProviderStateMixin {
 
 
@@ -31,6 +33,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
   late TabController tabController;
   late AnimationController _animationController;
   late ScrollController scrollController;
+  late UserModel? userModel;
 
   bool _isExpanded = false;
   int lastTab = 0;
@@ -42,6 +45,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
   void initState() {
     super.initState();
 
+   
     tabController =
         TabController(length: 3, vsync: this, initialIndex: activeTab);
     _animationController = AnimationController(
@@ -94,6 +98,7 @@ class _ScrollableUserListState extends State<ScrollableUserList>
       const MyStoryPage()
     ];
 
+    userModel = ref.read(userModelProviderState.notifier).state;
     return SafeArea(
       maintainBottomViewPadding: true,
       child: DefaultTabController(

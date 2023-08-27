@@ -1,4 +1,4 @@
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/navigation_routes.dart';
 import 'package:firebase_app/pages/Settings/account.dart';
@@ -143,7 +143,7 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
                       ),
                       ListTile(
                         onTap: (){
-                          Navigator.of(context).push(slideTransitionBuilder( MyAccount(userModel: widget.userModel,)));
+                          Navigator.of(context).push(slideTransitionBuilder(const MyAccount()));
                         },
                         leading: const Icon(Icons.portrait, size: 30,),
                         title: const Text("My Account", style: TextStyle(fontSize: 20),),

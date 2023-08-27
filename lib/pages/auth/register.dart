@@ -1,21 +1,24 @@
+import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/pages/auth/login.dart';
 import 'package:firebase_app/pages/navigation.dart';
 import 'package:firebase_app/service/auth_validator.dart';
 import 'package:firebase_app/service/FireBase/auth_service.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_app/service/Provider/provider.dart';
 import 'dart:async';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MyRegister extends StatefulWidget {
+class MyRegister extends ConsumerStatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
 
   @override
-  _MyRegisterState createState() => _MyRegisterState();
+  ConsumerState<MyRegister> createState() => _MyRegisterState();
 }
 
-class _MyRegisterState extends State<MyRegister> {
+class _MyRegisterState extends ConsumerState<MyRegister> {
   //Global key to connect buttons
   final _key = GlobalKey<FormState>();
 
@@ -348,21 +351,14 @@ class _MyRegisterState extends State<MyRegister> {
         user = await authService
           .registerUserWithEmailandPassword(fullName, email, password);
       } on FirebaseAuthException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: const Color.fromARGB(205, 219, 30, 30),
-          content: Text(
-            e.message.toString(),
-            textAlign: TextAlign.center,
-          ),
-          duration: const Duration(seconds: 4),
-        ));
+        showWarning(context, e.message.toString());
         setState(() {
           _isLoading = false;
         });
       }
       if(user != null) {
         String uid = user.uid;
-        DatabaseService.uid = uid;
+        DatabaseService.current_uid = uid;
         UserModel newUser = UserModel(
           uid: uid,
           email: email,
@@ -371,6 +367,7 @@ class _MyRegisterState extends State<MyRegister> {
           profilePic: ""
         );
         await DatabaseService.savingUserData(fullName,email,password).then((value) async{
+          ref.read(userModelProviderState.notifier).state = newUser;
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage(userModel: newUser)));
         });
       } 

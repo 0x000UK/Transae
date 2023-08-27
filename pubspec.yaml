@@ -40,6 +40,8 @@ dependencies:
   firebase_core: ^2.15.0
   http: ^1.1.0
   uuid: ^3.0.7
+  flutter_riverpod: ^2.3.7
+
 
 dev_dependencies:
   flutter_test:

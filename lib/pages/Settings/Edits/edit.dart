@@ -1,30 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
+import 'package:firebase_app/service/Provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
  
-class MyEdits extends StatefulWidget {
+class MyEdits extends ConsumerStatefulWidget {
   const MyEdits({super.key, required this.userModel});
 
-  final UserModel userModel;
- 
- 
+  final UserModel? userModel;
   @override
-  State<MyEdits> createState() => _MyEditsState();
+  ConsumerState<MyEdits> createState() => _MyEditsState();
 }
-class _MyEditsState extends State<MyEdits> {
+class _MyEditsState extends ConsumerState<MyEdits> {
   
   late TextEditingController userNameController;
   late FocusNode userNameFocusNode;
   bool showSaveButton = false;
+  UserModel? userModel;
 
     @override
   void initState() {
-    userNameController = TextEditingController(text: widget.userModel.userName);
-    userNameFocusNode = FocusNode();
     super.initState();
+    // userModel = ref.watch(userModelProviderState.notifier).state;
+    userNameController = TextEditingController(text: widget.userModel!.userName);
+    userNameFocusNode = FocusNode();
   }
 
   @override
@@ -34,9 +36,10 @@ class _MyEditsState extends State<MyEdits> {
     userNameFocusNode.dispose();
   }
  
+  
   @override
   Widget build(BuildContext context) {
-   // userNameController = TextEditingController(text: widget.userModel.userName);
+    userModel = ref.watch(userModelProviderState.notifier).state;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: ThemeColors.orange,
@@ -107,7 +110,7 @@ class _MyEditsState extends State<MyEdits> {
                             if(userNameController.text.isEmpty) {
                               showSaveButton = false;
                             }
-                            if(userNameController.text == widget.userModel.userName){
+                            if(userNameController.text == userModel!.userName){
                               showSaveButton = false;
                             }
                           });
@@ -128,8 +131,15 @@ class _MyEditsState extends State<MyEdits> {
                         child: FloatingActionButton.extended(
                           onPressed: () async {
                             await updateUsername(userNameController.text);
-                            // setState(() {
-                            // });
+                            UserModel updatedUserModel = 
+                            UserModel(
+                              uid: userModel!.uid,
+                              userName: userNameController.text,
+                              fullName: userModel!.fullName,
+                              profilePic: userModel!.profilePic,
+                              email: userModel!.email
+                              );
+                            ref.read(userModelProviderState.notifier).state = updatedUserModel;
                           }, 
                           label: const Text("Save", style: TextStyle(fontSize: 15),),
                           icon: const Icon(Icons.save, size: 30,),
@@ -150,7 +160,7 @@ class _MyEditsState extends State<MyEdits> {
     );
   }
 
- Future<void> updateUsername(String newUsername) async {
+  Future<void> updateUsername(String newUsername) async {
     try {
       // Check if the new username already exists
       QuerySnapshot querySnapshot = await DatabaseService.userCollection.where('userName', isEqualTo: newUsername).get();
@@ -158,11 +168,12 @@ class _MyEditsState extends State<MyEdits> {
       // If the querySnapshot is empty, the username is available
       if (querySnapshot.docs.isEmpty) {
         // Update the user's username
-        DocumentReference userDocRef = DatabaseService.userCollection.doc(widget.userModel.uid);
+        DocumentReference userDocRef = DatabaseService.userCollection.doc(userModel!.uid);
         await userDocRef.update({
           'userName': newUsername,
         });
         showWarning(context, "successfully updated Useraname");
+        Navigator.of(context).pop();
       } else {
         showWarning(context, "Username not availbale, Try different one");
       }

@@ -1,5 +1,5 @@
 
-import 'package:firebase_app/Models/UserModel.dart';
+import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'account_settings.dart';
