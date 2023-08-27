@@ -17,7 +17,7 @@ Widget emptyTabContent({ required String tab, String? text}) {
                   image: AssetImage(
                     tab == 'chats'? "assets/images/Worried-amico.png" :
                     tab == 'groups'? "assets/images/group.png":
-                    "assets/images/group.png"
+                    "assets/images/activity.png"
                   ),
                   fit: BoxFit.contain),
             ),
@@ -25,12 +25,7 @@ Widget emptyTabContent({ required String tab, String? text}) {
           const SizedBox(
             height: 30,
           ),
-          text == null ? const Text.rich(
-              TextSpan(text: 'OOPS!!', children: [
-              TextSpan(text: '  Sorry',style: TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: " Can't see anyone ",style: TextStyle(fontSize: 20)),
-              TextSpan(text: '\nMay be try adding someone'),
-            ]),
+          text == null ? const Text ( "Feature under development",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ):
           Text(text),

@@ -21,6 +21,7 @@ class DatabaseService {
       "profilePic": "",
       "uid": current_uid,
       "password": password,
+      "background" : ""
     });
   }
 

@@ -4,19 +4,21 @@ import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_app/service/Provider/provider.dart';
+import 'package:firebase_app/service/auth_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
  
 class MyEdits extends ConsumerStatefulWidget {
-  const MyEdits({super.key, required this.userModel});
+  const MyEdits({super.key,required this.edit, required this.userModel});
 
+  final String edit;
   final UserModel? userModel;
   @override
   ConsumerState<MyEdits> createState() => _MyEditsState();
 }
 class _MyEditsState extends ConsumerState<MyEdits> {
   
-  late TextEditingController userNameController;
+  late TextEditingController _controller;
   late FocusNode userNameFocusNode;
   bool showSaveButton = false;
   UserModel? userModel;
@@ -25,14 +27,25 @@ class _MyEditsState extends ConsumerState<MyEdits> {
   void initState() {
     super.initState();
     // userModel = ref.watch(userModelProviderState.notifier).state;
-    userNameController = TextEditingController(text: widget.userModel!.userName);
+    switch (widget.edit) {
+      case "UserName":  _controller = TextEditingController(text: widget.userModel!.userName);
+        break;
+      case "FullName" : _controller = TextEditingController(text: widget.userModel!.fullName);
+        break;
+      case "Email" : _controller = TextEditingController(text: widget.userModel!.email);
+        break;
+      case "Password" : _controller = TextEditingController();
+        break;
+      default: _controller = TextEditingController();
+        break;
+    }
     userNameFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
     super.dispose();
-    userNameController.dispose();
+    _controller.dispose();
     userNameFocusNode.dispose();
   }
  
@@ -61,9 +74,13 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                       iconSize: 30,
                     ),
                     const SizedBox(width: 20),
-                    const Text(
-                      'User Name',
-                      style: TextStyle(
+                    Text(
+                      widget.edit == "UserName" ? 'User Name' :
+                      widget.edit == "FullName" ? 'Full Name' :
+                      widget.edit == "Email" ? 'Email' :
+                      widget.edit == "Password" ? 'Password' :
+                      '',
+                      style: const TextStyle(
                           fontSize: 22, fontWeight: FontWeight.bold),
                     )
                   ],
@@ -86,13 +103,59 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                       child : TextField(
                         cursorColor: Colors.white38,
                         undoController: UndoHistoryController(),
-                        controller: userNameController,
+                        controller: _controller,
                         style: const TextStyle(fontSize: 20),
-                        decoration: const InputDecoration(
-                          border:UnderlineInputBorder(),
+                        decoration:  InputDecoration(
+                          border: const UnderlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
-                          contentPadding:  EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                          labelText: 'Enter userName',
+                          contentPadding: const  EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                          labelText: 
+                            widget.edit == "UserName" ? 'Enter userName' :
+                            widget.edit == "FullName" ? 'Enter Fullname' :
+                            widget.edit == "Email" ? 'Enter Email' :
+                            widget.edit == "Password" ? 'Enter Current Password' :
+                            "",
+                          labelStyle: const TextStyle(
+                            fontSize: 25,
+                            color: Color.fromARGB(123, 0, 0, 0),
+                          ),
+                        ),
+                        onTapOutside: (event) {
+                          userNameFocusNode.unfocus();
+                        },
+                        onTap: () {
+                          userNameFocusNode.requestFocus();
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            showSaveButton = true;
+                            if(_controller.text.isEmpty) {
+                              showSaveButton = false;
+                            }
+                            if(_controller.text == userModel!.userName){
+                              showSaveButton = false;
+                            }
+                          });
+                        },
+                        onSubmitted:(value) {
+                          _controller.text = value.trim();
+                          
+                        },
+                      ),
+                    ),
+                    widget.edit == "Password" ? Padding(
+                      padding:const EdgeInsets.only(top: 40, left: 20, right: 20),
+                      child : TextField(
+                        cursorColor: Colors.white38,
+                        undoController: UndoHistoryController(),
+                        controller: _controller,
+                        style: const TextStyle(fontSize: 20),
+                        decoration: const  InputDecoration(
+                          border:  UnderlineInputBorder(),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          contentPadding:   EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                          labelText: 
+                             'Enter New Password', 
                           labelStyle:  TextStyle(
                             fontSize: 25,
                             color: Color.fromARGB(123, 0, 0, 0),
@@ -107,20 +170,20 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                         onChanged: (value) {
                           setState(() {
                             showSaveButton = true;
-                            if(userNameController.text.isEmpty) {
+                            if(_controller.text.isEmpty) {
                               showSaveButton = false;
                             }
-                            if(userNameController.text == userModel!.userName){
+                            if(_controller.text == userModel!.userName){
                               showSaveButton = false;
                             }
                           });
                         },
                         onSubmitted:(value) {
-                          userNameController.text = value.trim();
+                          _controller.text = value.trim();
                           
                         },
                       ),
-                    ),
+                    ) : Container(),
                     // const SizedBox(height: 550,),
                     Expanded(
                       child: showSaveButton? AnimatedContainer(
@@ -130,16 +193,57 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                         alignment: Alignment.bottomRight,
                         child: FloatingActionButton.extended(
                           onPressed: () async {
-                            await updateUsername(userNameController.text);
-                            UserModel updatedUserModel = 
-                            UserModel(
-                              uid: userModel!.uid,
-                              userName: userNameController.text,
-                              fullName: userModel!.fullName,
-                              profilePic: userModel!.profilePic,
-                              email: userModel!.email
-                              );
+                            UserModel updatedUserModel;
+                            switch (widget.edit) {
+                              case "UserName":  await updateUserData(_controller.text);
+                                updatedUserModel = UserModel(
+                                  uid: userModel!.uid,
+                                  userName: _controller.text,
+                                  fullName: userModel!.fullName,
+                                  profilePic: userModel!.profilePic,
+                                  email: userModel!.email,
+                                  password: userModel!.password,
+                                  background: userModel!.background
+                                );
+                                break;
+                              case "FullName" : await updateUserData(_controller.text);
+                                  updatedUserModel = UserModel(
+                                  uid: userModel!.uid,
+                                  userName: userModel!.userName,
+                                  fullName: _controller.text,
+                                  profilePic: userModel!.profilePic,
+                                  email: userModel!.email,
+                                  password: userModel!.password,
+                                  background: userModel!.background
+                                );
+                                break;
+                              case "Email" : await updateUserData(_controller.text);
+                                  updatedUserModel = UserModel(
+                                  uid: userModel!.uid,
+                                  userName: userModel!.userName,
+                                  fullName:userModel!.fullName,
+                                  profilePic: userModel!.profilePic,
+                                  email: _controller.text,
+                                  password: userModel!.password,
+                                  background: userModel!.background
+                                );
+                                break;
+                              case "Password" : await updateUserData(_controller.text);
+                                  updatedUserModel = UserModel(
+                                  uid: userModel!.uid,
+                                  userName: userModel!.userName,
+                                  fullName: userModel!.fullName,
+                                  profilePic: userModel!.profilePic,
+                                  email: userModel!.email,
+                                  password: _controller.text,
+                                  background: userModel!.background
+                                );
+                                break;
+                              default: updatedUserModel = userModel!;
+                                break;
+                            }
                             ref.read(userModelProviderState.notifier).state = updatedUserModel;
+                             Navigator.of(context).pop();
                           }, 
                           label: const Text("Save", style: TextStyle(fontSize: 15),),
                           icon: const Icon(Icons.save, size: 30,),
@@ -160,23 +264,48 @@ class _MyEditsState extends ConsumerState<MyEdits> {
     );
   }
 
-  Future<void> updateUsername(String newUsername) async {
+  Future<void> updateUserData(String inputText) async {
     try {
       // Check if the new username already exists
-      QuerySnapshot querySnapshot = await DatabaseService.userCollection.where('userName', isEqualTo: newUsername).get();
-
-      // If the querySnapshot is empty, the username is available
-      if (querySnapshot.docs.isEmpty) {
-        // Update the user's username
+      QuerySnapshot querySnapshot;
+      if(widget.edit == "UserName") {
+        querySnapshot = await DatabaseService.userCollection.where('userName', isEqualTo: inputText).get();
+        if (querySnapshot.docs.isEmpty) {
+          // Update the user's username
+          DocumentReference userDocRef = DatabaseService.userCollection.doc(userModel!.uid);
+          await userDocRef.update({
+            'userName': inputText,
+          });
+          showWarning(context, "successfully updated Useraname");
+        } else {
+          showWarning(context, "Username not availbale, Try different one");
+        }
+      } else if (widget.edit == "Email"){
+        querySnapshot = await DatabaseService.userCollection.where('email', isEqualTo: inputText).get();
+        if (querySnapshot.docs.isEmpty) {
+          // Update the user's username
+          DocumentReference userDocRef = DatabaseService.userCollection.doc(userModel!.uid);
+          await userDocRef.update({
+            'email': inputText,
+          });
+          showWarning(context, "successfully updated Email");
+        } else {
+          showWarning(context, "Email already registered!!");
+        }
+      }else if(widget.edit == 'FullName') {
         DocumentReference userDocRef = DatabaseService.userCollection.doc(userModel!.uid);
         await userDocRef.update({
-          'userName': newUsername,
+          'fullName': inputText,
         });
-        showWarning(context, "successfully updated Useraname");
-        Navigator.of(context).pop();
-      } else {
-        showWarning(context, "Username not availbale, Try different one");
+        showWarning(context, "successfully updated FullName");
+      }else {
+        DocumentReference userDocRef = DatabaseService.userCollection.doc(userModel!.uid);
+        await userDocRef.update({
+          'password': inputText,
+        });
+        showWarning(context, "successfully updated Password");
       }
+      
     } catch (e) {
       showWarning(context, e);
     }

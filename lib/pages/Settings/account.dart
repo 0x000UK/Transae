@@ -72,7 +72,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                               IconButton(
                                 onPressed: () {
                                   
-                                  Navigator.of(context).push(slideTransitionBuilder( MyEdits(userModel: userModel,)));
+                                  Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "UserName",userModel: userModel,)));
                                 },
                                  icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
                             ],
@@ -90,7 +90,11 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(userModel.fullName!, style: const TextStyle(fontSize: 20),),
-                              IconButton(onPressed: (){}, icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
+                              IconButton(
+                                onPressed: (){
+                                   Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "FullName",userModel: userModel,)));
+                                }, 
+                                icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
                             ],
                           ))
                         ],
@@ -106,7 +110,11 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(userModel.email!, style: const TextStyle(fontSize: 20),overflow: TextOverflow.ellipsis,),
-                              IconButton(onPressed: (){}, icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
+                              IconButton(
+                                onPressed: (){
+                                   Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "Email",userModel: userModel,)));
+                                }, 
+                                icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
                             ],
                           ))
                         ],
