@@ -105,7 +105,7 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
       length: 3,
       initialIndex: 1,
         child: Scaffold(
-          backgroundColor:ThemeColors.orange,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,  //ThemeColors.orange,
           body: NestedScrollView(
             controller: scrollController,
             floatHeaderSlivers: true,
@@ -119,13 +119,15 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                   floating: true,
                   elevation: 0.0,
                   flexibleSpace:AppBar(
-                    backgroundColor: ThemeColors.orange,
-                    title: const Text('BoomBam',
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    title: Text('BoomBam',
                       style: TextStyle(
-                        fontSize: 30,
-                        color: ThemeColors.redorange
+                        fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.displayLarge?.color
                       ),
                     ),
+                    actionsIconTheme:const IconThemeData.fallback(),
                     actions: [
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
@@ -134,21 +136,21 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                         child: TextField(
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: ThemeColors.lightorange,
+                            fillColor: Theme.of(context).primaryColorLight,
                             border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius: BorderRadius.all(Radius.circular(45.0)),
                             ),
                             hintText: "Search...",
-                            suffixIcon: IconButton(onPressed: (){}, icon:const Icon(Icons.search), iconSize: _isExpanded? 30: 0 ,)
+                            suffixIcon: IconButton(onPressed: (){}, icon:const Icon(Icons.search), iconSize: _isExpanded? Theme.of(context).iconTheme.size: 0 ,)
                           ),
                           enabled: _isExpanded,
                         ),
                       ),
                       IconButton(
                         splashRadius: 1,
-                        iconSize: 30,
-                        color: ThemeColors.redorange,
+                        iconSize: Theme.of(context).iconTheme.size,
+                        color: Theme.of(context).iconTheme.color,
                         icon: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
                             transitionBuilder: (child, anim) => RotationTransition(
@@ -183,8 +185,8 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                         child: IconButton(
                           key: ValueKey<int>(tabController.index),
                           icon: Icon(_tabAddIcons[tabController.index],
-                            color: ThemeColors.redorange,
-                            size: 30,
+                            color: Theme.of(context).iconTheme.color,
+                            size: Theme.of(context).iconTheme.size,
                           ),
                           onPressed: () {
                             setState(() {
@@ -200,6 +202,7 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                       IconButton(
                         onPressed: () => {
                           showMenu(
+                            //color: Theme.of(context).popupMenuTheme.color,
                             context: context, 
                             position: const RelativeRect.fromLTRB(100, 50, 50, 0), 
                             elevation: 10,
@@ -221,8 +224,8 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                             ],
                           )
                         },
-                        icon:const Icon(Icons.more_vert, size: 30,),
-                        color: ThemeColors.redorange,
+                        icon: Icon(Icons.more_vert, size: Theme.of(context).iconTheme.size,),
+                        color: Theme.of(context).iconTheme.color,
                         splashRadius: 1,
                       )
                     ],
@@ -249,9 +252,9 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
               
               Container(
                 padding: const EdgeInsets.only(top: 20),
-                decoration: const BoxDecoration(
-                  color: ThemeColors.lightorange,
-                  borderRadius:  BorderRadius.all(Radius.circular(30))
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorLight,
+                  borderRadius:const BorderRadius.all(Radius.circular(30))
                 ),
                 child : TabBarView(
                   controller: tabController,
@@ -291,19 +294,15 @@ class Tabs extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: ThemeColors.orange,
+      color: Theme.of(context).scaffoldBackgroundColor,
       height: size,
       child: TabBar(
         controller: tabController,
-        indicatorSize: TabBarIndicatorSize.label,
-        indicatorWeight: 3,
-        indicatorColor: ThemeColors.redorange,
-        labelColor: ThemeColors.redorange,
-        unselectedLabelColor: Colors.white60,
+        indicatorPadding:const EdgeInsets.only(top: 5, bottom: 5, right: 30, left: 30),
         tabs: const <Widget> [
-          Tab(child: Icon(Icons.chat_outlined, size: 25)),
-          Tab(child: Icon(Icons.question_answer_outlined, size: 25)),
-          Tab(child: Icon(Icons.camera, size: 28)),
+          Tab(child: Icon(Icons.chat_outlined, size: 22)),
+          Tab(child: Icon(Icons.question_answer_outlined, size: 22)),
+          Tab(child: Icon(Icons.camera, size: 22)),
         ],
       ),
     );

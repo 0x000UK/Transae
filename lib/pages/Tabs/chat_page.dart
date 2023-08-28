@@ -54,18 +54,19 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
                                 leading: Hero(
                                   tag: 'profilepic$index',
                                   child: const CircleAvatar(
-                                    radius: 30,
+                                    radius: 28,
                                   ),
                                 ),
                                 title: Text(
                                   targetUser.fullName!,
-                                  style:const TextStyle(fontSize: 20),
+                                  style: Theme.of(context).textTheme.displaySmall
                                 ),
                                 subtitle:Text( 
                                   chatRoomModel.lastMessage.toString(),
                                   overflow: TextOverflow.ellipsis,
                                   softWrap: true,
                                   maxLines: 1,
+                                  style: Theme.of(context).textTheme.titleSmall,
                                 ),
                                 trailing:const Text('Time'),
                                 onTap: () {

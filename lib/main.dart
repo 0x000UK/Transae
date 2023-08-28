@@ -1,4 +1,6 @@
 import 'package:firebase_app/Models/user_model.dart';
+import 'package:firebase_app/Widgets/colors.dart';
+import 'package:firebase_app/Widgets/themes.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_app/service/FireBase/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,10 +44,13 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context ){
 
-    return  const ProviderScope(
+    return   ProviderScope(
     child : MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyLogin(),
+      theme: Themes.lightTheme(),
+      darkTheme: Themes.darkTheme(),
+      //themeMode: ThemeMode.light,
+      home: const MyLogin(),
     )
     );
   }
@@ -63,6 +68,8 @@ class Home extends StatelessWidget {
     return ProviderScope(
       child : MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: Themes.lightTheme(),
+        darkTheme: Themes.darkTheme(),
         home: MyHomePage(userModel: userModel),
     ));
   }
