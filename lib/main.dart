@@ -1,5 +1,4 @@
 import 'package:firebase_app/Models/user_model.dart';
-import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/themes.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_app/service/FireBase/firebase_options.dart';
@@ -7,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_app/service/Provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'pages/auth/login.dart';
 import 'pages/navigation.dart';
@@ -37,39 +37,40 @@ void main() async {
 }
 
 
-class Login extends StatelessWidget {
+class Login extends ConsumerWidget {
 
   const Login({Key? key}):super(key: key);
 
   @override
-  Widget build(BuildContext context ){
-
+  Widget build(BuildContext context, WidgetRef ref){
+    final theme = ref.watch(themeProviderState.notifier).state;
     return   ProviderScope(
     child : MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Themes.lightTheme(),
       darkTheme: Themes.darkTheme(),
-      //themeMode: ThemeMode.light,
+      themeMode: theme,
       home: const MyLogin(),
     )
     );
   }
 }
 
-class Home extends StatelessWidget {
+class Home extends ConsumerWidget {
 
   final UserModel userModel;
 
   const Home({super.key, required this.userModel});
 
   @override
-  Widget build(BuildContext context ){
-
+  Widget build(BuildContext context, WidgetRef ref ){
+    final theme = ref.watch(themeProviderState.notifier).state;
     return ProviderScope(
       child : MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: Themes.lightTheme(),
         darkTheme: Themes.darkTheme(),
+        themeMode: theme,
         home: MyHomePage(userModel: userModel),
     ));
   }

@@ -1,5 +1,4 @@
 import 'package:firebase_app/Models/user_model.dart';
-import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/navigation_routes.dart';
 import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/pages/Tabs/chat_page.dart';

@@ -51,16 +51,16 @@ class _MyChatRoom extends State<MyChatRoom> {
   Widget build(BuildContext context) {
  
     return Scaffold(
-      backgroundColor: ThemeColors.orange,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         
       body: Column(
         children: [
 
           Container(
-            decoration:const BoxDecoration(
-              color:  ThemeColors.orange
+            decoration: BoxDecoration(
+              color:  Theme.of(context).scaffoldBackgroundColor
             ),
-            padding: const EdgeInsets.only(top: 50),
+            padding: const EdgeInsets.only(top: 40),
             child: Row(
               children: <Widget>[
                 IconButton(
@@ -69,23 +69,22 @@ class _MyChatRoom extends State<MyChatRoom> {
                   },
                   icon: const Icon(Icons.arrow_back,color: Colors.black,),
                 ),
-                const SizedBox(width: 2),
+                const SizedBox(width: 5),
                 Hero(
                   tag: 'profilepic${widget.heroId}',
                   child: const CircleAvatar(
-                    radius: 25,
+                    radius: 20,
                     backgroundImage:NetworkImage(
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
                   ),
                 ),
-                const SizedBox(width: 12,),
+                const SizedBox(width: 20),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(widget.targetUser.fullName!, style: const TextStyle( fontSize: 20 ,fontWeight: FontWeight.w600),),
-                      const SizedBox(height: 6,),
+                      Text(widget.targetUser.fullName!, style: Theme.of(context).textTheme.bodyLarge),
                       Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 15),),
                     ],
                   ),
@@ -102,8 +101,9 @@ class _MyChatRoom extends State<MyChatRoom> {
             child: Padding(padding: const EdgeInsets.all(15),
               child: Container(
                 padding: const EdgeInsets.only(top: 0, bottom: 0),
-                decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(25)),
-                color: ThemeColors.lightorange,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(25)),
+                  color: Theme.of(context).primaryColorLight,
                 ),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(25)),
@@ -113,7 +113,7 @@ class _MyChatRoom extends State<MyChatRoom> {
             )
           ),
           Container(
-            color:ThemeColors.orange,
+            color:Theme.of(context).scaffoldBackgroundColor,
             padding: const EdgeInsets.only(bottom: 10),
             child: Row (
               mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +130,7 @@ class _MyChatRoom extends State<MyChatRoom> {
                     decoration: const InputDecoration(
                     contentPadding:  EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0),
                     hintText: 'Enter text...',
-                    fillColor: ThemeColors.lightorange,
+                    fillColor: LightThemeColors.lightorange,
                     filled: true,
                     hintStyle:  TextStyle(
                       fontSize: 20,
@@ -151,15 +151,15 @@ class _MyChatRoom extends State<MyChatRoom> {
               Padding(
                 padding:const EdgeInsets.only(bottom: 1),
                 child : Container(
-                  decoration:const BoxDecoration(
-                    color: ThemeColors.lightorange,
-                    borderRadius: BorderRadius.only(
+                  decoration:BoxDecoration(
+                    color: Theme.of(context).primaryColorLight,
+                    borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(30.0),
                       bottomRight: Radius.circular(30.0)
                     )
                   ),
                   child: IconButton(
-                    color: ThemeColors.redorange,
+                    color: LightThemeColors.redorange,
                     onPressed: (){
                       sendMessage(_isFirstMessage);
                       setState(() {

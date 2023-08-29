@@ -19,15 +19,16 @@ class _MyAccountState extends ConsumerState<MyAccount> {
     final userModel = ref.watch(userModelProviderState.notifier).state;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: ThemeColors.orange,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SizedBox(
         height: size.height,
         child: Column(
           children: [
             SafeArea(
               child: SizedBox(
-                height: 60,
+                height: 50,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
                       splashRadius: 1,
@@ -38,10 +39,9 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                       iconSize: 30,
                     ),
                     const SizedBox(width: 20),
-                    const Text(
-                      'Account Setting',
-                      style: TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.bold),
+                    Text(
+                      'Account Settings',
+                      style: Theme.of(context).textTheme.displayMedium,
                     )
                   ],
                 )
@@ -51,9 +51,9 @@ class _MyAccountState extends ConsumerState<MyAccount> {
               child: Padding(
                 padding:const EdgeInsets.all(15),
                 child: Container(
-                decoration: const BoxDecoration(
-                  color: ThemeColors.lightorange,
-                  borderRadius: BorderRadius.all(Radius.circular(30))
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorLight,
+                  borderRadius: const BorderRadius.all(Radius.circular(30))
 
                 ),
                 child: Column(
@@ -64,11 +64,12 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                       child : Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("UserName", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text("UserName", style: Theme.of(context).textTheme.displaySmall),
                           Expanded(child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(userModel!.userName!, style: const TextStyle(fontSize: 20)),
+                              const SizedBox(width: 60),
+                              Text(userModel!.userName!, style: Theme.of(context).textTheme.titleMedium),
                               IconButton(
                                 onPressed: () {
                                   
@@ -85,11 +86,12 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                       child : Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("FullName", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text("FullName", style: Theme.of(context).textTheme.displaySmall),
                           Expanded(child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(userModel.fullName!, style: const TextStyle(fontSize: 20),),
+                              const SizedBox(width: 60),
+                              Text(userModel.fullName!, style:  Theme.of(context).textTheme.titleMedium),
                               IconButton(
                                 onPressed: (){
                                    Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "FullName",userModel: userModel,)));
@@ -105,11 +107,12 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                       child : Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("EMail", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text("EMail", style: Theme.of(context).textTheme.displaySmall),
                           Expanded(child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(userModel.email!, style: const TextStyle(fontSize: 20),overflow: TextOverflow.ellipsis,),
+                              const SizedBox(width: 60),
+                              Text(userModel.email!, style:  Theme.of(context).textTheme.titleMedium),
                               IconButton(
                                 onPressed: (){
                                    Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "Email",userModel: userModel,)));
@@ -125,7 +128,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                       child : Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Change Password", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text("Change Password", style: Theme.of(context).textTheme.displaySmall),
                           Expanded(child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [

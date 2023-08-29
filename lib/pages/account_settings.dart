@@ -1,7 +1,7 @@
 import 'package:firebase_app/Models/user_model.dart';
-import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/navigation_routes.dart';
 import 'package:firebase_app/pages/Settings/account.dart';
+import 'package:firebase_app/pages/Settings/appearance.dart';
 import 'package:flutter/material.dart';
 
 class MySettings extends StatefulWidget {
@@ -83,7 +83,7 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
     expandedHight = size.height*0.2;
     _avatarOpacity = 1;
     return Scaffold(
-      backgroundColor: ThemeColors.orange,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       body: Stack(
         children: [
@@ -93,18 +93,8 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
             headerSliverBuilder: (context, value) {
               return [
                SliverAppBar(
-                  // leading: Row(
-                  //   children: [
-                  //     const SizedBox(width: 10),
-                  //     showPic? CircleAvatar(
-                  //       child: Image.asset(
-                  //         'assets/images/Profile.png',
-                  //       ),
-                  //     ): const SizedBox(),
-                  //   ],
-                  // ),
-                  backgroundColor:ThemeColors.orange,
-                  title:const Text("   Settings", style: TextStyle(fontSize: 25),),
+                  backgroundColor:Theme.of(context).scaffoldBackgroundColor,
+                  title: Text("   Settings", style: Theme.of(context).textTheme.displayMedium),
                   //expandedHeight:180, //MediaQuery.of(context).size.height*0.2,
                   expandedHeight: expandedHight,
                   collapsedHeight: 60,
@@ -123,64 +113,68 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
               ];
             },
             body: Padding (
-              padding:const EdgeInsets.all(15),
+              padding:const EdgeInsets.only(top: 15, bottom: 10, left: 15, right: 15),
               child: Container ( 
-                decoration: const BoxDecoration(
-                  color: ThemeColors.lightorange,
-                  borderRadius:  BorderRadius.all(Radius.circular(30))
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorLight,
+                  borderRadius: const BorderRadius.all(Radius.circular(30))
                 ),
                 child : ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(25)),
                   child: ListView(
                     children: [
                       Container(
-                        padding:const EdgeInsets.only(left: 20, bottom: 20),
-                        height: 40,
-                        child: const Text(
+                        padding:const EdgeInsets.only(top: 20,left: 15, bottom: 0),
+                        height: 80,
+                        alignment: Alignment.bottomLeft,
+                        child:  Text(
                           'User Settings',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.displaySmall//TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         )
                       ),
                       ListTile(
                         onTap: (){
                           Navigator.of(context).push(slideTransitionBuilder(const MyAccount()));
                         },
-                        leading: const Icon(Icons.portrait, size: 30,),
-                        title: const Text("My Account", style: TextStyle(fontSize: 20),),
+                        leading: const Icon(Icons.portrait, size: 24,),
+                        title:  Text("My Account", style: Theme.of(context).textTheme.titleMedium),
                       ),
                       ListTile(
                         onTap: (){},
-                        leading: const Icon(Icons.edit_outlined, size: 30,),
-                        title: const Text("Profile", style: TextStyle(fontSize: 20),),
+                        leading: const Icon(Icons.edit_outlined, size: 24,),
+                        title: Text("Profile", style: Theme.of(context).textTheme.titleMedium),
                       ),
                       ListTile(
                         onTap: (){},
-                        leading: const Icon(Icons.settings_outlined, size: 30,),
-                        title: const Text("Set Status", style: TextStyle(fontSize: 20)),
+                        leading: const Icon(Icons.settings_outlined, size: 24,),
+                        title: Text("Set Status", style: Theme.of(context).textTheme.titleMedium),
                         trailing: const Text("Online"),
                       ),
                       Container(
-                        padding: const EdgeInsets.only(top: 30,left: 20, bottom: 20),
-                        height: 80,
-                        child: const Text(
+                        padding: const EdgeInsets.only(top: 20,left: 20, bottom: 10),
+                        height: 60,
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
                           'App Settings',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.displaySmall,
                         )
                       ),
                       ListTile(
-                        onTap: (){},
-                        leading: const Icon(Icons.color_lens_outlined, size: 30,),
-                        title: const Text("Appearance", style: TextStyle(fontSize: 20)),
+                        onTap: (){
+                          Navigator.of(context).push(slideTransitionBuilder(const Appearance()));
+                        },
+                        leading: const Icon(Icons.color_lens_outlined, size: 24),
+                        title: Text("Appearance", style: Theme.of(context).textTheme.titleMedium),
                       ),
                       ListTile(
                         onTap: (){},
-                        leading: const Icon(Icons.language, size: 30,),
-                        title: const Text("Language", style: TextStyle(fontSize: 20)),
+                        leading: const Icon(Icons.language, size: 24),
+                        title: Text("Language", style: Theme.of(context).textTheme.titleMedium)
                       ),
                       ListTile(
                         onTap: (){},
-                        leading: const Icon(Icons.edit_notifications_outlined, size: 30,),
-                        title: const Text("Notifications", style: TextStyle(fontSize: 20)),
+                        leading: const Icon(Icons.edit_notifications_outlined, size: 24),
+                        title: Text("Notifications", style: Theme.of(context).textTheme.titleMedium),
                       ),
 
                     ],
@@ -194,7 +188,7 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
             top: vertical-20,
             width: MediaQuery.of(context).size.width,
             child: CircleAvatar(
-              backgroundColor: ThemeColors.orange,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               radius: _avatarRadius,
               child: Opacity(
                 opacity: _avatarOpacity,

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/user_model.dart';
-import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_app/service/Provider/provider.dart';
@@ -55,7 +54,7 @@ class _MyEditsState extends ConsumerState<MyEdits> {
     userModel = ref.watch(userModelProviderState.notifier).state;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: ThemeColors.orange,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SizedBox(
         height: size.height,
         child: Column(
@@ -80,8 +79,7 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                       widget.edit == "Email" ? 'Email' :
                       widget.edit == "Password" ? 'Password' :
                       '',
-                      style: const TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.displayMedium,
                     )
                   ],
                 )
@@ -91,9 +89,9 @@ class _MyEditsState extends ConsumerState<MyEdits> {
               child: Padding(
                 padding:const EdgeInsets.all(15),
                 child: Container(
-                decoration: const BoxDecoration(
-                  color: ThemeColors.lightorange,
-                  borderRadius: BorderRadius.all(Radius.circular(30))
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorLight,
+                  borderRadius: const BorderRadius.all(Radius.circular(30))
 
                 ),
                 child: Column(
@@ -104,7 +102,7 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                         cursorColor: Colors.white38,
                         undoController: UndoHistoryController(),
                         controller: _controller,
-                        style: const TextStyle(fontSize: 20),
+                        style: Theme.of(context).textTheme.bodyLarge,
                         decoration:  InputDecoration(
                           border: const UnderlineInputBorder(),
                           floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -115,10 +113,7 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                             widget.edit == "Email" ? 'Enter Email' :
                             widget.edit == "Password" ? 'Enter Current Password' :
                             "",
-                          labelStyle: const TextStyle(
-                            fontSize: 25,
-                            color: Color.fromARGB(123, 0, 0, 0),
-                          ),
+                          labelStyle: Theme.of(context).textTheme.bodyMedium
                         ),
                         onTapOutside: (event) {
                           userNameFocusNode.unfocus();
@@ -310,5 +305,4 @@ class _MyEditsState extends ConsumerState<MyEdits> {
       showWarning(context, e);
     }
   }
-
 }

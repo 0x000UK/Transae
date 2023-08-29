@@ -1,6 +1,7 @@
 import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final userModelProviderFuture = FutureProvider<UserModel?>((ref) async {
@@ -20,5 +21,12 @@ final userModelProviderState = StateProvider((ref) {
 
   final userModel = ref.watch(userModelProviderFuture).asData?.value;
   return userModel;
+
+});
+
+final themeProviderState = StateProvider((ref) {
+
+ ThemeMode currentMode = ThemeMode.dark;
+ return currentMode;
 
 });

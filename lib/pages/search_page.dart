@@ -32,7 +32,7 @@ class _MysearchPageState extends State<MysearchPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: ThemeColors.orange,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SizedBox(
         height: size.height,
         child: Column(
@@ -88,54 +88,43 @@ class _MysearchPageState extends State<MysearchPage> {
                           const SizedBox(
                             height: 8,
                           ),
-                          const Text(
+                          Text(
                             'Search users using there Email or UserName',
                             maxLines: null,
-                            style: TextStyle(
-                              fontSize: 15,
-                              //decoration: TextDecoration.lineThrough
-                            ),
+                            style: Theme.of(context).textTheme.titleSmall
                           ),
-                          const Text(
+                          Text(
                             'Keep in mind username is case sensitive',
                             maxLines: null,
-                            style: TextStyle(
-                              fontSize: 15,
-                              //decoration: TextDecoration.lineThrough
-                            ),
+                            style: Theme.of(context).textTheme.titleSmall
                           ),
                           const SizedBox(height: 30),
                           Container(
                             padding: const EdgeInsets.only(left: 20),
-                            color:ThemeColors.orange,
+                            color:Theme.of(context).scaffoldBackgroundColor,
                             child: Row(
                               children: [
                                 Container(
                                   padding: const EdgeInsets.only(left: 12),
                                   width: MediaQuery.of(context).size.width-140,
-                                  height: 75,
+                                  height: 60,
                                   child: TextField(
                                     focusNode: searchfocusNode,
                                     controller: searchController,
                                     style: const TextStyle(fontSize: 18),
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                       filled: true,
-                                      fillColor: ThemeColors.lightorange,
-                                      //  Color.fromARGB(
-                                      //     200, 255, 186, 186),
-                                      border: OutlineInputBorder(
+                                      fillColor: Theme.of(context).primaryColorLight,
+                                      border:const OutlineInputBorder(
                                         borderSide: BorderSide.none,
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(30.0),
-                                          bottomLeft:
-                                              Radius.circular(30.0),
+                                          bottomLeft: Radius.circular(30.0),
                                         ),
                                       ),
                                       hintText: 'Email or Username',
-                                      helperText:
-                                          'e.g user_Name11 or xyz@gmail.com',
-                                      floatingLabelBehavior:
-                                          FloatingLabelBehavior.always,
+                                      //helperText: 'e.g user_Name11 or xyz@gmail.com',
+                                      floatingLabelBehavior: FloatingLabelBehavior.always,
                                     ),
                                     onTapOutside: (event) {
                                       searchfocusNode.unfocus();
@@ -143,13 +132,15 @@ class _MysearchPageState extends State<MysearchPage> {
                                     cursorColor: Colors.black87,
                                   ),
                                 ),
-                                Padding(
-                                  padding:const EdgeInsets.only(bottom: 22),
-                                  child: Container(
+                                // Padding(
+                                //   padding:const EdgeInsets.only(bottom: 24.5),
+                                // child:
+                                 
+                                  Container(
                                     width: 80,
-                                    height: 52,
+                                    height: 60,
                                     decoration: const BoxDecoration(
-                                        color: ThemeColors.aqua,
+                                        color: LightThemeColors.aqua,
                                         borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(30.0),
                                             bottomRight: Radius.circular(30.0))),
@@ -162,12 +153,16 @@ class _MysearchPageState extends State<MysearchPage> {
                                         Icons.search,
                                         size: 30,
                                       ),
-                                      color: ThemeColors.orange
+                                      color: LightThemeColors.orange
                                     ),
                                   )
-                                )
+                                // )
                               ]
                             )
+                          ),
+                          const Align(
+                            alignment: Alignment.center,
+                            child: Text('e.g user_Name11 or xyz@gmail.com',style: TextStyle(fontSize: 14, color: Colors.black87))
                           ),
                           const SizedBox(height: 30),
                           searching? StreamBuilder(
