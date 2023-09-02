@@ -17,9 +17,9 @@ class Themes  {
         primaryColorDark: LightThemeColors.orange,
         primaryColorLight: LightThemeColors.lightorange,
         textTheme: const  TextTheme(
-          displayLarge: TextStyle(color: LightThemeColors.redorange, fontSize: 28, fontWeight: FontWeight.bold),
-          displayMedium: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
-          displaySmall: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+          displayLarge: TextStyle(color: LightThemeColors.coolGreen, fontSize: 25, fontWeight: FontWeight.bold),
+          displayMedium: TextStyle(color: LightThemeColors.coolGreen, fontSize: 22, fontWeight: FontWeight.bold),
+          displaySmall: TextStyle(color: LightThemeColors.coolGreen, fontSize: 18, fontWeight: FontWeight.bold),
           titleLarge: TextStyle(color: Colors.black, fontSize: 25, overflow: TextOverflow.ellipsis),
           titleMedium: TextStyle(color: Colors.black54, fontSize: 18, overflow: TextOverflow.ellipsis),
           titleSmall: TextStyle(color: Colors.black45, fontSize: 16, overflow: TextOverflow.ellipsis),
@@ -58,11 +58,11 @@ class Themes  {
           fill: 0.2,
           weight: 10,
           grade: 20,
-          color: LightThemeColors.redorange
+          color:  LightThemeColors.coolGreen
         ),
         tabBarTheme: const TabBarTheme(
           indicator: BoxDecoration(
-            color: LightThemeColors.redorange,
+            color: Color(0x78DBFFE2),
             borderRadius: BorderRadius.all(Radius.circular(50))
           ),
           dividerColor: Colors.transparent,
@@ -85,13 +85,13 @@ class Themes  {
           position: PopupMenuPosition.over
         ),
         scaffoldBackgroundColor: DarkThemeColors.darkpurple,
-        primaryColor: DarkThemeColors.redorange,
+        primaryColor: DarkThemeColors.darkpurple,
         primaryColorDark: DarkThemeColors.darkpurple,
         primaryColorLight: DarkThemeColors.lightpurle,
         textTheme: const  TextTheme(
-          displayLarge: TextStyle(color: DarkThemeColors.redorange, fontSize: 25, fontWeight: FontWeight.bold),
-          displayMedium: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
-          displaySmall: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          displayLarge: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 25, fontWeight: FontWeight.bold),
+          displayMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 22, fontWeight: FontWeight.bold),
+          displaySmall: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 18, fontWeight: FontWeight.bold),
           titleLarge: TextStyle(color: Colors.white, fontSize: 25, overflow: TextOverflow.ellipsis),
           titleMedium: TextStyle(color: Colors.white54, fontSize: 18, overflow: TextOverflow.ellipsis),
           titleSmall: TextStyle(color: Colors.white54, fontSize: 16, overflow: TextOverflow.ellipsis),
@@ -100,7 +100,7 @@ class Themes  {
           bodyLarge: TextStyle(color: Colors.white70, fontSize: 20),
         ),
         bottomNavigationBarTheme:const BottomNavigationBarThemeData(
-          backgroundColor: DarkThemeColors.redorange,
+          backgroundColor: DarkThemeColors.darkpurple,
           selectedIconTheme: IconThemeData(
             color: DarkThemeColors.darkpurple,
             fill: 0.8,
@@ -123,15 +123,15 @@ class Themes  {
           fill: 0.2,
           weight: 10,
           grade: 20,
-          color: DarkThemeColors.redorange
+          color: Color(0xFFE1F4D0)
         ),
         tabBarTheme: const TabBarTheme(
           indicator: BoxDecoration(
-            color: LightThemeColors.redorange,
+            color: Color(0xFFE1F4D0),
             borderRadius: BorderRadius.all(Radius.circular(50))
           ),
           dividerColor: Colors.transparent,
-          labelColor: Colors.white,
+          labelColor: Colors.black,
           indicatorSize: TabBarIndicatorSize.tab,
           unselectedLabelColor: Colors.white54,
           tabAlignment: TabAlignment.fill

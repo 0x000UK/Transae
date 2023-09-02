@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildBottomBar(){
     return CustomAnimatedBottomBar(
       containerHeight: 70,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor:  Colors.black,
       selectedIndex: _currentIndex,
       showElevation: true,
       itemCornerRadius: 24,
@@ -49,14 +49,14 @@ class _MyHomePageState extends State<MyHomePage> {
         BottomNavyBarItem(
           icon: const Icon(Icons.home_outlined),
           title: const Text('Home'),
-          activeColor: Colors.white,
+          activeColor: Colors.green,
           inactiveColor: Colors.grey,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
           icon:const  Icon(Icons.people),
           title:const  Text('Users'),
-          activeColor: Colors.white,
+          activeColor: Colors.deepPurple,
           inactiveColor: Colors.grey,
           textAlign: TextAlign.center,
         ),
@@ -117,7 +117,7 @@ class CustomAnimatedBottomBar extends StatelessWidget {
     child : Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
-        color: Theme.of(context).primaryColor,
+        color: Colors.black,//Theme.of(context).primaryColor,
       ),
       child: SafeArea(
         child: Container(

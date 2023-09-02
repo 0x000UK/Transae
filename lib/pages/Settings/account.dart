@@ -1,4 +1,3 @@
-import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/navigation_routes.dart';
 import 'package:firebase_app/pages/Settings/Edits/edit.dart';
 import 'package:firebase_app/service/Provider/provider.dart';
@@ -37,6 +36,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                       },
                       icon: const Icon(Icons.arrow_back),
                       iconSize: 30,
+                      color: Theme.of(context).iconTheme.color,
                     ),
                     const SizedBox(width: 20),
                     Text(
@@ -56,7 +56,9 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                   borderRadius: const BorderRadius.all(Radius.circular(30))
 
                 ),
-                child: Column(
+                child: ClipRRect(
+                
+                 child : Column(
                   children: [
                     const SizedBox(height: 20,),
                     Padding(
@@ -112,12 +114,13 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               const SizedBox(width: 60),
-                              Text(userModel.email!, style:  Theme.of(context).textTheme.titleMedium),
+                              Text(userModel.email!, style:  Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
                               IconButton(
                                 onPressed: (){
                                    Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "Email",userModel: userModel,)));
                                 }, 
-                                icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
+                                icon:const Icon(Icons.arrow_forward_ios), iconSize: 20
+                              )
                             ],
                           ))
                         ],
@@ -140,6 +143,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                     ),
                   ],
                 ),
+                )
               )
               )
             )

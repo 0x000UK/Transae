@@ -124,8 +124,8 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
                   child: ListView(
                     children: [
                       Container(
-                        padding:const EdgeInsets.only(top: 20,left: 15, bottom: 0),
-                        height: 80,
+                        padding:const EdgeInsets.only(top: 0,left: 15, bottom: 0),
+                        height: 60,
                         alignment: Alignment.bottomLeft,
                         child:  Text(
                           'User Settings',
