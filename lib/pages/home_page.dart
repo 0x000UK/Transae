@@ -114,17 +114,14 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                 SliverOverlapAbsorber(
                   handle:NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: SliverAppBar(
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor ,
                   snap: true,
                   floating: true,
                   elevation: 0.0,
                   flexibleSpace:AppBar(
                     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     title: Text('BoomBam',
-                      style: TextStyle(
-                        fontSize: Theme.of(context).textTheme.displayLarge?.fontSize,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.displayLarge?.color
-                      ),
+                      style: Theme.of(context).textTheme.displayLarge
                     ),
                     actionsIconTheme:const IconThemeData.fallback(),
                     actions: [

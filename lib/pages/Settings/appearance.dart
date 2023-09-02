@@ -11,11 +11,13 @@ class Appearance extends ConsumerStatefulWidget {
 }
 class _AppearanceState extends ConsumerState<Appearance> {
 
-  bool night = false;
  
   @override
   Widget build(BuildContext context) {
-     Size size = MediaQuery.of(context).size;
+
+    final night = ref.watch(themeProviderState) == ThemeMode.dark;
+    
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SizedBox(
@@ -69,9 +71,6 @@ class _AppearanceState extends ConsumerState<Appearance> {
                         const Text('Light'),
                         IconButton(
                           onPressed: (){
-                            setState(() {
-                              night = false;
-                            });
                             ref.read(themeProviderState.notifier).state = ThemeMode.light;
                           },
                            icon: Icon(night ?Icons.circle_outlined : Icons.circle_rounded))
@@ -82,9 +81,6 @@ class _AppearanceState extends ConsumerState<Appearance> {
                       children: [
                         const Text('Dark'),
                         IconButton(onPressed: (){
-                          setState(() {
-                            night = true;
-                          });
                           ref.read(themeProviderState.notifier).state = ThemeMode.dark;
                         }, 
                         icon: Icon(night ? Icons.circle_rounded : Icons.circle_outlined))

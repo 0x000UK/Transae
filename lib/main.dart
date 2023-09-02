@@ -64,7 +64,7 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref ){
-    final theme = ref.watch(themeProviderState.notifier).state;
+    final theme = ref.watch(themeProviderState);
     return ProviderScope(
       child : MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -26,7 +26,7 @@ final userModelProviderState = StateProvider((ref) {
 
 final themeProviderState = StateProvider((ref) {
 
- ThemeMode currentMode = ThemeMode.dark;
+ ThemeMode currentMode = ThemeMode.system;
  return currentMode;
 
 });

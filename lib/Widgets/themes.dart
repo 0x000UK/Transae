@@ -88,8 +88,8 @@ class Themes  {
         primaryColor: DarkThemeColors.redorange,
         primaryColorDark: DarkThemeColors.darkpurple,
         primaryColorLight: DarkThemeColors.lightpurle,
-        primaryTextTheme: const  TextTheme(
-         displayLarge: TextStyle(color: Colors.white54, fontSize: 28, fontWeight: FontWeight.bold),
+        textTheme: const  TextTheme(
+          displayLarge: TextStyle(color: DarkThemeColors.redorange, fontSize: 25, fontWeight: FontWeight.bold),
           displayMedium: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
           displaySmall: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           titleLarge: TextStyle(color: Colors.white, fontSize: 25, overflow: TextOverflow.ellipsis),
@@ -125,11 +125,16 @@ class Themes  {
           grade: 20,
           color: DarkThemeColors.redorange
         ),
-        tabBarTheme:const TabBarTheme(
-          indicatorColor: DarkThemeColors.redorange,
-          indicatorSize: TabBarIndicatorSize.label,
-          unselectedLabelColor: Colors.white38,
-          tabAlignment: TabAlignment.center
+        tabBarTheme: const TabBarTheme(
+          indicator: BoxDecoration(
+            color: LightThemeColors.redorange,
+            borderRadius: BorderRadius.all(Radius.circular(50))
+          ),
+          dividerColor: Colors.transparent,
+          labelColor: Colors.white,
+          indicatorSize: TabBarIndicatorSize.tab,
+          unselectedLabelColor: Colors.white54,
+          tabAlignment: TabAlignment.fill
         )
     );
   }
