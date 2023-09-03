@@ -60,7 +60,7 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
                                 leading: Hero(
                                   tag: 'profilepic$index',
                                   child: const CircleAvatar(
-                                    radius: 28,
+                                    radius: 22,
                                   ),
                                 ),
                                 title: Text(
@@ -88,6 +88,7 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
                                     ),
                                   );
                                 },
+                                minVerticalPadding: 20,
                               );
                             }else {
                               return emptyTabContent(tab: 'chats', text: "no user data");

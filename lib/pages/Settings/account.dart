@@ -71,7 +71,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               const SizedBox(width: 60),
-                              Text(userModel!.userName!, style: Theme.of(context).textTheme.titleMedium),
+                              Text(userModel!.userName!, style: Theme.of(context).textTheme.bodySmall),
                               IconButton(
                                 onPressed: () {
                                   
@@ -93,14 +93,15 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               const SizedBox(width: 60),
-                              Text(userModel.fullName!, style:  Theme.of(context).textTheme.titleMedium),
+                              Text(userModel.fullName!, style:  Theme.of(context).textTheme.bodySmall),
                               IconButton(
                                 onPressed: (){
                                    Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "FullName",userModel: userModel,)));
                                 }, 
                                 icon:const Icon(Icons.arrow_forward_ios), iconSize: 20,)
                             ],
-                          ))
+                          )
+                          )
                         ],
                       )
                     ),
@@ -110,19 +111,16 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("EMail", style: Theme.of(context).textTheme.displaySmall),
-                          Expanded(child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const SizedBox(width: 60),
-                              Text(userModel.email!, style:  Theme.of(context).textTheme.titleMedium,overflow: TextOverflow.ellipsis),
-                              IconButton(
-                                onPressed: (){
-                                   Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "Email",userModel: userModel,)));
-                                }, 
-                                icon:const Icon(Icons.arrow_forward_ios), iconSize: 20
-                              )
-                            ],
-                          ))
+                          const SizedBox(width: 60),
+                          Expanded(child: 
+                              Text(userModel.email!, style:  Theme.of(context).textTheme.bodySmall,overflow: TextOverflow.ellipsis, maxLines: 1,)
+                          ),
+                          IconButton(
+                            onPressed: (){
+                                Navigator.of(context).push(slideTransitionBuilder( MyEdits(edit: "Email",userModel: userModel,)));
+                            }, 
+                            icon:const Icon(Icons.arrow_forward_ios), iconSize: 20
+                          )
                         ],
                       )
                     ),

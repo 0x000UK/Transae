@@ -33,7 +33,7 @@ class _MessageBoxState extends State<MessageBox> {
       ),
       padding: EdgeInsets.only(
         top: 4,
-        bottom: 0,
+        bottom: 5,
         left: isSentByMe ? 0 : 5,
         right: isSentByMe ? 5 : 0
       ),
@@ -61,21 +61,9 @@ class _MessageBoxState extends State<MessageBox> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Text(
-            //   widget.senderId.toUpperCase(),
-            //   textAlign: TextAlign.start,
-            //   style: const TextStyle(
-            //       fontSize: 13,
-            //       fontWeight: FontWeight.bold,
-            //       color: Colors.white,
-            //       letterSpacing: -0.5),
-            // ),
-            // const SizedBox(
-            //   height: 8,
-            // ),
             Text(widget.message,
                 textAlign: TextAlign.start,
-                style: const TextStyle(fontSize: 18, color: Colors.white))
+                style: Theme.of(context).textTheme.bodySmall)
           ],
         ),
       ),

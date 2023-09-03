@@ -49,7 +49,7 @@ class _MyChatRoom extends State<MyChatRoom> {
 
   @override
   Widget build(BuildContext context) {
- 
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         
@@ -69,7 +69,6 @@ class _MyChatRoom extends State<MyChatRoom> {
                   },
                   icon: const Icon(Icons.arrow_back),
                 ),
-                const SizedBox(width: 5),
                 Hero(
                   tag: 'profilepic${widget.heroId}',
                   child: const CircleAvatar(
@@ -78,27 +77,28 @@ class _MyChatRoom extends State<MyChatRoom> {
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEgzwHNJhsADqquO7m7NFcXLbZdFZ2gM73x8I82vhyhg&s"),
                   ),
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(widget.targetUser.fullName!, style: Theme.of(context).textTheme.bodyMedium),
-                      Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 15),),
+                      Text(widget.targetUser.fullName!, style: Theme.of(context).textTheme.titleMedium),
+                      Text("Online",style: Theme.of(context).textTheme.titleSmall),
                     ],
                   ),
                 ),
                 IconButton(
                   onPressed: (){}, 
                   icon: const Icon(Icons.more_vert),
-                  iconSize: 30,
                 ),
               ],
             ),
           ),
+          
           Expanded(
-            child: Padding(padding: const EdgeInsets.all(15),
+            child : Padding(
+              padding: const EdgeInsets.all(15),
               child: Container(
                 padding: const EdgeInsets.only(top: 0, bottom: 0),
                 decoration: BoxDecoration(
@@ -110,55 +110,60 @@ class _MyChatRoom extends State<MyChatRoom> {
                   child : chatMessages()
                 ),
               ),
-            )
+            ),
           ),
           Container(
-            color:Theme.of(context).scaffoldBackgroundColor,
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Row (
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children : [
-                SizedBox(  
-                  width: MediaQuery.of(context).size.width-90,
-                  height: 60,
-                  child : TextField(
+            // decoration: BoxDecoration(
+            //   border: Border.all(color: Colors.grey),
+            // ),
+            padding:const  EdgeInsets.only(left: 15, right: 15, bottom:  10),      
+            child: Row( 
+              children: [
+                Expanded(child: 
+                  TextField(
                     controller: mssgController,
-                    maxLines: null,
-                    expands: true,
-                    style: const TextStyle(fontSize: 20),
-                    decoration: const InputDecoration(
-                    contentPadding:  EdgeInsets.symmetric(vertical: 18.0, horizontal: 30.0),
+                    maxLines: 5,
+                    minLines: 1,
+                    expands: false,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    decoration:  InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
                     hintText: 'Enter text...',
-                    fillColor: LightThemeColors.lightorange,
+                    fillColor: Theme.of(context).primaryColorLight,
                     filled: true,
-                    hintStyle:  TextStyle(
-                      fontSize: 20,
-                      color: Color.fromARGB(123, 0, 0, 0),
-                    ),
-                    border: OutlineInputBorder(
+                    //hintStyle: Theme.of(context).textTheme.bodySmall,
+                    border: const OutlineInputBorder(
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
-                          bottomLeft: Radius.circular(30.0)),
+                          bottomLeft: Radius.circular(30.0),
+                          bottomRight: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
+                        ),
                       ),
+                    prefixIcon: IconButton(onPressed:(){}, icon: const Icon(Icons.emoji_emotions_outlined), color: Theme.of(context).iconTheme.color,) ,
+                    suffixIcon: IconButton(onPressed:(){}, icon: const Icon(Icons.attachment_outlined),  color: Theme.of(context).iconTheme.color)
                     ),
                     onTapOutside: (event) {
                       msgFocusNode.unfocus();
                     },
+                    
                   ),
-              ),
-              Padding(
-                padding:const EdgeInsets.only(bottom: 1),
-                child : Container(
-                  decoration:BoxDecoration(
+                ),
+                const SizedBox(width: 5,),
+                Container(
+                  decoration:  BoxDecoration(
                     color: Theme.of(context).primaryColorLight,
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0)
-                    )
+                     
+                    shape: BoxShape.circle,
+                    //borderRadius: BorderRadius.circular(12)
+                    // BorderRadius.only(
+                    //   topRight: Radius.circular(30.0),
+                    //   bottomRight: Radius.circular(30.0)
+                    // )
                   ),
-                  child: IconButton(
+                  child :
+                   Center( child : IconButton(
                     color: LightThemeColors.redorange,
                     onPressed: (){
                       sendMessage(_isFirstMessage);
@@ -167,16 +172,16 @@ class _MyChatRoom extends State<MyChatRoom> {
                       });
                     }, 
                     icon:const Icon(Icons.send), 
-                    iconSize: 43,
-                  )
-                ),
+                    iconSize: 30,
+                  ),
+                   )
                 )
-              ]
+                
+                ]
+                )
             )
-          )
-        ],
-      ),
-      
+        ]
+      )
     );
   }
 

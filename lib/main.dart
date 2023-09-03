@@ -28,11 +28,15 @@ void main() async {
         runApp(ProviderScope(child: Home(userModel: userModel)));
       }
       else {
-      runApp( const Login());
+      runApp( const ProviderScope(
+        child : Login())
+      );
       }
     }
     else {
-      runApp(const Login());
+      runApp(const  ProviderScope(
+        child : Login())
+      );
     }
 }
 
@@ -44,14 +48,12 @@ class Login extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref){
     final theme = ref.watch(themeProviderState.notifier).state;
-    return   ProviderScope(
-    child : MaterialApp(
+    return   MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Themes.lightTheme(),
       darkTheme: Themes.darkTheme(),
       themeMode: theme,
       home: const MyLogin(),
-    )
     );
   }
 }
@@ -65,13 +67,12 @@ class Home extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref ){
     final theme = ref.watch(themeProviderState);
-    return ProviderScope(
-      child : MaterialApp(
+    return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: Themes.lightTheme(),
         darkTheme: Themes.darkTheme(),
         themeMode: theme,
         home: MyHomePage(userModel: userModel),
-    ));
+    );
   }
 }

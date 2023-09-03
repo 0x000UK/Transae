@@ -1,5 +1,6 @@
 
 import 'package:firebase_app/Models/user_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'account_settings.dart';
 import 'home_page.dart';
@@ -14,16 +15,13 @@ class MyHomePage extends StatefulWidget {
 }
 class _MyHomePageState extends State<MyHomePage> {
 
-  IconData homeIcon = Icons.home;
-  IconData freindsIcon = Icons.groups_2_outlined;
-  IconData notifyIcon = Icons.notifications_outlined;
-  IconData accIcon = Icons.account_circle_outlined;
- 
   int _currentIndex = 0;
   
  
   @override
   Widget build(BuildContext context) {
+
+    Size size = MediaQuery.of(context).size;
 
     final List<Widget> screens = [
       ScrollableUserList(userModel : widget.userModel),
@@ -32,13 +30,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      bottomNavigationBar: _buildBottomBar(),
+      bottomNavigationBar: _buildBottomBar(size),
       body: screens[_currentIndex]
     );
   }
-  Widget _buildBottomBar(){
+  Widget _buildBottomBar(Size size){
+    
     return CustomAnimatedBottomBar(
-      containerHeight: 70,
+      containerHeight: size.height*0.07,
       backgroundColor:  Colors.black,
       selectedIndex: _currentIndex,
       showElevation: true,
@@ -54,21 +53,21 @@ class _MyHomePageState extends State<MyHomePage> {
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon:const  Icon(Icons.people),
+          icon: const Icon(Icons.groups_2_outlined),
           title:const  Text('Users'),
           activeColor: Colors.deepPurple,
           inactiveColor: Colors.grey,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon: const  Icon(Icons.message),
+          icon: const  Icon(CupertinoIcons.add),
           title: const Text('Messages '),
           activeColor: Colors.pink,
           inactiveColor: Colors.grey,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon:const  Icon(Icons.settings),
+          icon:const  Icon(Icons.account_circle_outlined),
           title: const Text('Settings'),
           activeColor: Colors.blue,
           inactiveColor: Colors.grey,

@@ -90,7 +90,7 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
 
   @override
   Widget build(BuildContext context) {
-
+    Size size = MediaQuery.of(context).size;
     final List<Widget> tabs = <Widget> [
       MyChatPageTab(userModel: widget.userModel),
       MyGroupTabPage(userModel: widget.userModel),
@@ -127,17 +127,22 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                     actions: [
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
-                        width: _isExpanded ? 250.0 : 0.0,
+                        width: _isExpanded ? size.width-150 : 0.0,
+                        
                         height: 50.0,
                         child: TextField(
+                          //textAlignVertical: TextAlignVertical.top,
+                          cursorHeight: 22,
+                          style: Theme.of(context).textTheme.titleSmall,
                           decoration: InputDecoration(
+                            
                             filled: true,
                             fillColor: Theme.of(context).primaryColorLight,
                             border: const OutlineInputBorder(
                               borderSide: BorderSide.none,
                               borderRadius: BorderRadius.all(Radius.circular(45.0)),
                             ),
-                            hintText: "Search...",
+                           
                             suffixIcon: IconButton(onPressed: (){}, icon:const Icon(Icons.search), iconSize: _isExpanded? Theme.of(context).iconTheme.size: 0 ,)
                           ),
                           enabled: _isExpanded,
@@ -145,8 +150,6 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                       ),
                       IconButton(
                         splashRadius: 1,
-                        iconSize: Theme.of(context).iconTheme.size,
-                        color: Theme.of(context).iconTheme.color,
                         icon: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
                             transitionBuilder: (child, anim) => RotationTransition(
@@ -218,7 +221,7 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                             ],
                           )
                         },
-                        icon: Icon(Icons.more_vert, size: Theme.of(context).iconTheme.size,),
+                        icon: const Icon(Icons.more_vert),
                         splashRadius: 1,
                       )
                     ],
@@ -235,7 +238,7 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
               ];
             },
             body:Padding(
-              padding:const EdgeInsets.fromLTRB(15, 15,15, 10),
+              padding:const EdgeInsets.fromLTRB(10, 10,10, 10),
               child :
               
               Container(
@@ -286,11 +289,11 @@ class Tabs extends SliverPersistentHeaderDelegate {
       height: size,
       child: TabBar(
         controller: tabController,
-        indicatorPadding:const EdgeInsets.only(top: 5, bottom: 5, right: 30, left: 30),
+        indicatorPadding:const EdgeInsets.only(top: 10, bottom: 10, right: 35, left: 35),
         tabs: const <Widget> [
-          Tab(child: Icon(Icons.chat_outlined, size: 22)),
-          Tab(child: Icon(Icons.question_answer_outlined, size: 22)),
-          Tab(child: Icon(Icons.camera, size: 22)),
+          Tab(child: Icon(Icons.chat_outlined, size: 20,)),
+          Tab(child: Icon(Icons.question_answer_outlined, size: 20,)),
+          Tab(child: Icon(Icons.camera, size: 20,)),
         ],
       ),
     );

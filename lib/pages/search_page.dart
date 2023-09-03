@@ -93,14 +93,14 @@ class _MysearchPageState extends State<MysearchPage> {
                           ),
                           const SizedBox(height: 30),
                           Container(
-                            padding: const EdgeInsets.only(left: 20),
+                            padding: const EdgeInsets.only(left: 0),
                             color:Theme.of(context).scaffoldBackgroundColor,
                             child: Row(
                               children: [
                                 Container(
                                   padding: const EdgeInsets.only(left: 12),
-                                  width: MediaQuery.of(context).size.width-140,
-                                  height: size.height*0.06+10,
+                                  width: MediaQuery.of(context).size.width-100,
+                                  height: size.height*0.07,
                                   child: TextField(
                                     focusNode: searchfocusNode,
                                     controller: searchController,
@@ -131,7 +131,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                  
                                   Container(
                                     width: 80,
-                                    height: size.height*0.06+10,
+                                    height: size.height*0.07,
                                     decoration: const BoxDecoration(
                                         color: LightThemeColors.aqua,
                                         borderRadius: BorderRadius.only(
@@ -157,7 +157,7 @@ class _MysearchPageState extends State<MysearchPage> {
                             alignment: Alignment.center,
                             child: Text('e.g user_Name11 or xyz@gmail.com',style: Theme.of(context).textTheme.titleSmall)
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 0),
                           searching? StreamBuilder(
                             stream: searchController.text.contains('@')? 
                                     DatabaseService.userCollection.where('email', isEqualTo: searchController.text).where('email', isNotEqualTo: widget.userModel.email).snapshots(): 
@@ -176,19 +176,19 @@ class _MysearchPageState extends State<MysearchPage> {
                                     return Padding(
                                       //width: size.width,
                                       //height: 80,
-                                      padding:const EdgeInsets.all(20),
+                                      padding:const EdgeInsets.all(15),
                                     
                                     child: ListTile(
                                       leading: const Hero(
                                         tag: 0,
                                         child: CircleAvatar(
-                                          radius: 28,
+                                          radius: 22,
                                           //backgroundImage:NetworkImage(),
                                         ),
                                       ),
-                                      minVerticalPadding: 1,
-                                      title: Text(searchedUser.fullName!),
-                                      subtitle: Text(searchedUser.email!),
+                                     // minVerticalPadding: 1,
+                                      title: Text(searchedUser.fullName!, style: Theme.of(context).textTheme.displaySmall),
+                                      subtitle: Text(searchedUser.email!,  style: Theme.of(context).textTheme.bodySmall),
                                       trailing: Row(
                                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         //crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -197,7 +197,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                           IconButton(
                                             onPressed: (){}, 
                                             icon:const Icon(Icons.person_add_alt),
-                                            iconSize: 30,
+                                            iconSize: 20,
                                           ),
                                           IconButton(
                                             onPressed: () async {
@@ -218,7 +218,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                               }
                                             }, 
                                             icon:const Icon(Icons.chat_outlined),
-                                            iconSize: 30,
+                                            iconSize: 20,
                                           )
                                         ]
                                       ),

@@ -148,13 +148,13 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
                               Text(
                                 'Hello there',
                                 style: TextStyle(
-                                  fontSize: 40,
+                                  fontSize: 30,
                                   foreground: Paint()
                                     ..color = const Color.fromRGBO(
                                         219, 126, 193, 0.612),
                                 ),
                               ),
-                              SizedBox(height: size.height * 0.2),
+                              SizedBox(height: size.height * 0.1),
                               DynamicInputWidget(
                                   controller: fullNameController,
                                   obscureText: false,
@@ -164,7 +164,7 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
                                   hintText: 'Full Name',
                                   textInputAction: TextInputAction.next,
                                   isNonPasswordField: true),
-                              SizedBox(height: size.height * 0.025),
+                              SizedBox(height: size.height * 0.015),
                               DynamicInputWidget(
                                   controller: emailController,
                                   obscureText: false,
@@ -174,7 +174,7 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
                                   hintText: 'Email',
                                   textInputAction: TextInputAction.next,
                                   isNonPasswordField: true),
-                              SizedBox(height: size.height * 0.025),
+                              SizedBox(height: size.height * 0.015),
                               DynamicInputWidget(
                                   controller: passwordController,
                                   currentFocusNode: passwordFocusNode,
@@ -185,7 +185,7 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
                                   hintText: 'Password',
                                   textInputAction: TextInputAction.next,
                                   isNonPasswordField: false),
-                              SizedBox(height: size.height * 0.025),
+                              SizedBox(height: size.height * 0.015),
                               DynamicInputWidget(
                                 controller: confirmPassController,
                                 obscureText: true,
@@ -197,7 +197,7 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
                                 isNonPasswordField: true,
                                 textInputAction: TextInputAction.done,
                               ),
-                              SizedBox(height: size.height * 0.07),
+                              SizedBox(height: size.height * 0.05),
                               
                             ],
                           )
@@ -205,7 +205,7 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
                     )
                   ),
                   Positioned(
-                    top: size.height- 250,
+                    top: size.height- 300,
                     width: size.width,
                     child: Container(
                       child: Column( 
@@ -241,7 +241,7 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
                       )
                     ],
                   ),
-                  SizedBox(height: size.height * 0.04),
+                  SizedBox(height: size.height * 0.1),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment:
@@ -272,34 +272,42 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
                       ),
                     ],
                   ),
-                  SizedBox(height: size.height * 0.015),
+                  SizedBox(height: size.height * 0.025),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      IconButton(
+                      IconButton.filled(
+                        style: Theme.of(context).iconButtonTheme.style,
                         color: Colors.red,
                         padding: const EdgeInsets.all(4),
                         onPressed: () {},
-                        icon: Image.asset(
-                          'assets/images/twitter.png',
-                          color: Colors.blue,
-                        )
+                        icon:const Icon(Icons.hail_outlined),
+                        // icon: Image.asset(
+                        //   'assets/images/twitter.png',
+                        //   color: Colors.blue,
+                          
+                        // )
+                        
                       ),
                       IconButton.filled(
+                        style: Theme.of(context).iconButtonTheme.style,
                         padding: const EdgeInsets.all(4),
                         onPressed: () {},
-                        icon: Image.asset(
-                          'assets/images/apple.png',
-                          color: Colors.white,
-                        )
+                        icon:const Icon(Icons.hail_outlined),
+                        // icon: Image.asset(
+                        //   'assets/images/apple.png',
+                        //   color: Colors.white,
+                        // )
                       ),
                       IconButton.filled(
+                        style: Theme.of(context).iconButtonTheme.style,
                         padding: const EdgeInsets.all(4),
                         onPressed: () {},
-                        icon: Image.asset(
-                          'assets/images/google.png',
-                        )
+                        icon:const Icon(Icons.hail_outlined),
+                        // icon: Image.asset(
+                        //   'assets/images/google.png',
+                        // )
                       ),
                     ],
                   ),

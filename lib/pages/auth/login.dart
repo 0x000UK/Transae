@@ -297,6 +297,7 @@ class DynamicInputWidget extends StatelessWidget {
       controller: controller,
       enableSuggestions: isNonPasswordField,
       autocorrect: isNonPasswordField,
+      style: Theme.of(context).textTheme.bodySmall,
       decoration: InputDecoration(
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(45.0)),
@@ -305,7 +306,7 @@ class DynamicInputWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(45),
           borderSide: const BorderSide(color: Colors.black),
         ),
-        label: Text(labelText),
+        label: Text(labelText, style: Theme.of(context).textTheme.titleSmall ),
         prefixIcon: prefIcon,
         suffixIcon: isNonPasswordField
             ? null
