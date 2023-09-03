@@ -67,7 +67,7 @@ class _MyChatRoom extends State<MyChatRoom> {
                   onPressed: (){
                     Navigator.pop(context);
                   },
-                  icon: const Icon(Icons.arrow_back,color: Colors.black,),
+                  icon: const Icon(Icons.arrow_back),
                 ),
                 const SizedBox(width: 5),
                 Hero(
@@ -84,14 +84,14 @@ class _MyChatRoom extends State<MyChatRoom> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(widget.targetUser.fullName!, style: Theme.of(context).textTheme.bodyLarge),
+                      Text(widget.targetUser.fullName!, style: Theme.of(context).textTheme.bodyMedium),
                       Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 15),),
                     ],
                   ),
                 ),
                 IconButton(
                   onPressed: (){}, 
-                  icon: const Icon(Icons.more_vert,color: Colors.black54),
+                  icon: const Icon(Icons.more_vert),
                   iconSize: 30,
                 ),
               ],

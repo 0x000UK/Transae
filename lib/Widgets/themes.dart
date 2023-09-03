@@ -21,11 +21,11 @@ class Themes  {
           displayMedium: TextStyle(color: LightThemeColors.coolGreen, fontSize: 22, fontWeight: FontWeight.bold),
           displaySmall: TextStyle(color: LightThemeColors.coolGreen, fontSize: 18, fontWeight: FontWeight.bold),
           titleLarge: TextStyle(color: Colors.black, fontSize: 25, overflow: TextOverflow.ellipsis),
-          titleMedium: TextStyle(color: Colors.black54, fontSize: 18, overflow: TextOverflow.ellipsis),
-          titleSmall: TextStyle(color: Colors.black45, fontSize: 16, overflow: TextOverflow.ellipsis),
+          titleMedium: TextStyle(color: Colors.black54, fontSize: 16, overflow: TextOverflow.ellipsis),
+          titleSmall: TextStyle(color: Colors.black45, fontSize: 12, overflow: TextOverflow.ellipsis),
           bodySmall: TextStyle(color: Colors.black54, fontSize: 14),
-          bodyMedium: TextStyle(color: Color(0x85000000), fontSize: 20, fontWeight: FontWeight.bold),
-          bodyLarge: TextStyle(color: Colors.black87, fontSize: 20),
+          bodyMedium: TextStyle(color: LightThemeColors.coolGreen, fontSize: 20, fontWeight: FontWeight.bold),
+          bodyLarge: TextStyle(color: LightThemeColors.coolGreen, fontSize: 26, fontWeight: FontWeight.bold),
         ),
         bottomNavigationBarTheme:const BottomNavigationBarThemeData(
           backgroundColor: LightThemeColors.redorange,
@@ -48,7 +48,7 @@ class Themes  {
         ),
         iconButtonTheme:const IconButtonThemeData(
           style: ButtonStyle(
-            iconColor: MaterialStatePropertyAll(LightThemeColors.redorange),
+            iconColor: MaterialStatePropertyAll(LightThemeColors.coolGreen),
             iconSize: MaterialStatePropertyAll(25),
             animationDuration: Duration(milliseconds: 300)
           )
@@ -62,7 +62,7 @@ class Themes  {
         ),
         tabBarTheme: const TabBarTheme(
           indicator: BoxDecoration(
-            color: Color(0x78DBFFE2),
+            color: LightThemeColors.coolGreen,
             borderRadius: BorderRadius.all(Radius.circular(50))
           ),
           dividerColor: Colors.transparent,
@@ -93,11 +93,11 @@ class Themes  {
           displayMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 22, fontWeight: FontWeight.bold),
           displaySmall: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 18, fontWeight: FontWeight.bold),
           titleLarge: TextStyle(color: Colors.white, fontSize: 25, overflow: TextOverflow.ellipsis),
-          titleMedium: TextStyle(color: Colors.white54, fontSize: 18, overflow: TextOverflow.ellipsis),
-          titleSmall: TextStyle(color: Colors.white54, fontSize: 16, overflow: TextOverflow.ellipsis),
+          titleMedium: TextStyle(color: Colors.white54, fontSize: 16, overflow: TextOverflow.ellipsis),
+          titleSmall: TextStyle(color: Colors.white54, fontSize: 12, overflow: TextOverflow.ellipsis),
           bodySmall: TextStyle(color: Colors.white54, fontSize: 14),
           bodyMedium: TextStyle(color: Color(0x85000000), fontSize: 20, fontWeight: FontWeight.bold),
-          bodyLarge: TextStyle(color: Colors.white70, fontSize: 20),
+          bodyLarge: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 28, fontWeight: FontWeight.bold)
         ),
         bottomNavigationBarTheme:const BottomNavigationBarThemeData(
           backgroundColor: DarkThemeColors.darkpurple,
@@ -118,6 +118,13 @@ class Themes  {
           type: BottomNavigationBarType.shifting,
           elevation: 5
         ),
+        iconButtonTheme:const IconButtonThemeData(
+          style: ButtonStyle(
+            iconColor: MaterialStatePropertyAll(DarkThemeColors.coolGreen),
+            iconSize: MaterialStatePropertyAll(25),
+            animationDuration: Duration(milliseconds: 300)
+          )
+        ),
         iconTheme:const IconThemeData(
           size: 25,
           fill: 0.2,
@@ -127,7 +134,7 @@ class Themes  {
         ),
         tabBarTheme: const TabBarTheme(
           indicator: BoxDecoration(
-            color: Color(0xFFE1F4D0),
+            color: DarkThemeColors.coolGreen,
             borderRadius: BorderRadius.all(Radius.circular(50))
           ),
           dividerColor: Colors.transparent,

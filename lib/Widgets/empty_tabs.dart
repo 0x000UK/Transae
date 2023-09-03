@@ -17,7 +17,8 @@ Widget emptyTabContent({ required String tab, String? text}) {
                   image: AssetImage(
                     tab == 'chats'? "assets/images/Worried-amico.png" :
                     tab == 'groups'? "assets/images/group.png":
-                    "assets/images/activity.png"
+                    tab == 'story' ? "assets/images/activity.png":
+                    ''
                   ),
                   fit: BoxFit.contain),
             ),

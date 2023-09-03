@@ -51,10 +51,9 @@ class _MysearchPageState extends State<MysearchPage> {
                       iconSize: 30,
                     ),
                     const SizedBox(width: 20),
-                    const Text(
+                    Text(
                       'Add Members',
-                      style: TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.bold),
+                      style:  Theme.of(context).textTheme.displayMedium
                     )
                   ],
                 )
@@ -78,25 +77,19 @@ class _MysearchPageState extends State<MysearchPage> {
                             scale: 3.5,
                           ),
                           const SizedBox(height: 50),
-                          const Text(
+                          Text(
                             'Add members on BoomBam',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          const SizedBox(
-                            height: 8,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           Text(
                             'Search users using there Email or UserName',
                             maxLines: null,
-                            style: Theme.of(context).textTheme.titleSmall
+                            style: Theme.of(context).textTheme.titleMedium
                           ),
                           Text(
                             'Keep in mind username is case sensitive',
                             maxLines: null,
-                            style: Theme.of(context).textTheme.titleSmall
+                            style: Theme.of(context).textTheme.titleMedium
                           ),
                           const SizedBox(height: 30),
                           Container(
@@ -107,7 +100,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                 Container(
                                   padding: const EdgeInsets.only(left: 12),
                                   width: MediaQuery.of(context).size.width-140,
-                                  height: 60,
+                                  height: size.height*0.06+10,
                                   child: TextField(
                                     focusNode: searchfocusNode,
                                     controller: searchController,
@@ -138,7 +131,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                  
                                   Container(
                                     width: 80,
-                                    height: 60,
+                                    height: size.height*0.06+10,
                                     decoration: const BoxDecoration(
                                         color: LightThemeColors.aqua,
                                         borderRadius: BorderRadius.only(
@@ -160,15 +153,15 @@ class _MysearchPageState extends State<MysearchPage> {
                               ]
                             )
                           ),
-                          const Align(
+                          Align(
                             alignment: Alignment.center,
-                            child: Text('e.g user_Name11 or xyz@gmail.com',style: TextStyle(fontSize: 14, color: Colors.black87))
+                            child: Text('e.g user_Name11 or xyz@gmail.com',style: Theme.of(context).textTheme.titleSmall)
                           ),
                           const SizedBox(height: 30),
                           searching? StreamBuilder(
                             stream: searchController.text.contains('@')? 
                                     DatabaseService.userCollection.where('email', isEqualTo: searchController.text).where('email', isNotEqualTo: widget.userModel.email).snapshots(): 
-                                    DatabaseService.userCollection.where('username', isEqualTo: searchController.text).snapshots(),
+                                    DatabaseService.userCollection.where('userName', isEqualTo: searchController.text).snapshots(),
 
                             builder: (context, snapshot){
                               if(snapshot.connectionState == ConnectionState.active){

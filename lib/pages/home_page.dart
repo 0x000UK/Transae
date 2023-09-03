@@ -181,8 +181,6 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                         child: IconButton(
                           key: ValueKey<int>(tabController.index),
                           icon: Icon(_tabAddIcons[tabController.index],
-                            color: Theme.of(context).iconTheme.color,
-                            size: Theme.of(context).iconTheme.size,
                           ),
                           onPressed: () {
                             setState(() {
@@ -221,19 +219,13 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                           )
                         },
                         icon: Icon(Icons.more_vert, size: Theme.of(context).iconTheme.size,),
-                        color: Theme.of(context).iconTheme.color,
                         splashRadius: 1,
                       )
                     ],
                       elevation: 0.0,
                     ),
-                    //bottom: TabBars(50, tabController)
                   ),
                 ),
-              
-              // SliverOverlapInjector(
-              //             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              //           ),
                 SliverPersistentHeader(
                   pinned: true,
                   floating: true,

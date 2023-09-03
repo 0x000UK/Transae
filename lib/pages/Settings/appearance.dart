@@ -36,7 +36,6 @@ class _AppearanceState extends ConsumerState<Appearance> {
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.arrow_back),
-                      iconSize: 30,
                     ),
                     const SizedBox(width: 20),
                     Text(

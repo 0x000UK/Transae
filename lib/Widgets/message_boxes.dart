@@ -56,7 +56,7 @@ class _MessageBoxState extends State<MessageBox> {
                     bottomRight: Radius.circular(20),
                   ),
             color: isSentByMe
-                ? LightThemeColors.redorange
+                ? const Color(0xF805111D)
                 : LightThemeColors.darkgrey),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
