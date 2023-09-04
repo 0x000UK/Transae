@@ -1,7 +1,10 @@
 import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Widgets/navigation_routes.dart';
+import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/pages/Settings/account.dart';
 import 'package:firebase_app/pages/Settings/appearance.dart';
+import 'package:firebase_app/pages/auth/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MySettings extends StatefulWidget {
@@ -109,6 +112,20 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
                   pinned: true,
                   elevation: 0,
                   shape: const RoundedRectangleBorder(side: BorderSide.none , borderRadius: BorderRadius.all(Radius.circular(25))),
+                  actions: [
+                    IconButton(
+                      onPressed:  () async {
+                        try {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const MyLogin()));
+                        } catch (error) {
+                          showWarning(context, error);
+                        }
+                      },
+                      icon: const Icon(Icons.logout_rounded),
+                      splashRadius: 1,
+                    )
+                  ],
                 ),
               ];
             },

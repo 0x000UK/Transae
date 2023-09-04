@@ -198,7 +198,8 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                                   profilePic: userModel!.profilePic,
                                   email: userModel!.email,
                                   password: userModel!.password,
-                                  background: userModel!.background
+                                  background: userModel!.background,
+                                  freinds : userModel!.freinds
                                 );
                                 break;
                               case "FullName" : await updateUserData(_controller.text);
@@ -209,7 +210,8 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                                   profilePic: userModel!.profilePic,
                                   email: userModel!.email,
                                   password: userModel!.password,
-                                  background: userModel!.background
+                                  background: userModel!.background,
+                                  freinds : userModel!.freinds
                                 );
                                 break;
                               case "Email" : await updateUserData(_controller.text);
@@ -220,7 +222,8 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                                   profilePic: userModel!.profilePic,
                                   email: _controller.text,
                                   password: userModel!.password,
-                                  background: userModel!.background
+                                  background: userModel!.background,
+                                  freinds : userModel!.freinds
                                 );
                                 break;
                               case "Password" : await updateUserData(_controller.text);
@@ -231,7 +234,8 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                                   profilePic: userModel!.profilePic,
                                   email: userModel!.email,
                                   password: _controller.text,
-                                  background: userModel!.background
+                                  background: userModel!.background,
+                                  freinds : userModel!.freinds
                                 );
                                 break;
                               default: updatedUserModel = userModel!;

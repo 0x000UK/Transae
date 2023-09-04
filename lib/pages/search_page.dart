@@ -82,14 +82,14 @@ class _MysearchPageState extends State<MysearchPage> {
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           Text(
-                            'Search users using there Email or UserName',
+                            'Search users using there Email or UserName. Keep',
                             maxLines: null,
-                            style: Theme.of(context).textTheme.titleMedium
+                            style: Theme.of(context).textTheme.titleSmall
                           ),
                           Text(
-                            'Keep in mind username is case sensitive',
+                            'in mind username is case sensitive',
                             maxLines: null,
-                            style: Theme.of(context).textTheme.titleMedium
+                            style: Theme.of(context).textTheme.titleSmall
                           ),
                           const SizedBox(height: 30),
                           Container(
@@ -157,7 +157,7 @@ class _MysearchPageState extends State<MysearchPage> {
                             alignment: Alignment.center,
                             child: Text('e.g user_Name11 or xyz@gmail.com',style: Theme.of(context).textTheme.titleSmall)
                           ),
-                          const SizedBox(height: 0),
+                          const SizedBox(height: 20),
                           searching? StreamBuilder(
                             stream: searchController.text.contains('@')? 
                                     DatabaseService.userCollection.where('email', isEqualTo: searchController.text).where('email', isNotEqualTo: widget.userModel.email).snapshots(): 
@@ -188,7 +188,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                       ),
                                      // minVerticalPadding: 1,
                                       title: Text(searchedUser.fullName!, style: Theme.of(context).textTheme.displaySmall),
-                                      subtitle: Text(searchedUser.email!,  style: Theme.of(context).textTheme.bodySmall),
+                                      subtitle: Text(searchedUser.email!,  style: Theme.of(context).textTheme.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis,),
                                       trailing: Row(
                                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         //crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -222,8 +222,8 @@ class _MysearchPageState extends State<MysearchPage> {
                                           )
                                         ]
                                       ),
-                                      onTap: () async {
-                                      },
+                                      // onTap: () async {
+                                      // },
                                     )
                                     );
 

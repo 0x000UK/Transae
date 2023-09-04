@@ -17,15 +17,15 @@ class Themes  {
         primaryColorDark: LightThemeColors.orange,
         primaryColorLight: LightThemeColors.lightorange,
         textTheme: const  TextTheme(
-          displayLarge: TextStyle(color: LightThemeColors.coolGreen, fontSize: 25, fontWeight: FontWeight.bold),
-          displayMedium: TextStyle(color: LightThemeColors.coolGreen, fontSize: 22, fontWeight: FontWeight.bold),
+          displayLarge: TextStyle(color: LightThemeColors.coolGreen, fontSize: 22, fontWeight: FontWeight.bold),
+          displayMedium: TextStyle(color: LightThemeColors.coolGreen, fontSize: 20, fontWeight: FontWeight.bold),
           displaySmall: TextStyle(color: LightThemeColors.coolGreen, fontSize: 18, fontWeight: FontWeight.bold),
           titleLarge: TextStyle(color: Colors.black, fontSize: 25, overflow: TextOverflow.ellipsis),
           titleMedium: TextStyle(color: Colors.black54, fontSize: 16, overflow: TextOverflow.ellipsis),
-          titleSmall: TextStyle(color: Colors.black45, fontSize: 12, overflow: TextOverflow.ellipsis),
-          bodySmall: TextStyle(color: Colors.black54, fontSize: 14),
+          titleSmall: TextStyle(color: Colors.black45, fontSize: 16, overflow: TextOverflow.ellipsis),
+          bodySmall: TextStyle(color: Colors.black54, fontSize: 16),
           bodyMedium: TextStyle(color: LightThemeColors.coolGreen, fontSize: 20, fontWeight: FontWeight.bold),
-          bodyLarge: TextStyle(color: LightThemeColors.coolGreen, fontSize: 26, fontWeight: FontWeight.bold),
+          bodyLarge: TextStyle(color: LightThemeColors.coolGreen, fontSize: 27, fontWeight: FontWeight.bold),
         ),
         bottomNavigationBarTheme:const BottomNavigationBarThemeData(
           backgroundColor: LightThemeColors.redorange,
@@ -91,13 +91,13 @@ class Themes  {
         textTheme: const  TextTheme(
           displayLarge: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 22, fontWeight: FontWeight.bold),
           displayMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 20, fontWeight: FontWeight.bold),
-          displaySmall: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 20, fontWeight: FontWeight.bold),
+          displaySmall: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 18, fontWeight: FontWeight.bold),
           titleLarge: TextStyle(color: Colors.white, fontSize: 25, overflow: TextOverflow.ellipsis),
-          titleMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 16, overflow: TextOverflow.ellipsis),
-          titleSmall: TextStyle(color: Colors.black, fontSize: 13),
-          bodySmall: TextStyle(color: Colors.black, fontSize: 16),
+          titleMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 18, overflow: TextOverflow.ellipsis),
+          titleSmall: TextStyle(color: Colors.white38, fontSize: 16),
+          bodySmall: TextStyle(color: Colors.white, fontSize: 16),
           bodyMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 20, fontWeight: FontWeight.bold),
-          bodyLarge: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 25, fontWeight: FontWeight.bold)
+          bodyLarge: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 27, fontWeight: FontWeight.bold)
         ),
         bottomNavigationBarTheme:const BottomNavigationBarThemeData(
           backgroundColor: DarkThemeColors.darkpurple,
@@ -121,7 +121,7 @@ class Themes  {
         iconButtonTheme:const IconButtonThemeData(
           style: ButtonStyle(
             iconColor: MaterialStatePropertyAll(DarkThemeColors.coolGreen),
-            iconSize: MaterialStatePropertyAll(20),
+            iconSize: MaterialStatePropertyAll(25),
             animationDuration: Duration(milliseconds: 300)
           )
         ),

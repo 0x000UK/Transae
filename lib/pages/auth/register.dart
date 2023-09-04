@@ -372,7 +372,10 @@ class _MyRegisterState extends ConsumerState<MyRegister> {
           email: email,
           userName: "",
           fullName: fullName,
-          profilePic: ""
+          profilePic: "",
+          password: password,
+          background: "",
+          freinds: {}
         );
         await DatabaseService.savingUserData(fullName,email,password).then((value) async{
           ref.read(userModelProviderState.notifier).state = newUser;

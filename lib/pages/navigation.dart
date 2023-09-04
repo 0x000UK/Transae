@@ -1,5 +1,7 @@
 
 import 'package:firebase_app/Models/user_model.dart';
+import 'package:firebase_app/pages/freinds.dart';
+import 'package:firebase_app/pages/notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'account_settings.dart';
@@ -25,6 +27,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final List<Widget> screens = [
       ScrollableUserList(userModel : widget.userModel),
+      const MyFreinds(),
+      const MyNotifications(),
       MySettings(userModel : widget.userModel),
     ];
 
@@ -46,28 +50,28 @@ class _MyHomePageState extends State<MyHomePage> {
       onItemSelected: (index) => setState(() => _currentIndex = index),
       items: <BottomNavyBarItem>[
         BottomNavyBarItem(
-          icon: const Icon(Icons.home_outlined),
+          icon: const Icon(Icons.home_outlined, size: 25),
           title: const Text('Home'),
           activeColor: Colors.green,
           inactiveColor: Colors.grey,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon: const Icon(Icons.groups_2_outlined),
-          title:const  Text('Users'),
+          icon: const Icon(Icons.groups_2_outlined, size: 25,),
+          title:const  Text('Freinds'),
           activeColor: Colors.deepPurple,
           inactiveColor: Colors.grey,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon: const  Icon(CupertinoIcons.add),
-          title: const Text('Messages '),
+          icon: const  Icon(CupertinoIcons.at, size: 25,),
+          title: const Text('tags'),
           activeColor: Colors.pink,
           inactiveColor: Colors.grey,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon:const  Icon(Icons.account_circle_outlined),
+          icon:const  Icon(Icons.account_circle_outlined, size: 25,),
           title: const Text('Settings'),
           activeColor: Colors.blue,
           inactiveColor: Colors.grey,

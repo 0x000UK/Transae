@@ -60,7 +60,7 @@ class _MyChatPageTabState extends State<MyChatPageTab> {
                                 leading: Hero(
                                   tag: 'profilepic$index',
                                   child: const CircleAvatar(
-                                    radius: 22,
+                                    radius: 24,
                                   ),
                                 ),
                                 title: Text(

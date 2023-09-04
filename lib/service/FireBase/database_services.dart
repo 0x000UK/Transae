@@ -19,6 +19,7 @@ class DatabaseService {
       "email": email,
       "userName": "" ,
       "profilePic": "",
+      "freinds" : [],
       "uid": current_uid,
       "password": password,
       "background" : ""

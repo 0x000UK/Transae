@@ -1,13 +1,10 @@
 import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Widgets/navigation_routes.dart';
-import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/pages/Tabs/chat_page.dart';
 import 'package:firebase_app/pages/Tabs/group_page.dart';
 import 'package:firebase_app/pages/Tabs/story_page.dart';
-import 'package:firebase_app/pages/auth/login.dart';
 import 'package:firebase_app/pages/search_page.dart';
 import 'package:firebase_app/service/Provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -196,34 +193,6 @@ class _ScrollableUserListState extends ConsumerState<ScrollableUserList>
                           },
                         ),
                       ),
-                      IconButton(
-                        onPressed: () => {
-                          showMenu(
-                            //color: Theme.of(context).popupMenuTheme.color,
-                            context: context, 
-                            position: const RelativeRect.fromLTRB(100, 50, 50, 0), 
-                            elevation: 10,
-                            items: [
-                              PopupMenuItem(
-                                child: ListTile(
-                                  leading:const Icon(Icons.logout_outlined),
-                                  title:const Text('Logout'),
-                                  onTap: () async {
-                                    try {
-                                      await FirebaseAuth.instance.signOut();
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const MyLogin()));
-                                    } catch (error) {
-                                      showWarning(context, error);
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          )
-                        },
-                        icon: const Icon(Icons.more_vert),
-                        splashRadius: 1,
-                      )
                     ],
                       elevation: 0.0,
                     ),
