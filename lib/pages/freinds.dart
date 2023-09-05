@@ -14,7 +14,8 @@ class MyFreinds extends ConsumerStatefulWidget {
 }
 class _MyFreindsState extends ConsumerState<MyFreinds> {
 
- 
+  bool requsts = false;
+  bool pending = false;
   @override
   Widget build(BuildContext context) {
     
@@ -31,16 +32,9 @@ class _MyFreindsState extends ConsumerState<MyFreinds> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    IconButton(
-                      splashRadius: 1,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 30,),
                     Text(
-                      'MyFreinds',
+                      'Freinds',
                       style: Theme.of(context).textTheme.displayMedium,
                     )
                   ],
@@ -59,37 +53,38 @@ class _MyFreindsState extends ConsumerState<MyFreinds> {
                   child: ClipRRect(
                     child:Padding(
                       padding:const EdgeInsets.only(top: 30, left: 20, bottom: 30),
-                      child : StreamBuilder(
-                        stream: DatabaseService.userCollection.where('MyFreinds', isEqualTo: true).snapshots(),
+                      child : Column(
+                      children : [
+                       // pending ? 
+                      StreamBuilder(
+                        stream: DatabaseService.userCollection.where('freinds', isEqualTo: true).snapshots(),
                         builder: (context, snapshot){
                           if(snapshot.connectionState == ConnectionState.active)  {
                             if(snapshot.hasData) {
-                              QuerySnapshot MyFreinds = snapshot.data as QuerySnapshot;
+                              QuerySnapshot freinds = snapshot.data as QuerySnapshot;
 
-                              if(MyFreinds.docs.isNotEmpty){
-                                return  //ListView.builder(itemBuilder:
-                                SliverList(
-                                  delegate: SliverChildBuilderDelegate( 
+                              if(freinds.docs.isNotEmpty){
+                                return ListView.builder(
+                                  itemBuilder:
                                     (context, index) {
-                                      // getting chatroommodel of snapshot
+                                      // getting usermodel of snapshot
                                       UserModel userModel = UserModel.fromMap(
-                                        MyFreinds.docs[index].data() as Map<String, dynamic>);
+                                        freinds.docs[index].data() as Map<String, dynamic>);
                                       //extracting members of chatroom as map
                                       Map<String, dynamic> members = userModel.freinds!;
                                       // converting member id to list
                                       List<String> memberKeys = members.keys.toList();
 
                                       return FutureBuilder(
-                                        future: DatabaseService.getUserDataByID(memberKeys[0]),
+                                        future: DatabaseService.getUserDataByID(memberKeys[index]),
                                         builder: (context, userData) {
                                           if(userData.connectionState == ConnectionState.done){
-                                            // print("userdata connection done");
                                             if(userData.data != null) {
 
                                               UserModel targetUser = userData.data as UserModel;
                                               return  ListTile(
                                                 leading: Hero(
-                                                  tag: 'profilepic$index',
+                                                  tag: 'freindpic$index',
                                                   child: const CircleAvatar(
                                                     radius: 24,
                                                   ),
@@ -133,26 +128,26 @@ class _MyFreindsState extends ConsumerState<MyFreinds> {
                                         }
                                       );  
                                     },
-                                    childCount: MyFreinds.docs.length,
-                                  ),
+                                    itemCount: freinds.docs.length,
                                 );
                               } else {
-                                return SliverToBoxAdapter(child: emptyTabContent(tab: 'chats', text: "no data in database"));
+                                return emptyTabContent(tab: 'chats', text: "You don't have any freinds Go make some");
                               }
                             }else if(snapshot.hasError){
-                              return SliverToBoxAdapter(child: emptyTabContent(tab: 'chats', text: snapshot.error.toString()));
+                              return  emptyTabContent(tab: 'chats', text: snapshot.error.toString());
                             }else {
-                              return SliverToBoxAdapter(child : emptyTabContent(tab: 'chats', text: "snapshot error"));
+                              return  emptyTabContent(tab: 'chats', text: "snapshot error");
                             }
                           }else {
-                            return const SliverToBoxAdapter(child: Center(
+                            return const Center(
                               child: CircularProgressIndicator(),
-                            )
                             );
 
                           }
                         }
                       )
+                      ]
+                    )
                   )
                 )
               )

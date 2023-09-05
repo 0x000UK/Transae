@@ -29,7 +29,7 @@ Widget emptyTabContent({ required String tab, String? text}) {
           text == null ? const Text ( "Feature under development",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ):
-          Text(text),
+          Center(child: Text(text)),
         ],
       )
   );
