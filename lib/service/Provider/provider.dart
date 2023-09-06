@@ -30,3 +30,10 @@ final themeProviderState = StateProvider((ref) {
  return currentMode;
 
 });
+
+final friendRequestProvider = StateProvider((ref) {
+
+  final List<UserModel> sent = [];
+  return sent;
+  
+});

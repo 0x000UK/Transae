@@ -102,7 +102,6 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
                   expandedHeight: expandedHight,
                   collapsedHeight: 60,
                   flexibleSpace: FlexibleSpaceBar(
-                    collapseMode: CollapseMode.parallax,
                     background: Image.asset(
                       // Image background for the top widget
                       'assets/images/landscape.jpg',
@@ -111,7 +110,7 @@ class _MySettingsState extends State<MySettings> with SingleTickerProviderStateM
                   ),
                   pinned: true,
                   elevation: 0,
-                  shape: const RoundedRectangleBorder(side: BorderSide.none , borderRadius: BorderRadius.all(Radius.circular(25))),
+                  //shape: const RoundedRectangleBorder(side: BorderSide.none , borderRadius: BorderRadius.all(Radius.circular(25))),
                   actions: [
                     IconButton(
                       onPressed:  () async {

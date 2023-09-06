@@ -43,9 +43,9 @@ class _MyEditsState extends ConsumerState<MyEdits> {
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
     userNameFocusNode.dispose();
+    super.dispose();
   }
  
   
@@ -173,10 +173,6 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                             }
                           });
                         },
-                        onSubmitted:(value) {
-                          _controller.text = value.trim();
-                          
-                        },
                       ),
                     ) : Container(),
                     // const SizedBox(height: 550,),
@@ -188,60 +184,24 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                         alignment: Alignment.bottomRight,
                         child: FloatingActionButton.extended(
                           onPressed: () async {
-                            UserModel updatedUserModel;
+                            //UserModel updatedUserModel;
                             switch (widget.edit) {
                               case "UserName":  await updateUserData(_controller.text);
-                                updatedUserModel = UserModel(
-                                  uid: userModel!.uid,
-                                  userName: _controller.text,
-                                  fullName: userModel!.fullName,
-                                  profilePic: userModel!.profilePic,
-                                  email: userModel!.email,
-                                  password: userModel!.password,
-                                  background: userModel!.background,
-                                  freinds : userModel!.freinds
-                                );
+                                  ref.read(userModelProviderState.notifier).state!.userName = _controller.text;
+                                
                                 break;
                               case "FullName" : await updateUserData(_controller.text);
-                                  updatedUserModel = UserModel(
-                                  uid: userModel!.uid,
-                                  userName: userModel!.userName,
-                                  fullName: _controller.text,
-                                  profilePic: userModel!.profilePic,
-                                  email: userModel!.email,
-                                  password: userModel!.password,
-                                  background: userModel!.background,
-                                  freinds : userModel!.freinds
-                                );
+                                  ref.read(userModelProviderState.notifier).state!.fullName = _controller.text;
                                 break;
                               case "Email" : await updateUserData(_controller.text);
-                                  updatedUserModel = UserModel(
-                                  uid: userModel!.uid,
-                                  userName: userModel!.userName,
-                                  fullName:userModel!.fullName,
-                                  profilePic: userModel!.profilePic,
-                                  email: _controller.text,
-                                  password: userModel!.password,
-                                  background: userModel!.background,
-                                  freinds : userModel!.freinds
-                                );
+                                  ref.read(userModelProviderState.notifier).state!.email = _controller.text;
                                 break;
                               case "Password" : await updateUserData(_controller.text);
-                                  updatedUserModel = UserModel(
-                                  uid: userModel!.uid,
-                                  userName: userModel!.userName,
-                                  fullName: userModel!.fullName,
-                                  profilePic: userModel!.profilePic,
-                                  email: userModel!.email,
-                                  password: _controller.text,
-                                  background: userModel!.background,
-                                  freinds : userModel!.freinds
-                                );
+                                ref.read(userModelProviderState.notifier).state!.password = _controller.text;
                                 break;
-                              default: updatedUserModel = userModel!;
+                              default:
                                 break;
                             }
-                            ref.read(userModelProviderState.notifier).state = updatedUserModel;
                              Navigator.of(context).pop();
                           }, 
                           label: const Text("Save", style: TextStyle(fontSize: 15),),
@@ -250,7 +210,7 @@ class _MyEditsState extends ConsumerState<MyEdits> {
                             borderRadius: BorderRadius.all(Radius.circular(15))
                           ),
                         ),
-                      ): Container()
+                      ): const SizedBox()
                     )
                   ],
                 )

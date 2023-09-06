@@ -1,6 +1,6 @@
 
 import 'package:firebase_app/Models/user_model.dart';
-import 'package:firebase_app/pages/freinds.dart';
+import 'package:firebase_app/pages/freinds_page.dart';
 import 'package:firebase_app/pages/notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

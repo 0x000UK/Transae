@@ -4,24 +4,19 @@ import 'package:http/http.dart' as http;
 
 class Chat {
 
-  //ChatGPt({required this.text, required this.initialLanguage, required this.desiredLanguage});
-
-  // final String text;
-  // final String initialLanguage;
-  // final String desiredLanguage;
-
-  static Future<dynamic> translateMessage(String text, String desiredLanguage) async {
+  static Future<dynamic> sendMessage(String text, String? desiredLanguage) async {
 
     if(text.isNotEmpty) {
-      return sendRequest(text, desiredLanguage);
+      return translate(text, desiredLanguage);
     }
     else {
-      return "Error";
+      return "error";
     }
   }
-  static Future<String> sendRequest( String text, String targetLanguage) async {
+
+  static Future<String> translate( String text, String? targetLanguage) async {
     const  String apiKey = APIKey.key;
-    const  String apiUrl = 'https://api.openai.com/v1/completions';
+    const  String apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     final response = await http.post(Uri.parse(apiUrl), 
       headers: {
@@ -29,9 +24,8 @@ class Chat {
         'Content-Type': 'application/json',
       }, 
       body: jsonEncode({
-        'prompt': 'Translate the following text to $targetLanguage: "$text"',
-        'max_tokens': 10,
-        'model' : 'gpt-3.5-turbo-16k-0613'
+        'prompt': targetLanguage == null? text : 'Translate the following text to $targetLanguage: $text',
+        'model' : 'gpt-3.5-turbo'
       }
       )
     );
@@ -40,7 +34,7 @@ class Chat {
       final data = jsonDecode(response.body);
       return data['choices'][0]['text'].toString();
     } else {
-      return "";
+      return "error";
     }
   }
 }

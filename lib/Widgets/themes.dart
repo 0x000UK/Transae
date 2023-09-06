@@ -91,13 +91,13 @@ class Themes  {
         textTheme: const  TextTheme(
           displayLarge: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 22, fontWeight: FontWeight.bold),
           displayMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 20, fontWeight: FontWeight.bold),
-          displaySmall: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 18, fontWeight: FontWeight.bold),
-          titleLarge: TextStyle(color: Colors.white, fontSize: 25, overflow: TextOverflow.ellipsis),
-          titleMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 18, overflow: TextOverflow.ellipsis),
-          titleSmall: TextStyle(color: Colors.white38, fontSize: 16),
+          displaySmall: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 16, fontWeight: FontWeight.bold),
+          titleLarge: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 25, fontWeight: FontWeight.bold),
+          titleMedium: TextStyle(color: Colors.black54, fontSize: 18),
+          titleSmall: TextStyle(color: Colors.white38, fontSize: 12),
           bodySmall: TextStyle(color: Colors.white, fontSize: 16),
-          bodyMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 20, fontWeight: FontWeight.bold),
-          bodyLarge: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 27, fontWeight: FontWeight.bold)
+          bodyMedium: TextStyle(color: DarkThemeColors.coolGreen, fontSize: 16),
+          bodyLarge: TextStyle(color: Colors.white54, fontSize: 20)
         ),
         bottomNavigationBarTheme:const BottomNavigationBarThemeData(
           backgroundColor: DarkThemeColors.darkpurple,

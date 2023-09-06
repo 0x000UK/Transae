@@ -2,20 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Models/user_model.dart';
 import 'package:firebase_app/Models/chat_room_model.dart';
 import 'package:firebase_app/Widgets/colors.dart';
+import 'package:firebase_app/Widgets/warnings.dart';
 import 'package:firebase_app/pages/chats.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
+import 'package:firebase_app/service/Provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MysearchPage extends StatefulWidget {
+class MysearchPage extends ConsumerStatefulWidget {
   const MysearchPage({super.key, required this.userModel});
 
   final UserModel userModel;
 
   @override
-  State<MysearchPage> createState() => _MysearchPageState();
+  ConsumerState<MysearchPage> createState() => _MysearchPageState();
 }
 
-class _MysearchPageState extends State<MysearchPage> {
+class _MysearchPageState extends ConsumerState<MysearchPage> {
 
   late TextEditingController searchController;
   late FocusNode searchfocusNode;
@@ -71,7 +74,7 @@ class _MysearchPageState extends State<MysearchPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         //SizedBox.shrink(child: SizedBox(height: 100,),),
                         children: [
-                          const SizedBox(height: 100),
+                          const SizedBox(height: 80),
                           Image.asset(
                             'assets/images/search.png',
                             scale: 3.5,
@@ -79,7 +82,7 @@ class _MysearchPageState extends State<MysearchPage> {
                           const SizedBox(height: 50),
                           Text(
                             'Add members on BoomBam',
-                            style: Theme.of(context).textTheme.bodyLarge,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           Text(
                             'Search users using there Email or UserName. Keep',
@@ -91,7 +94,7 @@ class _MysearchPageState extends State<MysearchPage> {
                             maxLines: null,
                             style: Theme.of(context).textTheme.titleSmall
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 20),
                           Container(
                             padding: const EdgeInsets.only(left: 0),
                             color:Theme.of(context).scaffoldBackgroundColor,
@@ -100,11 +103,11 @@ class _MysearchPageState extends State<MysearchPage> {
                                 Container(
                                   padding: const EdgeInsets.only(left: 12),
                                   width: MediaQuery.of(context).size.width-100,
-                                  height: size.height*0.07,
+                                  height: size.height*0.06,
                                   child: TextField(
                                     focusNode: searchfocusNode,
                                     controller: searchController,
-                                    style: const TextStyle(fontSize: 18),
+                                    style: const TextStyle(fontSize: 16),
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Theme.of(context).primaryColorLight,
@@ -114,10 +117,13 @@ class _MysearchPageState extends State<MysearchPage> {
                                           topLeft: Radius.circular(30.0),
                                           bottomLeft: Radius.circular(30.0),
                                         ),
+                                        
                                       ),
+                                      contentPadding: const EdgeInsets.only(left: 20),
                                       hintText: 'Email or Username',
+                                      hintStyle: const TextStyle(color: Colors.black45, fontSize: 16),
                                       //helperText: 'e.g user_Name11 or xyz@gmail.com',
-                                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                                      //floatingLabelBehavior: FloatingLabelBehavior.always,
                                     ),
                                     onTapOutside: (event) {
                                       searchfocusNode.unfocus();
@@ -131,7 +137,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                  
                                   Container(
                                     width: 80,
-                                    height: size.height*0.07,
+                                    height: size.height*0.06,
                                     decoration: const BoxDecoration(
                                         color: LightThemeColors.aqua,
                                         borderRadius: BorderRadius.only(
@@ -141,6 +147,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                       splashRadius: 1,
                                       onPressed: () {
                                         setState(() { searching = true;});
+                                        //
                                       },
                                       icon: const Icon(
                                         Icons.search,
@@ -157,11 +164,11 @@ class _MysearchPageState extends State<MysearchPage> {
                             alignment: Alignment.center,
                             child: Text('e.g user_Name11 or xyz@gmail.com',style: Theme.of(context).textTheme.titleSmall)
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           searching? StreamBuilder(
                             stream: searchController.text.contains('@')? 
-                                    DatabaseService.userCollection.where('email', isEqualTo: searchController.text).where('email', isNotEqualTo: widget.userModel.email).snapshots(): 
-                                    DatabaseService.userCollection.where('userName', isEqualTo: searchController.text).snapshots(),
+                                    DatabaseService.userCollection.where('email', isEqualTo: searchController.text.trim()).where('email', isNotEqualTo: widget.userModel.email).snapshots(): 
+                                    DatabaseService.userCollection.where('userName', isEqualTo: searchController.text.trim()).snapshots(),
 
                             builder: (context, snapshot){
                               if(snapshot.connectionState == ConnectionState.active){
@@ -173,6 +180,7 @@ class _MysearchPageState extends State<MysearchPage> {
 
                                     Map<String,dynamic> userMap = dataSnapshot.docs[0].data() as Map<String, dynamic>;
                                     UserModel searchedUser = UserModel.fromMap(userMap);
+                                    
                                     return Padding(
                                       //width: size.width,
                                       //height: 80,
@@ -195,7 +203,10 @@ class _MysearchPageState extends State<MysearchPage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           IconButton(
-                                            onPressed: (){}, 
+                                            onPressed: (){
+                                              ref.read(friendRequestProvider.notifier).state.add(searchedUser);
+                                              sendRequest(searchedUser.uid);
+                                            }, 
                                             icon:const Icon(Icons.person_add_alt),
                                             iconSize: 20,
                                           ),
@@ -204,6 +215,7 @@ class _MysearchPageState extends State<MysearchPage> {
                                                ChatRoomModel? chatRoomModel = await DatabaseService.getChatRoomModel(searchedUser);
                                               if(chatRoomModel != null) {
                                                   Navigator.pop(context);
+                                                  // ignore: use_build_context_synchronously
                                                   Navigator.push(context, MaterialPageRoute(
                                                     builder: (context) {
                                                       return MyChatRoom(
@@ -222,8 +234,6 @@ class _MysearchPageState extends State<MysearchPage> {
                                           )
                                         ]
                                       ),
-                                      // onTap: () async {
-                                      // },
                                     )
                                     );
 
@@ -253,5 +263,20 @@ class _MysearchPageState extends State<MysearchPage> {
         ),
       )
     );
+  }
+  sendRequest(targetuserid) async {
+    //final  querySnapshot = await DatabaseService.userCollection.doc(targetuser).get();
+
+     DocumentReference userDocRef = DatabaseService.userCollection.doc(targetuserid);
+
+    try {
+      await userDocRef.update({
+        // Use square brackets to set a new key-value pair in the map
+        'friends.$targetuserid': false,
+      });
+      showWarning(context,'Friend added successfully');
+    } catch (e) {
+      showWarning(context,'Some Error occured : $e');
+    }
   }
 }

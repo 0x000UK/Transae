@@ -7,6 +7,7 @@ import 'package:firebase_app/Widgets/colors.dart';
 import 'package:firebase_app/Widgets/message_boxes.dart';
 import 'package:firebase_app/main.dart';
 import 'package:firebase_app/service/FireBase/database_services.dart';
+import 'package:firebase_app/service/Translate/gpt_3.dart';
 import 'package:flutter/material.dart';
 
 class MyChatRoom extends StatefulWidget {
@@ -142,7 +143,7 @@ class _MyChatRoom extends State<MyChatRoom> {
                         ),
                       ),
                     prefixIcon: IconButton(onPressed:(){}, icon: const Icon(Icons.emoji_emotions_outlined), color: Theme.of(context).iconTheme.color,) ,
-                    suffixIcon: IconButton(onPressed:(){}, icon: const Icon(Icons.attachment_outlined),  color: Theme.of(context).iconTheme.color)
+                    suffixIcon: IconButton(onPressed:(){}, icon: const Icon(Icons.attachment_outlined), color: Theme.of(context).iconTheme.color)
                     ),
                     onTapOutside: (event) {
                       msgFocusNode.unfocus();
@@ -189,10 +190,10 @@ class _MyChatRoom extends State<MyChatRoom> {
     String msg = mssgController.text.trim();
     mssgController.clear();
     
-    // dynamic req = await Chat.sendRequest(msg, "english");
-    // if (req != null ) {
-    //   msg = req;
-    // }
+    dynamic req = await Chat.sendMessage(msg, "english");
+    if (req != null ) {
+      msg = req;
+    }
 
     if (msg.isNotEmpty) {
       MessageModel newMessage = MessageModel(
@@ -240,7 +241,7 @@ class _MyChatRoom extends State<MyChatRoom> {
               );
           }else if(snapshot.hasError){
             return  Center(
-              child: Text("${snapshot.error.toString()}\nplease check your internet connection "),
+              child: Text("${snapshot.error.toString()}\n please check your internet connection "),
             );
           }else {
             return const Center(
