@@ -1,4 +1,4 @@
-# firebase_app
+# Spotify CLone
 
 A new Flutter project.
 
